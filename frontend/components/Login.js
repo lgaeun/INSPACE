@@ -47,6 +47,12 @@ function Login() {
   $register.addEventListener("click", () => {
     Register();
   });
+
+  const $loginBtn = document.getElementById("login-Btn");
+
+  $loginBtn.addEventListener("click", () => {
+    //서버에 id, password POST 후 Response 처리
+  });
 }
 
 export default Login;
