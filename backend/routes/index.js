@@ -28,9 +28,17 @@ router.post(
     })
 );
 
+router.post('/login', passport.authenticate('local', {
+    failureRedirect: '/fail'
+}), function(res, req) {
+    res.statusCode(200).json({ message: 'success' })
+})
+
 router.get("/logout", (req, res, next) => {
     req.logout();
     res.status(204).json({ message: "success" });
 });
+
+
 
 module.exports = router;
