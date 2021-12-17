@@ -1,8 +1,5 @@
-import Dashboard from "../views/Dashboard.js";
-import Posts from "../views/Posts.js";
-import PostView from "../views/PostView.js";
-import Settings from "../views/Settings.js";
-import Login from "../views/Login.js";
+import LoginView from "../views/Login.js";
+import SignupView from "../views/Signup.js";
 
 //연결한 뷰 컴포넌트 가져오기
 
@@ -45,10 +42,11 @@ const router = async () => {
 
   // URL + 받아올 파라미터 의 형태를 고정해서 만들어놔야함.
   const routes = [
-    { path: "/", view: Login },
-    { path: "/posts", view: Posts },
-    { path: "/posts/:id", view: PostView },
-    { path: "/settings", view: Settings },
+    { path: "/", view: LoginView },
+    {
+      path: "/signup",
+      view: SignupView,
+    },
   ];
 
   // Test each route for potential match
