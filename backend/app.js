@@ -10,6 +10,9 @@ const usersRouter = require("./routes/users");
 const paymentsRouter = require("./routes/payments");
 const seatsRouter = require("./routes/seats");
 const loginRouter = require('./routes/login');
+const loginRequired = require('./middlewares/login-required');
+const { passport } = require("passport");
+const session = require('express-session');
 
 require('./passport')();
 mongoose.connect(
@@ -32,14 +35,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(session({
+    secret: 'Inspace',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: "mongodb+srv://doosan:bbc0410@simple-board-cluster.mdnn7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    })
+}))
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/payments", paymentsRouter);
-app.use("/users", usersRouter);
-app.use('/login', loginRouter)
+app.use("/payments", loginRequired, paymentsRouter);
+app.use("/users", loginRequired, usersRouter);
+app.use('/login', loginRequired, loginRouter)
 
 
 
