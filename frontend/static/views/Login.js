@@ -16,7 +16,7 @@ export default class extends AbstractView {
         </aside>
         <article class="right">
           <div id="login-box">
-            <h3>로그인</h3>
+            <h3>Log in</h3>
             <input
               type="text"
               name="ID"
@@ -38,7 +38,8 @@ export default class extends AbstractView {
             </button>
             <div id="form-box">
               <ul>
-                <a href='/posts' data-link><button id="register">회원가입</button></a>
+                <a href='/signup' data-link><button id="register">회원가입</button></a>
+                <li> | </li>
                 <li id="findPassword">비밀번호 찾기</li>
               </ul>
             </div>

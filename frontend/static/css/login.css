@@ -1,8 +1,14 @@
+@font-face {
+  font-family: customFont;
+  src: url("../assets/fonts/TTRamillas-Regular.otf");
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  font-family: customFont;
+  /* font-family: "Zen Kaku Gothic Antique", sans-serif; */
 }
 
 body {
@@ -45,14 +51,20 @@ main #login-image h2 {
   left: 5rem;
 }
 
-main .left {
-  width: 100%;
+.left {
+  width: 50%;
   height: 100%;
   background-image: url("../assets/images/leftbg.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   color: white;
+}
+.right {
+  position: relative;
+  display: flex;
+  width: 50%;
+  height: 100%;
 }
 
 main #login-box {
@@ -120,5 +132,15 @@ main #form-box ul {
 main #form-box ul li {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+#register {
+  border: none;
+  font-family: customFont;
+  background-color: white;
+  font-weight: 350;
+  color: gray;
+  margin-top: -2.5px;
   cursor: pointer;
 }
