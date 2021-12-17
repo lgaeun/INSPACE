@@ -79,7 +79,7 @@ router.post('/change-password', asyncHandler(async(req, res) => {
         throw new Error('임시 비밀번호가 일치하지 않습니다.');
     }
 
-    await User.updateOne({ shortId: user.shortId }, {
+    await User.updateOne({ _id: user.id }, {
         password: hashPassword(password),
         passwordReset: false,
 
@@ -89,5 +89,22 @@ router.post('/change-password', asyncHandler(async(req, res) => {
     res.status(200).json({ message: "success" });
 }))
 
+
+router.post('/info-change', asyncHandler(async(req, res, next) => {
+    const { password, newpassword, confirmpassword } = req.body;
+    const user = await User.findOne({ _id: req.user.id });
+
+    if (user.password != hashPassword(password)) {
+        throw new Error('기존 비밀번호를 다시 입력해주세요')
+    } else if (hashPassword(password) == hashPassword(newpassword)) {
+        throw new Error('기존비밀번호와 새 비밀번호를 다르게 입력해주세요')
+    }
+    if (newpassword != confirmpassword) {
+        throw new Error('새비밀번호를 다시 확인해주세요.')
+    }
+    await User.updateOne({ _id: user.id }, {
+        password: hashPassword(password)
+    })
+}))
 
 module.exports = router;
