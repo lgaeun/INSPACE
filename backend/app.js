@@ -4,13 +4,14 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-
+const passport = require('passport');
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const paymentsRouter = require("./routes/payments");
 const seatsRouter = require("./routes/seats");
 const loginRouter = require('./routes/login');
 
+require('./passport')();
 mongoose.connect(
     "mongodb+srv://doosan:bbc0410@simple-board-cluster.mdnn7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
@@ -31,11 +32,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/payments", paymentsRouter);
 app.use("/users", usersRouter);
 app.use('/login', loginRouter)
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
