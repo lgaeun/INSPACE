@@ -8,7 +8,7 @@ function Signup() {
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="./assets/images/logo.png" />
+            <img class="logo" src="/assets/images/logo.png" />
           </div>
         </aside>
         <article class="right">

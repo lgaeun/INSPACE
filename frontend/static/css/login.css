@@ -45,10 +45,10 @@ main #login-image h2 {
   left: 5rem;
 }
 
-main #login-image {
+main .left {
   width: 100%;
   height: 100%;
-  background-image: url("././img/ivana-cajina-asuyh-_ZX54-unsplash.jpg");
+  background-image: url("../assets/images/leftbg.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

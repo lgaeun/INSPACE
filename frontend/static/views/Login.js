@@ -1,14 +1,17 @@
-import Signup from "./Signup.js";
+import AbstractView from "./AbstractView.js";
 
-function Login() {
-  const $root = document.getElementById("root");
-
-  $root.innerHTML = `
+export default class extends AbstractView {
+  constructor(params) {
+    super(params);
+    this.setTitle("Dashboard");
+  }
+  async getHtml() {
+    return `
     <div class="bg">
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="./assets/images/logo.png" />
+            <img class="logo" src="/static/assets/images/logo.png" />
           </div>
         </aside>
         <article class="right">
@@ -30,12 +33,12 @@ function Login() {
             />
             <input type="submit" id="login-Btn" value="로그인" />
             <button id="google-login">
-              <img src="../assets/img/Google_2015_logo.svg.png" width="40" />
+              <img src="/static/assets/images/Google_2015_logo.svg.png" width="40" />
               계정으로 로그인
             </button>
             <div id="form-box">
               <ul>
-                <button id="register">회원가입</button>
+                <a href='/posts' data-link><button id="register">회원가입</button></a>
                 <li id="findPassword">비밀번호 찾기</li>
               </ul>
             </div>
@@ -44,18 +47,17 @@ function Login() {
       </main>
     </div>
   `;
+  }
 
-  const $register = document.getElementById("register");
+  async defaltFunc() {
+    const $register = document.getElementById("register");
 
-  $register.addEventListener("click", () => {
-    Signup();
-  });
+    $register.addEventListener("click", () => {});
 
-  const $loginBtn = document.getElementById("login-Btn");
+    const $loginBtn = document.getElementById("login-Btn");
 
-  $loginBtn.addEventListener("click", () => {
-    //서버에 id, password POST 후 Response 처리
-  });
+    $loginBtn.addEventListener("click", () => {
+      //서버에 id, password POST 후 Response 처리
+    });
+  }
 }
-
-export default Login;
