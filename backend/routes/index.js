@@ -3,6 +3,9 @@ var router = express.Router();
 const hashPassword = require("../utils/hash-password");
 const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Seat } = require("../models/index");
+const nodemailer = require('nodemailer')
+const generateRandomPassword = require('../utils/generate-random-password')
+const sendMail = require('../utils/send-mail')
 
 router.post(
     "/signup",
@@ -39,21 +42,50 @@ router.get("/logout", (req, res, next) => {
     res.status(204).json({ message: "success" });
 });
 
-router.post(
-    '/findid',
-    asyncHandler(async(req, res, next) => {
-        const { name, password } = req.body;
-        const Pname = await User.findOne({ name });
-        const checkPassword = hashPassword(password)
-        if (!Pname) {
-            throw new Error('유효한 이름이 아닙니다.')
-        }
-        if (Pname.password != checkPassword) {
-            throw new Error('비밀번호가 다릅니다.')
-        }
-        res.json(Pname.userId)
+// router.post(
+//     '/findpw',
+//     asyncHandler(async(req, res, next) => {
+//         const { name } = req.body;
+//         const Pname = await User.findOne({ name });
+//         if (!Pname) {
+//             throw new Error('유효한 사용자가 아닙니다.')
+//         }
+
+
+//     })
+// )
+
+router.post('/reset-password', asyncHandler(async(req, res) => {
+    const { userId } = req.body;
+    const user = await User.findOne({ userId });
+    if (!user) {
+        throw new Error('해당 메일로 가입된 아이디가 없습니다.')
+    }
+
+    const password = generateRandomPassword();
+    await User.updateOne({ userId }, {
+        password: hashPassword(password),
+        passwordReset: true,
     })
-)
+
+    await sendMail(email, '비밀번호가 변경되었습니다.', `변경된 비밀번호는 : ${password} 입니다.`);
+}))
+
+router.post('/change-password', asyncHandler(async(req, res) => {
+    const { currentPassword, password } = req.body;
+    const user = await User.findOne({ _id: req.user.id });
+
+    if (user.password !== hashPassword(currentPassword)) {
+        throw new Error('임시 비밀번호가 일치하지 않습니다.');
+    }
+
+    await User.updateOne({ shortId: user.shortId }, {
+        password: hashPassword(password),
+        passwordReset: false,
+    });
+
+    res.status(200).json({ message: "success" });
+}))
 
 
 module.exports = router;
