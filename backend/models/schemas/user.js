@@ -27,7 +27,7 @@ const UserSchema = new Schema({
     },
     userTicket: {
         type: Schema.Types.ObjectId,
-        ref: "ticket",
+        ref: "Ticket",
     },
 }, { timestamps: true });
 

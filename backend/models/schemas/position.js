@@ -1,27 +1,16 @@
 const { Schema } = require("mongoose");
 
-const SeatSchema = new Schema({
-    //선택한 섹션
-    section: {
-        type: String,
-        required: true,
-    }, //선택한 섹션 내의 좌석
-    position: {
+const PositionSchema = new Schema({
+    name: {
         type: String,
         required: true,
     }, //좌석 사용 여부
-    empty: {
+    isempty: {
         type: Boolean,
     }, //섹션별 남은 좌석
-    leftSeat: {
-        type: Number,
-    }, //시작하는시간
     startTime: {
         type: Number, //timestamps 이용???
-    }, //끝나는 시간
-    // finishTime: {
-    //   type: Number,
-    // },
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -32,4 +21,4 @@ const SeatSchema = new Schema({
     },
 }, { timestamps: true });
 
-module.exports = SeatSchema;
+module.exports = PositionSchema;
