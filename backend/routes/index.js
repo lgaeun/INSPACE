@@ -39,6 +39,21 @@ router.get("/logout", (req, res, next) => {
     res.status(204).json({ message: "success" });
 });
 
+router.post(
+    '/findid',
+    asyncHandler(async(req, res, next) => {
+        const { name, password } = req.body;
+        const Pname = await User.findOne({ name });
+        const checkPassword = hashPassword(password)
+        if (!Pname) {
+            throw new Error('유효한 이름이 아닙니다.')
+        }
+        if (Pname.password != checkPassword) {
+            throw new Error('비밀번호가 다릅니다.')
+        }
+        res.json(Pname.userId)
+    })
+)
 
 
 module.exports = router;
