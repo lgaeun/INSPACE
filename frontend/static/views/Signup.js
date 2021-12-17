@@ -8,7 +8,7 @@ function Signup() {
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="/assets/images/logo.png" />
+            <img class="logo" src="/static//assets/images/logo.png" />
           </div>
         </aside>
         <article class="right">
@@ -36,9 +36,11 @@ function Signup() {
               />
             </form>
             <div class="btn_container">
+            <a href='/' data-link>
               <button class="btn btn-cancel" id="cancelBtn" onclick="cancel">
                 Cancel
               </button>
+              </a>
               <button class="btn btn-signup" id="signupBtn" onclick="signup">
                 Sign Up
               </button>

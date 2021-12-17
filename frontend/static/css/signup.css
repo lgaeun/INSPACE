@@ -1,6 +1,6 @@
 @font-face {
   font-family: customFont;
-  src: url(../../assets/fonts/TTRamillas-Regular.otf);
+  src: url(../assets/fonts/TTRamillas-Regular.otf);
 }
 
 .bg {
@@ -28,7 +28,7 @@ sign-in_contents {
   width: 50%;
   height: 100%;
   /* background-color: #e7dcc8; */
-  background: url(../../assets/images/leftbg.jpg);
+  background-image: url("../assets/images/leftbg.jpg");
   background-size: cover;
   border-radius: 12px 0 0 12px; /* 수정 */
   display: flex;
@@ -100,10 +100,13 @@ sign-in_contents {
   display: flex;
   width: 100%;
 }
+.btn_container a {
+  width: 100%;
+  margin-right: 2px;
+}
 .btn_container .btn {
   width: 100%;
   height: 2rem;
-  margin: 2px;
   border: none;
   border-radius: 0.7em;
   font-size: 0.7rem;
