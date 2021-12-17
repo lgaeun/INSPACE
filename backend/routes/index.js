@@ -98,8 +98,6 @@ router.post('/info-change', asyncHandler(async(req, res, next) => {
         throw new Error('기존 비밀번호를 다시 입력해주세요')
     } else if (hashPassword(password) == hashPassword(newpassword)) {
         throw new Error('기존비밀번호와 새 비밀번호를 다르게 입력해주세요')
-
-
     }
     if (newpassword != confirmpassword) {
         throw new Error('새비밀번호를 다시 확인해주세요.')
