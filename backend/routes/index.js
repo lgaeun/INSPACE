@@ -82,6 +82,8 @@ router.post('/change-password', asyncHandler(async(req, res) => {
     await User.updateOne({ shortId: user.shortId }, {
         password: hashPassword(password),
         passwordReset: false,
+
+
     });
 
     res.status(200).json({ message: "success" });
