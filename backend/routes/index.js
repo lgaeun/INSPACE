@@ -104,6 +104,9 @@ router.post('/info-change', asyncHandler(async(req, res, next) => {
     }
     await User.updateOne({ _id: user.id }, {
         password: hashPassword(password)
+
+
+
     })
 }))
 
