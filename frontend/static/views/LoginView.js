@@ -43,7 +43,7 @@ export default class extends AbstractView {
             </form>  
             <div id="form-box">
               <ul>
-                <a href='/signup' data-link>회원가입</a>
+                <a href='/signup' data-link id="register-Btn">회원가입</a>
                 <li> | </li>
                 <li id="findPassword">비밀번호 찾기</li>
               </ul>

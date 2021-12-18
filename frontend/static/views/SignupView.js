@@ -28,7 +28,7 @@ export default class extends AbstractView {
               <input
                 type="password"
                 id="password"
-                placeholder="알바펫,숫자 포함 8자리 이상"
+                placeholder="알바펫,숫자 포함 8~15자리"
               />
 
               <label for="confirm">Password Confirm</label>
@@ -40,7 +40,7 @@ export default class extends AbstractView {
             </form>
             <div class="btn_container">
             <a href='/' data-link>Cancel</a>
-            <a href='/' data-link>Sign up</a>
+            <a href='/' data-link id="signUp">Sign up</a>
             </div>
           </div>
         </article>
@@ -49,5 +49,58 @@ export default class extends AbstractView {
   `;
   }
 
-  async defaultFunc() {}
+  async defaultFunc() {
+    const $signUp = document.getElementById("signUp");
+
+    $signUp.addEventListener("click", () => {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const passwordconfirm = document.getElementById("passwordconfirm").value;
+      // 이메일 정규표현식
+      const regEmail =
+        /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+      const regPassword = /^[a-zA-Z0-9]{8,15}$/;
+
+      // 이름, 이메일 , 비밀번호 검증
+      if (name === "") {
+        $signUp.href = "";
+        alert("이름을 입력해주세요.");
+      } else if (regEmail.test(email) !== true) {
+        $signUp.href = "";
+        alert("이메일을 입력해주세요.");
+      } else if (regPassword.test(password) !== true) {
+        $signUp.href = "";
+        alert("비밀번호를 정확히 입력해주세요.");
+      } else if (password !== passwordconfirm) {
+        $signUp.href = "";
+        alert("비밀번호가 맞지 않습니다.");
+      } else {
+        // 회원가입 유저 요청 데이터
+        const createdUser = {
+          name: name,
+          email: email,
+          password: password,
+        };
+
+        // 서버 전달
+        fetch("url", {
+          method: "POST",
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(createdUser),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              alert("이미 존재하는 회원입니다.");
+            } else {
+              response.json();
+            }
+          })
+          .then(console.log);
+      }
+    });
+  }
 }
