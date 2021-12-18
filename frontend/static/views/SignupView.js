@@ -11,7 +11,7 @@ export default class extends AbstractView {
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="../../assets/images/logo.png" />
+            <img class="logo" src="/static//assets/images/logo.png" />
           </div>
         </aside>
         <article class="right">
@@ -39,12 +39,8 @@ export default class extends AbstractView {
               />
             </form>
             <div class="btn_container">
-              <button class="btn btn-cancel" id="cancelBtn" onclick="cancel">
-                Cancel
-              </button>
-              <button class="btn btn-signup" id="signupBtn" onclick="signup">
-                Sign Up
-              </button>
+            <a href='/' data-link>Cancel</a>
+            <a href='/' data-link>Sign up</a>
             </div>
           </div>
         </article>
