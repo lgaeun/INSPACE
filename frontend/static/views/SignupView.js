@@ -40,7 +40,7 @@ export default class extends AbstractView {
             </form>
             <div class="btn_container">
             <a href='/' data-link>Cancel</a>
-            <a href='/' data-link id="signUp">Sign up</a>
+            <a href='/' data-link><button id="signUp">Sign up</button></a>
             </div>
           </div>
         </article>
@@ -64,16 +64,16 @@ export default class extends AbstractView {
 
       // 이름, 이메일 , 비밀번호 검증
       if (name === "") {
-        $signUp.href = "";
+        $signUp.parentElement.href = "";
         alert("이름을 입력해주세요.");
       } else if (regEmail.test(email) !== true) {
-        $signUp.href = "";
+        $signUp.parentElement.href = "";
         alert("이메일을 입력해주세요.");
       } else if (regPassword.test(password) !== true) {
-        $signUp.href = "";
+        $signUp.parentElement.href = "";
         alert("비밀번호를 정확히 입력해주세요.");
       } else if (password !== passwordconfirm) {
-        $signUp.href = "";
+        $signUp.parentElement.href = "";
         alert("비밀번호가 맞지 않습니다.");
       } else {
         // 회원가입 유저 요청 데이터

@@ -44,6 +44,7 @@ const router = async () => {
   const routes = [
     { path: "/signup", view: SignupView },
     { path: "/", view: LoginView },
+    { path: "/select", view: SelectView },
   ];
 
   // Test each route for potential match
@@ -94,10 +95,9 @@ document.addEventListener("DOMContentLoaded", () => {
   //클릭하면.
   document.body.addEventListener("click", (e) => {
     //index.html  data-link 속성을 가진 애들만.
-    console.log(e.target.parentElement);
-    if (e.target.matches("[data-link]")) {
+    if (e.target.parentElement.matches("[data-link]")) {
       e.preventDefault(); //원래 a링크의 기본 속성 막기.
-      navigateTo(e.target.href); //히스토리 생성.
+      navigateTo(e.target.parentElement.href); //히스토리 생성.
     }
   });
 
