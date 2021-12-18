@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const UserSchema = require("./schemas/user");
 const TicketSchema = require("./schemas/ticket");
-const SeatSchema = require("./schemas/seat");
+const PositionSchema = require("./schemas/position");
 
 const User = mongoose.model("User", UserSchema);
 const Ticket = mongoose.model("Ticket", TicketSchema);
-const Seat = mongoose.model("Seat", SeatSchema);
+const Position = mongoose.model("Position", PositionSchema);
 
 exports.User = User;
 exports.Ticket = Ticket;
-exports.Seat = Seat;
+exports.Position = Position;
