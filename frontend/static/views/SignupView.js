@@ -1,14 +1,17 @@
-import Login from "./Login.js";
+import AbstractView from "./AbstractView.js";
 
-function Signup() {
-  const $root = document.getElementById("root");
-
-  $root.innerHTML = `
-   <div class="bg">
+export default class extends AbstractView {
+  constructor(params) {
+    super(params);
+    this.setTitle("Dashboard");
+  }
+  async getHtml() {
+    return `
+    <div class="bg">
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="/assets/images/logo.png" />
+            <img class="logo" src="../../assets/images/logo.png" />
           </div>
         </aside>
         <article class="right">
@@ -47,11 +50,8 @@ function Signup() {
         </article>
       </main>
     </div>
-`;
+  `;
+  }
 
-  const $backBtn = document.getElementById("cancelBtn");
-
-  $backBtn.addEventListener("click", Login);
+  async defaultFunc() {}
 }
-
-export default Signup;

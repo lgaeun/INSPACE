@@ -1,4 +1,5 @@
 import AbstractView from "./AbstractView.js";
+import SignupView from "./SignupView.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -38,7 +39,7 @@ export default class extends AbstractView {
             </button>
             <div id="form-box">
               <ul>
-                <a href='/posts' data-link><button id="register">회원가입</button></a>
+                <a href='/signup' data-link><button id="register">회원가입</button></a>
                 <li id="findPassword">비밀번호 찾기</li>
               </ul>
             </div>
@@ -49,7 +50,7 @@ export default class extends AbstractView {
   `;
   }
 
-  async defaltFunc() {
+  async defaultFunc() {
     const $register = document.getElementById("register");
 
     $register.addEventListener("click", () => {});
@@ -58,6 +59,15 @@ export default class extends AbstractView {
 
     $loginBtn.addEventListener("click", () => {
       //서버에 id, password POST 후 Response 처리
+    });
+
+    document.body.addEventListener("click", (e) => {
+      //index.html  data-link 속성을 가진 애들만.
+      if (e.target.matches("[data-link]")) {
+        console.log("test-----------" + e.target.link);
+        e.preventDefault(); //원래 a링크의 기본 속성 막기.
+        navigateTo(e.target.href); //히스토리 생성.
+      }
     });
   }
 }
