@@ -14,10 +14,10 @@ const reservationRouter = require("./routes/seats");
 const loginRequired = require('./middlewares/login-required');
 const { passport } = require("passport");
 const session = require('express-session');
-
+require('dotenv').config()
 require('./passport')();
 mongoose.connect(
-    "mongodb+srv://doosan:bbc0410@simple-board-cluster.mdnn7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    DB_URL
 );
 
 mongoose.connection.on("connected", () => {
@@ -41,7 +41,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: "mongodb+srv://doosan:bbc0410@simple-board-cluster.mdnn7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+        mongoUrl: DB_URL,
     })
 }))
 
