@@ -1,6 +1,7 @@
 import MainView from "../views/MainView.js";
 import LoginView from "../views/LoginView.js";
 import SignupView from "../views/SignupView.js";
+import TicketView from "../views/TicketView.js";
 
 //연결한 뷰 컴포넌트 가져오기
 
@@ -45,8 +46,9 @@ const router = async () => {
   const routes = [
     { path: "/signup", view: SignupView },
     { path: "/", view: LoginView },
-    { path: "/select", view: SelectView },
+    // { path: "/select", view: SelectView },
     { path: "/main", view: MainView },
+    { path: "/ticket", view: TicketView },
   ];
 
   // Test each route for potential match
@@ -97,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //클릭하면.
   document.body.addEventListener("click", (e) => {
     // console.log(e.target);
-    // e.preventDefault();
+    // e.preventDefault(); INFP
     //index.html  data-link 속성을 가진 애들만.
 
     //해당 링크로 넘어가기 위한 엘리먼트를 감싼 <a> 태그 = e.target.parentElement
