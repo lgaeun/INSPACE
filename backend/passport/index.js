@@ -10,12 +10,12 @@ module.exports = () => {
     passport.use(local);
 
     passport.serializeUser((user, done) => {
-        done(null, user.id); //_id로 받아주기 
+        done(null, user); //_id로 받아주기 
     });
-    //이 세션 데이터를 가진 사람을 db에서 찾아줘.
-    passport.deserializeUser((id, done) => {
+
+    passport.deserializeUser((user, done) => {
         //디비에서 위에있는 user.id로 정보를 찾은다음
-        User.findOne({ _id: id }, (err, user) => {
+        User.findOne({ _id: user.id }, (err, user) => {
             done(null, user); //검증성공
         })
 
