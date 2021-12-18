@@ -11,5 +11,5 @@ export default class {
     return "";
   }
 
-  async defaltFunc() {}
+  async defaultFunc() {}
 }
