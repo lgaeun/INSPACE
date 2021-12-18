@@ -45,7 +45,7 @@ const router = async () => {
   const routes = [
     { path: "/signup", view: SignupView },
     { path: "/", view: LoginView },
-    { path: "/select", view: SelectView },
+    // { path: "/select", view: SelectView },
     { path: "/main", view: MainView },
   ];
 
