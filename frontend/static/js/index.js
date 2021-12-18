@@ -1,6 +1,7 @@
 import MainView from "../views/MainView.js";
 import LoginView from "../views/LoginView.js";
 import SignupView from "../views/SignupView.js";
+import TicketView from "../views/TicketView.js";
 
 //연결한 뷰 컴포넌트 가져오기
 
@@ -47,6 +48,7 @@ const router = async () => {
     { path: "/", view: LoginView },
     // { path: "/select", view: SelectView },
     { path: "/main", view: MainView },
+    { path: "/ticket", view: TicketView },
   ];
 
   // Test each route for potential match
