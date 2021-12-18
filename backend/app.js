@@ -17,7 +17,7 @@ const session = require('express-session');
 require('dotenv').config()
 require('./passport')();
 mongoose.connect(
-    DB_URL
+    process.env.DB_URL
 );
 
 mongoose.connection.on("connected", () => {
@@ -41,7 +41,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: DB_URL,
+        mongoUrl: process.env.DB_URL,
     })
 }))
 
