@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //클릭하면.
   document.body.addEventListener("click", (e) => {
     // console.log(e.target);
-    // e.preventDefault();
+    // e.preventDefault(); INFP
     //index.html  data-link 속성을 가진 애들만.
 
     //해당 링크로 넘어가기 위한 엘리먼트를 감싼 <a> 태그 = e.target.parentElement
