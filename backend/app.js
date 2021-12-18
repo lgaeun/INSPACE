@@ -12,7 +12,6 @@ const paymentsRouter = require("./routes/payments");
 const reservationRouter = require("./routes/seats");
 // const loginRouter = require('./routes/login');
 const loginRequired = require('./middlewares/login-required');
-const { passport } = require("passport");
 const session = require('express-session');
 require('dotenv').config()
 require('./passport')();
