@@ -15,10 +15,10 @@ const TicketSchema = new Schema(
       type: Number,
       rquired: true,
     }, //구매한 시간
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
+    // user: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "User",
+    // },
   },
   { timestamps: true }
 );

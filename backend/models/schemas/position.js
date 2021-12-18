@@ -2,17 +2,18 @@ const { Schema } = require("mongoose");
 
 const PositionSchema = new Schema(
   {//좌석이름
-    name: {
-      type: String,
+    position: {
+      type: Number,
       required: true,
     }, //속한 섹션
-    section:{
+    table:{
       type:String,
       required: true,
     },//좌석이용여부
     isempty: {
       type: Boolean,
-      default: true,
+      default: false,
+      // required: true,
     }, //좌석을 반납하거나 이동한시간
     deletedAt:{
       type:Date,

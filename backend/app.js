@@ -9,10 +9,9 @@ const passport = require('passport');
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const paymentsRouter = require("./routes/payments");
-const reservationRouter = require("./routes/seats");
+const reservationRouter = require("./routes/reservation");
 // const loginRouter = require('./routes/login');
 const loginRequired = require('./middlewares/login-required');
-const { passport } = require("passport");
 const session = require('express-session');
 
 require('./passport')();

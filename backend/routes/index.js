@@ -34,7 +34,7 @@ router.post(
 router.post('/login', passport.authenticate('local', {
     failureRedirect: '/fail'
 }), function(res, req) {
-    res.statusCode(200).json({ message: 'success' })
+    res.status(200).json({ message: 'success' })
 })
 
 router.get("/logout", (req, res, next) => {

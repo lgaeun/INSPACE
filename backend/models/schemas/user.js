@@ -1,5 +1,4 @@
 const { Schema } = require("mongoose");
-const shortId = require("./types/shortId");
 
 const UserSchema = new Schema(
   {
@@ -17,12 +16,24 @@ const UserSchema = new Schema(
     },//이제껏 결제한 총 시간
     totalTime: {
       type: Number,
+      required: true,
+      default: 0,
     },//사용한 총 시간
     usedTime: {
       type: Number,
-    },//가장 최근에 결제한 티켓
+      required: true,
+      default: 0,
+    },
+    remainingTime:{
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    //가장 최근에 결제한 티켓
     userTicket:{
-      type:Schema.Types.ObjectId
+      type:Schema.Types.ObjectId,
+      ref: "Ticket"
+    
     },//좌석 position 과 연결
     userSeat: {
       type: Schema.Types.ObjectId,
@@ -31,6 +42,8 @@ const UserSchema = new Schema(
     userTicketHistory: [{
       type: Schema.Types.ObjectId,
       ref: "Ticket",
+      default: [],
+      required: true,
     }],
   },
   { timestamps: true }

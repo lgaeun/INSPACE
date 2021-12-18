@@ -15,8 +15,8 @@ router.get(
     if (!user) {
       throw new Error("존재하지 않는 유저입니다.");
     }
-
-    const { category, price, duration } = user.userTicket;
+//여기서 duration은 초단위로 계산되어있음 변환해줘야 합니다.
+    const { category, price,duration } = user.userTicket;
     const { startTime } = user.userSeat;
     res.json({ category, price, duration, startTime });
     res.status(200).json({ message: "success" });
