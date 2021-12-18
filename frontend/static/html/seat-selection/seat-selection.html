@@ -10,9 +10,9 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="index.css" />
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="paycheck.css" />
+    <link rel="stylesheet" href="../../css/seat-selection.css" />
+    <link rel="stylesheet" href="../../css/reset.css" />
+    <link rel="stylesheet" href="../../css/paycheck.css" />
     <title>this is index</title>
   </head>
   <body>
@@ -39,15 +39,17 @@
           <main class="seat-view">
             <nav class="seat-view__nav">
               <button type="button" class="btn btn-primary">
-                <div class="plus-icon"><img src="arrow-left.svg" /></div>
+                <div class="plus-icon">
+                  <img src="../../assets/svg/arrow-left.svg" />
+                </div>
                 <div class="select-label">이전페이지로</div>
               </button>
             </nav>
 
             <div class="information">
-              <img src="./table-ok.png" />
+              <img src="../../assets/images/table-ok.png" />
               <p class="table-status">빈자리 있음</p>
-              <img src="./table-full.png" />
+              <img src="../../assets/images/table-full.png" />
               <p class="table-status full">빈자리 없음</p>
             </div>
 
@@ -63,6 +65,9 @@
         </div>
       </div>
     </div>
-    <script type="module" src="index.js"></script>
+    <script
+      type="module"
+      src="../../js/seat-selection/seat-selection.js"
+    ></script>
   </body>
 </html>
