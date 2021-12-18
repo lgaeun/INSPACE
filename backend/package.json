@@ -7,6 +7,7 @@
         "nodemon": "nodemon ./bin/www"
     },
     "dependencies": {
+        "connect-mongo": "^4.6.0",
         "cookie-parser": "~1.4.4",
         "crypto": "^1.0.1",
         "debug": "~2.6.9",
@@ -17,11 +18,10 @@
         "mongoose": "^6.1.2",
         "morgan": "~1.9.1",
         "nanoid": "^3.1.30",
+        "passport": "^0.5.2",
+        "passport-local": "^1.0.0",
         "prettier": "^2.5.1",
-        "pug": "2.0.0-beta11",
-        "passport": "^0.5.0",
-        "passport-local": "^1.0.0"
-
+        "pug": "2.0.0-beta11"
     },
     "devDependencies": {
         "eslint": "^8.4.1",

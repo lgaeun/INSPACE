@@ -6,6 +6,7 @@ const { User, Ticket, Seat } = require("../models/index");
 const nodemailer = require('nodemailer')
 const generateRandomPassword = require('../utils/generate-random-password')
 const sendMail = require('../utils/send-mail')
+const passport = require('passport')
 
 router.post(
     "/signup",
