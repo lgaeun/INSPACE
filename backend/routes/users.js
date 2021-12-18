@@ -1,6 +1,6 @@
 var express = require("express");
 const asyncHandler = require("../utils/async-handler");
-const { User, Ticket, Seat, Position } = require("../models/index");
+const { User, Ticket, Position } = require("../models/index");
 const { modelNames } = require("mongoose");
 var router = express.Router();
 
@@ -28,6 +28,7 @@ router.get(
 );
 
 router.get(
+<<<<<<< HEAD
   "/:id/checkOut",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
@@ -54,3 +55,4 @@ router.get(
 
 
 module.exports = router
+

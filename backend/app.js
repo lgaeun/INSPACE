@@ -13,10 +13,10 @@ const reservationRouter = require("./routes/reservation");
 // const loginRouter = require('./routes/login');
 const loginRequired = require('./middlewares/login-required');
 const session = require('express-session');
-
+require('dotenv').config()
 require('./passport')();
 mongoose.connect(
-    "mongodb+srv://doosan:bbc0410@simple-board-cluster.mdnn7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    process.env.DB_URL
 );
 
 mongoose.connection.on("connected", () => {
@@ -40,7 +40,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: "mongodb+srv://doosan:bbc0410@simple-board-cluster.mdnn7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+        mongoUrl: process.env.DB_URL,
     })
 }))
 

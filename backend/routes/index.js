@@ -3,9 +3,9 @@ var router = express.Router();
 const hashPassword = require("../utils/hash-password");
 const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Seat } = require("../models/index");
-const nodemailer = require('nodemailer')
 const generateRandomPassword = require('../utils/generate-random-password')
 const sendMail = require('../utils/send-mail')
+const passport = require('passport')
 
 router.post(
     "/signup",
@@ -22,18 +22,19 @@ router.post(
             return;
         }
 
-        await User.create({
+        const doosan = await User.create({
             name,
             userId,
             password: hashedPassword,
         });
+        console.log("doosan", doosan)
         res.status(201).json({ message: "success" });
     })
 );
 
 router.post('/login', passport.authenticate('local', {
     failureRedirect: '/fail'
-}), function(res, req) {
+}), function(req, res) {
     res.status(200).json({ message: 'success' })
 })
 
@@ -50,8 +51,6 @@ router.get("/logout", (req, res, next) => {
 //         if (!Pname) {
 //             throw new Error('유효한 사용자가 아닙니다.')
 //         }
-
-
 //     })
 // )
 
@@ -65,49 +64,58 @@ router.post('/reset-password', asyncHandler(async(req, res) => {
     const password = generateRandomPassword();
     await User.updateOne({ userId }, {
         password: hashPassword(password),
-        passwordReset: true,
     })
 
-    await sendMail(email, '비밀번호가 변경되었습니다.', `변경된 비밀번호는 : ${password} 입니다.`);
+    await sendMail(userId, '비밀번호가 변경되었습니다.', `변경된 비밀번호는 : ${password} 입니다.`);
 }))
 
-router.post('/change-password', asyncHandler(async(req, res) => {
-    const { currentPassword, password } = req.body;
+// router.post('/change-password', asyncHandler(async(req, res) => {
+//     const { currentPassword, password } = req.body;
+//     const user = await User.findOne({ _id: req.user.id });
+
+//     if (user.password !== hashPassword(currentPassword)) {
+//         throw new Error('임시 비밀번호가 일치하지 않습니다.');
+//     }
+
+//     await User.updateOne({ _id: user.id }, {
+//         password: hashPassword(password),
+//         passwordReset: false,
+
+
+//     });
+
+//     res.status(200).json({ message: "success" });
+// }))
+
+
+router.post('/info-change', asyncHandler(async(req, res, next) => { //postman에서 검증을 하면 socket hang up오류가 나옵니다 ㅠㅠ
+    console.log('a')
+    const { name, password, newpassword, confirmpassword } = req.body;
     const user = await User.findOne({ _id: req.user.id });
-
-    if (user.password !== hashPassword(currentPassword)) {
-        throw new Error('임시 비밀번호가 일치하지 않습니다.');
+    console.log('b')
+    if (user.name != name) {
+        console.log
+        throw new Error('이름이 다릅니다.')
     }
-
-    await User.updateOne({ _id: user.id }, {
-        password: hashPassword(password),
-        passwordReset: false,
-
-
-    });
-
-    res.status(200).json({ message: "success" });
-}))
-
-
-router.post('/info-change', asyncHandler(async(req, res, next) => {
-    const { password, newpassword, confirmpassword } = req.body;
-    const user = await User.findOne({ _id: req.user.id });
-
-    if (user.password != hashPassword(password)) {
-        throw new Error('기존 비밀번호를 다시 입력해주세요')
-    } else if (hashPassword(password) == hashPassword(newpassword)) {
-        throw new Error('기존비밀번호와 새 비밀번호를 다르게 입력해주세요')
-    }
+    console.log((user.password != (password)))
+    console.log('c')
+    console.log(user.password)
+    console.log(hashPassword(password)) // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
+        // if (user.password != hashPassword(password)) {
+        //     throw new Error('기존 비밀번호를 다시 입력해주세요')
+        // } else if (hashPassword(password) == hashPassword(newpassword)) {
+        //     throw new Error('기존비밀번호와 새 비밀번호를 다르게 입력해주세요')
+        // }
+    console.log('d')
     if (newpassword != confirmpassword) {
         throw new Error('새비밀번호를 다시 확인해주세요.')
     }
-    await User.updateOne({ _id: user.id }, {
-        password: hashPassword(password)
-
-
-
+    console.log('e')
+    await User.updateOne({ _id: user._id }, {
+        password: hashPassword(newpassword)
     })
+    console.log('f')
+
 }))
 
 module.exports = router;
