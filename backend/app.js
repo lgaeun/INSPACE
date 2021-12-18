@@ -9,8 +9,8 @@ const passport = require('passport');
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const paymentsRouter = require("./routes/payments");
-const seatsRouter = require("./routes/seats");
-const loginRouter = require('./routes/login');
+const reservationRouter = require("./routes/seats");
+// const loginRouter = require('./routes/login');
 const loginRequired = require('./middlewares/login-required');
 const { passport } = require("passport");
 const session = require('express-session');
@@ -49,10 +49,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+// app.use("/users", usersRouter);//이부분 loginrequired 달아야 할까요?
 app.use("/payments", loginRequired, paymentsRouter);
 app.use("/users", loginRequired, usersRouter);
-app.use('/login', loginRequired, loginRouter)
+// app.use('/login', loginRequired, loginRouter)
+app.use('/reservation', loginRequired, reservationRouter)
+
 
 
 
