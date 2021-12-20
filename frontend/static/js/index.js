@@ -2,7 +2,7 @@ import MainView from "../views/MainView.js";
 import LoginView from "../views/LoginView.js";
 import SignupView from "../views/SignupView.js";
 import TicketView from "../views/TicketView.js";
-
+import FindView from "../views/FindView.js";
 //연결한 뷰 컴포넌트 가져오기
 
 const pathToRegex = (path) =>
@@ -46,8 +46,9 @@ const router = async () => {
 
   // URL + 받아올 파라미터 의 형태를 고정해서 만들어놔야함.
   const routes = [
-    { path: "/signup", view: SignupView },
     { path: "/", view: LoginView },
+    { path: "/signup", view: SignupView },
+    { path: "/find", view: FindView },
     // { path: "/select", view: SelectView },
     { path: "/main", view: MainView },
     { path: "/ticket", view: TicketView },

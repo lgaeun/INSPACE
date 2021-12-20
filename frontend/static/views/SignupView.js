@@ -29,7 +29,7 @@ export default class extends AbstractView {
               <input
                 type="password"
                 id="password"
-                placeholder="알바펫,숫자 포함 8~15자리"
+                placeholder="알바펫,숫자 포함 8자리 이상"
               />
 
               <label for="confirm">Password Confirm</label>
@@ -40,8 +40,8 @@ export default class extends AbstractView {
               />
             </form>
             <div class="btn_container">
-            <a href='/' data-link><button>Cancel</button></a>
-            <a href='/' data-link><button id="signUp">Sign up</button></a>
+            <a href='/' data-link><button class="btn btn-cancel">Cancel</button></a>
+            <a href='/' data-link><button id="signUp" class="btn btn-signup">Sign up</button></a>
             </div>
           </div>
         </article>
@@ -61,7 +61,7 @@ export default class extends AbstractView {
       // 이메일 정규표현식
       const regEmail =
         /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-      const regPassword = /^[a-zA-Z0-9]{8,15}$/;
+      const regPassword = /^[a-zA-Z0-9]{8,30}$/;
 
       // 이름, 이메일 , 비밀번호 검증
       if (name === "") {
