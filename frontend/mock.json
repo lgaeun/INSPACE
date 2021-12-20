@@ -1,0 +1,68 @@
+{
+  "seats": [
+    {
+      "position": 1,
+      "talbe": "T1",
+      "isempty": true,
+      "startTime": "2021-12-20 23:00:00"
+    },
+    {
+      "position": 2,
+      "talbe": "T1",
+      "isempty": false,
+      "startTime": "2021-12-20 23:00:00"
+    },
+    {
+      "position": 3,
+      "talbe": "T1",
+      "isempty": false,
+      "startTime": "2021-12-20 23:00:00"
+    },
+    {
+      "position": 4,
+      "talbe": "T1",
+      "isempty": true,
+      "startTime": "2021-12-20 23:00:00"
+    }
+  ],
+  "times": [
+    {
+      "table-row1": [
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null,
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null
+      ]
+    },
+    {
+      "table-row2": [null, "1h", "2h3m", "30m", null, null]
+    },
+    {
+      "table-row3": [null, "1h", "2h3m", "30m", null, null]
+    },
+    {
+      "table-row4": [
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null,
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { createTable, createSmallTable } from "./Table.js";
+import { fetchSeatData } from "../data.js";
 import selectSeat from "./selectSeat.js";
 
 export default function initSeats() {
@@ -8,65 +9,31 @@ export default function initSeats() {
   const row3 = document.getElementById("table-row3");
   const row4 = document.getElementById("table-row4");
 
-  const dummyTimesLeft = [
-    {
-      "table-row1": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-      ],
-    },
-    {
-      "table-row2": [null, "1h", "2h3m", "30m", null, null],
-    },
-    {
-      "table-row3": [null, "1h", "2h3m", "30m", null, null],
-    },
-    {
-      "table-row4": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-      ],
-    },
-  ];
+  function bringSeatInfo() {
+    fetch("http://localhost:3000/times")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        data.forEach((obj) => {
+          const row = Object.entries(obj)[0][0];
+          const hours = Object.entries(obj)[0][1];
+          const occupied = document.querySelectorAll(`#${row} li`);
 
-  function revealTime() {
-    //db에서 가져오는 시점에 이미 자리가 차 있는 좌석들은 잔여 시간 표시하기
-    dummyTimesLeft.forEach((obj) => {
-      const row = Object.entries(obj)[0][0];
-      const hours = Object.entries(obj)[0][1];
-      const occupied = document.querySelectorAll(`#${row} li`);
-
-      hours.forEach((hour, idx) => {
-        if (hour !== null) {
-          occupied[idx].innerText = hour;
-          occupied[idx].style.color = "white";
-        } else {
-          occupied[idx].classList.add("available");
-          occupied[idx].innerText = `${occupied[idx].getAttribute("idx")}번`;
-        }
-        occupied[idx].style.fontSize = "0.7rem";
-      });
-    });
+          hours.forEach((hour, idx) => {
+            if (hour !== null) {
+              occupied[idx].innerText = hour;
+              occupied[idx].style.color = "white";
+            } else {
+              occupied[idx].classList.add("available");
+              occupied[idx].innerText = `${occupied[idx].getAttribute(
+                "idx"
+              )}번`;
+            }
+            occupied[idx].style.fontSize = "0.7rem";
+          });
+        });
+      })
+      .catch((err) => console.log(err));
   }
 
   function createSeats() {
@@ -86,9 +53,12 @@ export default function initSeats() {
     }
   }
 
-  window.onload = () => {
-    createSeats();
-    revealTime();
-  };
+  // window.onload = () => {
+  //   createSeats();
+  //   showSeatInfo();
+  // };
+  bringSeatInfo();
+  createSeats();
+
   section.addEventListener("click", selectSeat);
 }
