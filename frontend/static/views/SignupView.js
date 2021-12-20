@@ -43,7 +43,7 @@ export default class extends AbstractView {
             <a href='/' data-link><button>Cancel</button></a>
             <a href='/' data-link><button id="signUp">Sign up</button></a>
             </div>
-          </div>q
+          </div>
         </article>
       </main>
     </div>
