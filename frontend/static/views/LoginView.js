@@ -9,7 +9,7 @@ export default class extends AbstractView {
     super(params);
     this.setTitle("Dashboard");
   }
-  async getHtml() {
+  getHtml() {
     return `
     <div class="bg">
       <main class="sign-in">
@@ -56,7 +56,7 @@ export default class extends AbstractView {
   `;
   }
 
-  async defaultFunc() {
+  defaultFunc() {
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
 
@@ -93,6 +93,7 @@ export default class extends AbstractView {
         );
       }
 
+      $loginBtn.parentElement.href = "/main";
       const loginSuccessedUser = userData.find(
         (user) => loginUser.id === user.id
       );

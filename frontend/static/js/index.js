@@ -1,7 +1,5 @@
-import MainView from "../views/MainView.js";
-import LoginView from "../views/LoginView.js";
-import SignupView from "../views/SignupView.js";
-import TicketView from "../views/TicketView.js";
+import LoginView from "../views/Login.js";
+import SignupView from "../views/Signup.js";
 
 //연결한 뷰 컴포넌트 가져오기
 
@@ -44,15 +42,20 @@ const router = async () => {
 
   // URL + 받아올 파라미터 의 형태를 고정해서 만들어놔야함.
   const routes = [
-    { path: "/signup", view: SignupView },
     { path: "/", view: LoginView },
-    // { path: "/select", view: SelectView },
-    { path: "/main", view: MainView },
-    { path: "/ticket", view: TicketView },
+    {
+      path: "/signup",
+      view: SignupView,
+    },
   ];
 
   // Test each route for potential match
   const potentialMatches = routes.map((route) => {
+    console.log(location.pathname);
+    console.log(pathToRegex(route.path));
+    console.log(location.pathname.match(pathToRegex(route.path)));
+    console.log("-------");
+
     return {
       route: route,
       //현재 위치와 routes에 정해놓은 경로와 매치 되는지 확인
@@ -69,6 +72,13 @@ const router = async () => {
     (potentialMatch) => potentialMatch.result !== null
   );
 
+  console.log("match---------");
+  console.log(
+    potentialMatches.find((potentialMatch) => potentialMatch.result !== null)
+  );
+
+  console.log(!match);
+
   ////따라서 route 경로에 지정해 놓지 않은 , 즉 존재하지 않는 경로는
   // 기본 홈(/)으로 돌아가게 경로 지정.
   if (!match) {
@@ -84,10 +94,12 @@ const router = async () => {
   //   route: { path: "/", view: Dashboard },
   //   result: [location.pathname],
   // };
+  console.log(view.getHtml());
 
   //index.html의  app div 에 view의 html 태그들을 넣어줌.
   document.querySelector("#root").innerHTML = await view.getHtml();
-  view.defaultFunc();
+
+  view.defaltFunc();
 };
 
 //페이지 로드
@@ -98,16 +110,11 @@ window.addEventListener("popstate", router);
 document.addEventListener("DOMContentLoaded", () => {
   //클릭하면.
   document.body.addEventListener("click", (e) => {
-    // console.log(e.target);
-    // e.preventDefault(); INFP
     //index.html  data-link 속성을 가진 애들만.
-
-    //해당 링크로 넘어가기 위한 엘리먼트를 감싼 <a> 태그 = e.target.parentElement
-    if (e.target.parentElement.matches("[data-link]")) {
-      //e.stopPropagation();
-      //console.log("test-----------" + e.target.link);
+    if (e.target.matches("[data-link]")) {
+      console.log("test-----------" + e.target.link);
       e.preventDefault(); //원래 a링크의 기본 속성 막기.
-      navigateTo(e.target.parentElement.href); //히스토리 생성.
+      navigateTo(e.target.href); //히스토리 생성.
     }
   });
 
