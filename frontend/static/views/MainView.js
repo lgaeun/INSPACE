@@ -7,7 +7,7 @@ export default class extends AbstractView {
     this.setTitle("Main Page");
   }
 
-  async getHtml() {
+  getHtml() {
     return `
     <div class="main-container">
       <div class="main-section">
@@ -24,14 +24,14 @@ export default class extends AbstractView {
           <a href="/" data-link><button class="btn" type="button">시간 연장</button></a>
           <a href="/" data-link><button class="btn" type="button">좌석 이동</button></a>
           <a href="/" data-link><button class="btn" type="button" onclick="checkOut(true)">퇴실</button></a>
-          <a href="/" data-link><button class="btn" type="button">좌석 선택</button></a>
+          <a href="/select" data-link><button class="btn" type="button">좌석 선택</button></a>
           </div>
         </div>
       </div>
         `;
   }
 
-  async defaultFunc() {
+  defaultFunc() {
     const endTime = new Date("2021-12-19 01:34:00");
 
     const progressColor = "#daecd7";

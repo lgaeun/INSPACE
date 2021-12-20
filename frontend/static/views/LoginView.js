@@ -1,6 +1,6 @@
 // import { doc } from "prettier";
 // import { response } from "express";
-import e from "express";
+// import e from "express";
 import AbstractView from "./AbstractView.js";
 import SignupView from "./SignupView.js";
 
@@ -9,7 +9,7 @@ export default class extends AbstractView {
     super(params);
     this.setTitle("Dashboard");
   }
-  async getHtml() {
+  getHtml() {
     return `
     <div class="bg">
       <main class="sign-in">
@@ -56,7 +56,7 @@ export default class extends AbstractView {
   `;
   }
 
-  async defaultFunc() {
+  defaultFunc() {
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
 
@@ -98,7 +98,7 @@ export default class extends AbstractView {
         // 당일권 회원이라면 이용권 구매 UI로 이동한다.
       }
 
-      $loginBtn.parentElement.href = "/select";
+      $loginBtn.parentElement.href = "/main";
     });
   }
 }
