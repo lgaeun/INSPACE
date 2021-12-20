@@ -38,6 +38,8 @@ const navigateTo = (url) => {
   router();
 };
 
+const paymentObj = {};
+
 const router = async () => {
   // console.log(pathToRegex("/posts/:id/:pw"));
   // console.log("/posts/eunsol/123".match(pathToRegex("/posts/:id/:pw")));
@@ -86,8 +88,17 @@ const router = async () => {
   // };
 
   //index.html의  app div 에 view의 html 태그들을 넣어줌.
-  document.querySelector("#root").innerHTML = await view.getHtml();
+  document.querySelector("#root").innerHTML = view.getHtml();
   view.defaultFunc();
+
+  // let temp = view.defaultFunc();
+  // console.log(temp);
+
+  // if (temp) {
+  //   paymentObj = { ...paymentObj, temp };
+  // } else {
+  //   view.defaultFunc();
+  // }
 };
 
 //페이지 로드

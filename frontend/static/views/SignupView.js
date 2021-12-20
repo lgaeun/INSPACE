@@ -6,7 +6,7 @@ export default class extends AbstractView {
     super(params);
     this.setTitle("Dashboard");
   }
-  async getHtml() {
+  getHtml() {
     return `
     <div class="bg">
       <main class="sign-in">
@@ -43,14 +43,14 @@ export default class extends AbstractView {
             <a href='/' data-link><button>Cancel</button></a>
             <a href='/' data-link><button id="signUp">Sign up</button></a>
             </div>
-          </div>q
+          </div>
         </article>
       </main>
     </div>
   `;
   }
 
-  async defaultFunc() {
+  defaultFunc() {
     const $signUp = document.getElementById("signUp");
 
     $signUp.addEventListener("click", () => {
