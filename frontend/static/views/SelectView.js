@@ -49,7 +49,7 @@ export default class extends AbstractView {
 
             <div id="toast"></div>
 
-            <div class="section-container">
+            <div id="section-container">
               <div id="table-row1"></div>
               <div id="table-row2"></div>
               <div id="table-row3"></div>

@@ -16,6 +16,7 @@ function toast(string) {
 }
 
 const selectSeat = (e) => {
+  console.log(e.target);
   const classes = e.target.classList;
   let mySeat = e.target.innerText;
   const display = document.querySelector(".payment-box h2 p");

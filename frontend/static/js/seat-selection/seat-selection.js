@@ -1,15 +1,12 @@
 import { createTable, createSmallTable } from "./Table.js";
 import selectSeat from "./selectSeat.js";
 
-// let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
-
 export default function initSeats() {
   const section = document.getElementById("section-container");
   const row1 = document.getElementById("table-row1");
   const row2 = document.getElementById("table-row2");
   const row3 = document.getElementById("table-row3");
   const row4 = document.getElementById("table-row4");
-  let finalSeatsLeft;
 
   function bringSeatInfo() {
     let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
@@ -79,5 +76,8 @@ export default function initSeats() {
   bringSeatInfo();
   createSeats();
 
-  section.addEventListener("click", selectSeat);
+  console.log(section);
+  section.addEventListener("click", (e) => {
+    selectSeat(e);
+  });
 }
