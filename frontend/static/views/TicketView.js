@@ -37,7 +37,7 @@ export default class extends AbstractView {
           </article>
         </section>
         <div>
-          <a href="/select" id="next-Btn"><button>NEXT</button></a>
+          <a href="/select" id="next-Btn" data-link><button>NEXT</button></a>
         </div>
       </main>
     </div>`;
@@ -67,12 +67,12 @@ export default class extends AbstractView {
         const ticketData = objectFunc();
         // localStorage에 추가
         sessionStorage.setItem("ticket", JSON.stringify(ticketData));
-
         //티켓데이터 obj생성함수
         function objectFunc() {
           return {
             time: selectedTime,
             auth: userAuth,
+            history: `${sessionStorage.getItem("history")}`,
           };
         }
       };
