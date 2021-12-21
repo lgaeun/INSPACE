@@ -113,7 +113,7 @@
   width: 75px;
 }
 
-.section-container {
+#section-container {
   display: flex;
   justify-content: center;
 }
