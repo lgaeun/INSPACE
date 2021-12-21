@@ -8,22 +8,39 @@ export default class extends AbstractView {
   }
   getHtml() {
     return `
+    <style>
+      @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+    </style>
     <div class="bg">
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="/static//assets/images/logo.png" />
+          <h1>inspace</h1>
           </div>
         </aside>
         <article class="right">
-          <div class="sign-in_container">
-            <span class="sign-in_title">패스워드 찾기</span>
-            <form class="sign-in_form">
+          <div class="find_container">
+            <div class="sign-in_title">Find <br> Password</div>
+            <form class="find_form">
+              <div class="form-floating mb-3">
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                placeholder="Name"
+              />
               <label for="name">Name</label>
-              <input type="text" id="name" placeholder="이름을 입력하세요." />
+            </div>
 
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="example@xx.com" />
+            <div class="form-floating mb-3">
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="name@example.com"
+            />
+            <label for="email">Email</label>
+          </div>
             </form>
             <div class="btn_container">
             <a href='/' data-link><button class="btn btn-cancel">Cancel</button></a>
@@ -36,5 +53,10 @@ export default class extends AbstractView {
   `;
   }
 
-  defaultFunc() {}
+  defaultFunc() {
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    document.getElementById("root").appendChild(script);
+  }
 }

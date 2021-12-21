@@ -9,6 +9,8 @@
   font-family: "Chonburi", cursive;
   font-size: 34px;
   padding-left: 20px;
+  text-decoration: #bccbea wavy underline;
+  text-underline-position: under;
 }
 
 .nav-item.dropdown .userIcon {
@@ -41,9 +43,9 @@
 .main-section {
   width: 60vw;
   /* height: 70vh; */
-  background-color: #e7dcc8;
+  background-color: white;
   border-radius: 12px;
-  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .main-section__info {
@@ -124,4 +126,11 @@
   font-size: 14px;
   cursor: pointer;
   /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+}
+
+.main-section__btn--check-in .btn:hover,
+.main-section__btn--check-out .btn:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
 }

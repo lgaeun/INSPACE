@@ -1,4 +1,5 @@
 import AbstractView from "./AbstractView.js";
+import NavComponent from "../js/common/nav.js";
 import userData from "../js/data.js";
 // import e from "express";
 
@@ -10,10 +11,11 @@ export default class extends AbstractView {
   }
 
   getHtml() {
-    return `<body>
-    <div class="bg">
+    return (
+      NavComponent() +
+      `<div class="ticket-bg">
       <main class="ticket-select">
-        <h2>이용권 선택</h2>
+        <h2>Ticket</h2>
         <section class="ticket-box">
           <article class="oneday-box">
             <h3>당일권</h3>
@@ -25,6 +27,7 @@ export default class extends AbstractView {
               <li class="oneday ticket" data-name="24">24시간권 : 25,000원</li>
             </ul>
           </article>
+          <div class="divider"></div>
           <article class="charge-box">
             <h3>충전권</h3>
             <p>시간 내에 사용 가능하며 퇴실시 유지됩니다.</p>
@@ -36,14 +39,20 @@ export default class extends AbstractView {
             </ul>
           </article>
         </section>
-        <div>
-          <a href="/select" id="next-Btn"><button>NEXT</button></a>
-        </div>
       </main>
-    </div>`;
+      <div class="next-btn-wrapper">
+          <a href="/select" data-link><button id="next-btn">NEXT</button></a>
+        </div>
+    </div>`
+    );
   }
 
   defaultFunc() {
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    document.getElementById("root").appendChild(script);
+
     const $tickets = document.querySelectorAll(".ticket");
 
     $tickets.forEach((ticket) => {

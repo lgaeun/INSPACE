@@ -8,36 +8,79 @@ export default class extends AbstractView {
   }
   getHtml() {
     return `
+    <style>
+      @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+    </style>
     <div class="bg">
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="/static//assets/images/logo.png" />
+            <!-- <img class="logo" src="../../assets/images/logo.png" /> -->
+            <h1>inspace</h1>
           </div>
         </aside>
         <article class="right">
           <div class="sign-in_container">
-            <span class="sign-in_title">Sign up</span>
+            <h1 class="sign-in_title">Sign up</h1>
             <form class="sign-in_form">
-              <label for="name">Name</label>
-              <input type="text" id="name" placeholder="이름을 입력하세요." />
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  placeholder="Name"
+                />
+                <label for="name">Name</label>
+              </div>
 
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="example@xx.com" />
+              <!-- <label for="name">Name</label>
+              <input type="text" id="name" placeholder="이름을 입력하세요." /> -->
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  placeholder="name@example.com"
+                />
+                <label for="email">Email</label>
+              </div>
 
-              <label for="password">Password</label>
+              <!-- <label for="email">Email</label>
+              <input type="email" id="email" placeholder="example@xx.com" /> -->
+
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="알바펫,숫자 포함 8자리 이상"
+                />
+                <label for="password">Password</label>
+              </div>
+
+              <!-- <label for="password">Password</label>
               <input
                 type="password"
                 id="password"
                 placeholder="알바펫,숫자 포함 8자리 이상"
-              />
+              /> -->
 
-              <label for="confirm">Password Confirm</label>
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  id="passwordconfirm"
+                  class="form-control"
+                  placeholder="비밀번호를 한 번 더 입력하세요"
+                />
+                <label for="password">Password Confirm</label>
+              </div>
+
+              <!-- <label for="confirm">Password Confirm</label>
               <input
                 type="password"
                 id="passwordconfirm"
                 placeholder="비밀번호를 한 번 더 입력하세요"
-              />
+              /> -->
             </form>
             <div class="btn_container">
             <a href='/' data-link><button class="btn btn-cancel">Cancel</button></a>
@@ -51,6 +94,11 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    document.getElementById("root").appendChild(script);
+
     const $signUp = document.getElementById("signUp");
 
     $signUp.addEventListener("click", () => {

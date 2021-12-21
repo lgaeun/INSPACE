@@ -1,16 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Chonburi&family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap");
+
 @font-face {
   font-family: customFont;
   src: url(./TTRamillas-Regular.otf);
 }
 
-.bg {
+.ticket-bg {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
-  background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1);
-  /* background: url(bg.jpg); */
+  height: 91vh;
+  background-color: #edf0eb;
 }
 .ticket-select {
   display: flex;
@@ -20,29 +21,40 @@
   background-color: white;
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  position: relative;
 }
 
 .ticket-select h2 {
-  font-size: 1.5rem;
-  align-self: center;
-  margin-top: 2rem;
+  font-family: "Chonburi", cursive;
+  margin: 3rem;
+  font-size: 4.3rem;
+  text-decoration: #c28ed1 wavy underline;
+  text-underline-position: under;
 }
 
 .ticket-box {
   display: flex;
-  margin: auto;
-  justify-content: center;
+  margin: 55px auto;
+  width: 80%;
 }
 
+.ticket-box .divider {
+  border-left: 2px solid;
+  height: 100%;
+}
 .oneday-box {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  border-right: solid 1px rgba(94, 94, 94, 0.598);
-  padding-right: 1rem;
+  margin-right: 2rem;
+  text-align: center;
 }
 
 .charge-box {
+  width: 100%;
   margin-left: 2rem;
+  text-align: center;
 }
 
 .oneday-box h3,
@@ -50,22 +62,66 @@
   font-weight: bold;
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  color: rgb(103, 103, 103);
 }
 
 .oneday-box p,
 .charge-box p {
   color: #858585;
+  margin-bottom: 2rem;
+}
+
+.oneday-box ul,
+.charge-box ul {
+  padding-left: 0px;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.oneday-box ul .ticket,
+.charge-box ul .ticket {
+  text-align: center;
 }
 
 .oneday-box .oneday,
 .charge-box .charge {
-  background-color: rgba(121, 167, 135, 0.411);
-  margin: 1rem;
-  font-size: 1rem;
+  color: #ffff;
+  width: 100%;
   padding: 1rem;
-  border-radius: 5px;
-  text-align: center;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin-bottom: 20px;
+}
+
+.oneday-box .oneday:hover,
+.charge-box .charge:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+}
+
+.next-btn-wrapper {
+  position: absolute;
+  width: 160px;
+  right: 40px;
+  bottom: 40px;
+}
+
+.next-btn-wrapper #next-btn {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.next-btn-wrapper #next-btn:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
 }

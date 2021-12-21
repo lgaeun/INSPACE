@@ -1,10 +1,7 @@
 // import { doc } from "prettier";
 // import { response } from "express";
-<<<<<<< HEAD
 //import e from "express";
-=======
 // import e from "express";
->>>>>>> 1089744a0424ab577792d810b89da6950b5012a7
 import AbstractView from "./AbstractView.js";
 import userData from "../js/data.js";
 
@@ -15,18 +12,44 @@ export default class extends AbstractView {
   }
   getHtml() {
     return `
+    <style>
+      @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+    </style>
     <div class="bg">
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="/static/assets/images/logo.png" />
+            <!-- <img class="logo" src="/static/assets/images/logo.png" /> -->
+            <h1>inspace</h1>
           </div>
         </aside>
         <article class="right">
           <div id="login-box">
             <h3>Log in</h3>
             <form action="post" id="login-form">
-              <input
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  name="ID"
+                  id="ID"
+                  class="form-control login-input"
+                  placeholder="name@example.com"
+                />
+                <label for="ID">Email address</label>
+              </div>
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  class="form-control login-input"
+                  id="password"
+                  placeholder="Password"
+                />
+                <label for="password">Password</label>
+              </div>
+
+              <!-- <input
                 type="text"
                 name="ID"
                 id="ID"
@@ -39,18 +62,28 @@ export default class extends AbstractView {
                 id="password"
                 placeholder="PASSWORD"
                 class="login-input"
-              />
-              <a href="/" data-link><input type="button" id="login-Btn" value="로그인" /></a>
+              /> -->
+              <a href="/" data-link
+                ><input type="button" id="login-Btn" value="로그인"
+              /></a>
               <button id="google-login">
-                <img src="/static/assets/images/Google_2015_logo.svg.png" width="40" />
-                계정으로 로그인
+                <!-- <img
+                  src="/static/assets/images/Google_2015_logo.svg.png"
+                  width="40"
+                /> -->
+                <!-- <img src="../../assets/images/google-logo.png" width="40" /> -->
+                Google 계정으로 로그인
               </button>
-            </form>  
+            </form>
             <div id="form-box">
               <ul>
-                <a href='/signup' data-link><button id="register-Btn">회원가입</button></a>
-                <li> | </li>
-                <a href='/find' data-link><button id="find-Btn">비밀번호 찾기</button></a>
+                <a href="/signup" data-link
+                  ><button id="register-Btn">회원가입</button></a
+                >
+                <li>|</li>
+                <a href="/find" data-link
+                  ><button id="find-Btn">비밀번호 찾기</button></a
+                >
               </ul>
             </div>
           </div>
@@ -61,6 +94,11 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    document.getElementById("root").appendChild(script);
+
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
 
@@ -97,7 +135,6 @@ export default class extends AbstractView {
         );
       }
 
-      $loginBtn.parentElement.href = "/main";
       const loginSuccessedUser = userData.find(
         (user) => loginUser.id === user.id
       );

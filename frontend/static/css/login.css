@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Chonburi&family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap");
+
 @font-face {
   font-family: customFont;
   src: url(../assets/fonts/TTRamillas-Regular.otf);
@@ -9,8 +11,7 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1);
-  /* background: url(bg.jpg); */
+  background-color: #edf0eb;
 }
 
 .sign-in {
@@ -26,6 +27,11 @@
   width: 30vw;
 }
 
+.logo_container h1 {
+  font-family: "Chonburi", cursive;
+  color: #fde5d2;
+}
+
 .logo {
   width: 100%;
   height: 100%;
@@ -35,7 +41,7 @@
   width: 50%;
   height: 100%;
   /* background-color: #e7dcc8; */
-  background-image: url("../assets/images/leftbg.jpg");
+  background-image: url("../assets/images/login-bg5.jpg");
   background-size: cover;
   border-radius: 12px 0 0 12px; /* 수정 */
   display: flex;
@@ -59,12 +65,20 @@
 }
 
 .sign-in #login-box h3 {
+  font-family: "Chonburi", cursive;
+  margin-bottom: 4rem;
+  font-size: 4.3rem;
+  text-decoration: #bccbea wavy underline;
+  text-underline-position: under;
+}
+
+/* .sign-in #login-box h3 {
   margin-bottom: 2rem;
   font-size: 1.3rem;
   font-weight: 500;
-}
+} */
 
-.sign-in .login-input {
+/* .sign-in .login-input {
   margin: 5px;
   background-color: rgb(247, 247, 247);
   border: 0;
@@ -72,6 +86,10 @@
   border-radius: 5px;
   width: 15rem;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+} */
+
+#login-form {
+  width: 60%;
 }
 
 input:focus {
@@ -79,6 +97,40 @@ input:focus {
 }
 
 .sign-in #login-Btn {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.sign-in #login-Btn:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+}
+
+.sign-in #google-login {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sign-in #google-login:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+}
+/* .sign-in #login-Btn {
   font-weight: bold;
   width: 16.35rem;
   border: 0;
@@ -101,7 +153,7 @@ input:focus {
   padding: 0.5rem;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 
 .sign-in #form-box ul {
   display: flex;
@@ -110,6 +162,7 @@ input:focus {
   font-size: smaller;
   margin-top: 2rem;
   color: rgb(106, 106, 106);
+  padding-left: 0rem !important;
 }
 
 .sign-in #form-box ul li {
