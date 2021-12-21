@@ -91,14 +91,11 @@ router.post('/reset-password', asyncHandler(async(req, res) => {
 
 
 router.post('/info-change', asyncHandler(async(req, res, next) => {
-    console.log('a')
     const { name, password, newpassword, confirmpassword } = req.body;
     const user = await User.findOne({ _id: req.user.id });
-    console.log('b')
-    console.log(req.user.id)
-    console.log(user)
+    console.log('인포체인지에서 req.user', req.user)
+    console.log('인포체인지에서 user', user)
     if (user.name != name) {
-        console.log
         throw new Error('이름이 다릅니다.')
     }
     // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
@@ -107,15 +104,12 @@ router.post('/info-change', asyncHandler(async(req, res, next) => {
     } else if (hashPassword(password) == hashPassword(newpassword)) {
         throw new Error('기존비밀번호와 새 비밀번호를 다르게 입력해주세요')
     }
-    console.log('d')
     if (newpassword != confirmpassword) {
         throw new Error('새비밀번호를 다시 확인해주세요.')
     }
-    console.log('e')
     await User.updateOne({ _id: user._id }, {
         password: hashPassword(newpassword)
     })
-    console.log('f')
 
 }))
 
