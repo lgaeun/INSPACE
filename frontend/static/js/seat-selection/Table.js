@@ -1,5 +1,3 @@
-import selectSeat from "./selectSeat.js";
-
 const defaultChairs = {
   small: 2,
   normal: 4,
@@ -18,7 +16,6 @@ function bringChair(position, chairStartIdx, amount) {
     li.setAttribute("idx", index);
     li.innerText = `${index}번`;
     li.style.fontSize = "0.7rem";
-    li.addEventListener("click", selectSeat);
     index++;
     ul.append(li);
   }
