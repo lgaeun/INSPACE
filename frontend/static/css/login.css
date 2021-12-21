@@ -1,91 +1,138 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Chonburi&family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap");
+
+@font-face {
+  font-family: customFont;
+  src: url(../assets/fonts/TTRamillas-Regular.otf);
 }
 
-body {
-  background-color: #bdcad9;
-  background-image: linear-gradient(315deg, #bdcad9 0%, #e1dada 74%);
-
-  height: 100vh;
-}
-
-main {
-  width: 100%;
-}
-
-main #container {
-  background-color: white;
+.bg {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 80%;
-  margin: auto;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
-    rgba(0, 0, 0, 0.22) 0px 10px 10px;
-  transform: translateY(10%);
-  height: 80vh;
+  width: 100vw;
+  height: 100vh;
+  background-color: #edf0eb;
 }
 
-main h1 img {
-  position: relative;
-  top: 14rem;
-  left: 11rem;
-  width: 14rem;
-  border-radius: 5px;
+.sign-in {
+  display: flex;
+  width: 70vw;
+  height: 75vh;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-main #login-image h2 {
-  position: relative;
-  top: 9.8rem;
-  left: 5rem;
+.logo_container {
+  width: 30vw;
 }
 
-main .left {
+.logo_container h1 {
+  font-family: "Chonburi", cursive;
+  color: #fde5d2;
+}
+
+.logo {
   width: 100%;
   height: 100%;
-  background-image: url("../assets/images/leftbg.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: white;
 }
 
-main #login-box {
+.left {
+  width: 50%;
+  height: 100%;
+  /* background-color: #e7dcc8; */
+  background-image: url("../assets/images/login-bg5.jpg");
+  background-size: cover;
+  border-radius: 12px 0 0 12px; /* 수정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.right {
+  position: relative;
+  display: flex;
+  width: 50%;
+  height: 100%;
+}
+
+.sign-in #login-box {
   width: 100%;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-main h3 {
+.sign-in #login-box h3 {
+  font-family: "Chonburi", cursive;
+  margin-bottom: 4rem;
+  font-size: 4.3rem;
+  text-decoration: #bccbea wavy underline;
+  text-underline-position: under;
+}
+
+/* .sign-in #login-box h3 {
   margin-bottom: 2rem;
   font-size: 1.3rem;
   font-weight: 500;
-}
+} */
 
-main .login-input {
+/* .sign-in .login-input {
   margin: 5px;
-  background-color: rgb(235, 234, 234);
+  background-color: rgb(247, 247, 247);
   border: 0;
   padding: 10px;
   border-radius: 5px;
   width: 15rem;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+} */
+
+#login-form {
+  width: 60%;
 }
 
 input:focus {
   outline: none;
 }
 
-main #login-Btn {
+.sign-in #login-Btn {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.sign-in #login-Btn:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+}
+
+.sign-in #google-login {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sign-in #google-login:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+}
+/* .sign-in #login-Btn {
   font-weight: bold;
-  width: 15rem;
+  width: 16.35rem;
   border: 0;
   border-radius: 5px;
   padding: 0.5rem;
@@ -96,8 +143,8 @@ main #login-Btn {
   cursor: pointer;
 }
 
-main #google-login {
-  width: 15rem;
+.sign-in #google-login {
+  width: 16.35rem;
   background-color: rgba(247, 247, 247, 0.712);
   border: 0;
   font-weight: bold;
@@ -106,19 +153,31 @@ main #google-login {
   padding: 0.5rem;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 
-main #form-box ul {
+.sign-in #form-box ul {
   display: flex;
   flex-direction: row;
   list-style: none;
   font-size: smaller;
   margin-top: 2rem;
   color: rgb(106, 106, 106);
+  padding-left: 0rem !important;
 }
 
-main #form-box ul li {
+.sign-in #form-box ul li {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+#register-Btn,
+#find-Btn {
+  border: none;
+  font-family: customFont;
+  background-color: white;
+  font-weight: 350;
+  color: gray;
+  margin-top: -2.5px;
   cursor: pointer;
 }

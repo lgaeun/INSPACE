@@ -1,6 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Chonburi&family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap");
+
 @font-face {
   font-family: customFont;
-  src: url(../../assets/fonts/TTRamillas-Regular.otf);
+  src: url(../assets/fonts/TTRamillas-Regular.otf);
 }
 
 .bg {
@@ -9,9 +11,9 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1);
-  /* background: url(bg.jpg); */
+  background-color: #edf0eb;
 }
+
 .sign-in {
   display: flex;
   width: 70vw;
@@ -20,51 +22,64 @@
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
-sign-in_contents {
-  width: 50%;
+
+.logo_container {
+  width: 30vw;
+}
+
+.logo_container h1 {
+  font-family: "Chonburi", cursive;
+  color: #fde5d2;
+}
+
+.logo {
+  width: 100%;
   height: 100%;
 }
+
 .left {
   width: 50%;
   height: 100%;
   /* background-color: #e7dcc8; */
-  background: url(../../assets/images/leftbg.jpg);
+  background-image: url("../assets/images/login-bg5.jpg");
   background-size: cover;
   border-radius: 12px 0 0 12px; /* 수정 */
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.logo_container {
-  width: 30vw;
-}
-.logo {
-  width: 100%;
-  height: 100%;
-}
+
 .right {
   position: relative;
+  display: flex;
   width: 50%;
   height: 100%;
-}
-.sign-in_container {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
   align-items: center;
-  flex-direction: column;
-  width: 60%;
-  height: 80%;
-  border-radius: 2px solid black;
-}
-.sign-in_title {
-  font-size: 4vmin;
-  font-family: customFont;
+  justify-content: center;
 }
 
-.sign-in_form {
+.sign-in .sign-in_container {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-in .sign-in_container .sign-in_form {
+  width: 60%;
+}
+
+.sign-in .sign-in_title {
+  font-family: "Chonburi", cursive;
+  margin-bottom: 4rem;
+  font-size: 4.3rem;
+  text-decoration: #bccbea wavy underline;
+  text-underline-position: under;
+}
+
+/* .sign-in_form {
   margin-top: 10%;
   display: flex;
   flex-direction: column;
@@ -79,8 +94,8 @@ sign-in_contents {
   margin-bottom: 3px;
   font-size: 2vmin;
   font-family: customFont;
-}
-.sign-in_form input {
+} */
+/* .sign-in_form input {
   width: 100%;
   height: 1.5rem;
   border-style: none;
@@ -93,23 +108,26 @@ sign-in_contents {
 }
 .sign-in_form input:-ms-input-placeholder {
   color: rgb(189, 189, 189);
-}
+} */
 
 .btn_container {
-  margin-top: 6vmin;
+  margin-top: 3vmin;
   display: flex;
+  width: 70%;
+}
+/* .btn_container a {
   width: 100%;
+  margin-right: 2px;
 }
 .btn_container .btn {
   width: 100%;
   height: 2rem;
-  margin: 2px;
   border: none;
   border-radius: 0.7em;
   font-size: 0.7rem;
   font-family: customFont;
-}
-.btn_container .btn.btn-cancel {
+} */
+/* .btn_container .btn.btn-cancel {
   border: unset;
   background-color: white;
   color: black;
@@ -125,4 +143,44 @@ sign-in_contents {
 }
 .btn_container .btn.btn-signup:active {
   background-color: rgba(0, 0, 0, 0.7);
+} */
+
+.btn_container a {
+  display: contents;
+}
+
+.btn_container .btn-cancel {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0 20px 20px 0;
+}
+
+.btn_container .btn-cancel:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+}
+
+.btn_container .btn-signup {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.btn_container .btn-signup:hover {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
 }

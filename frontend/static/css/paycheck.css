@@ -1,36 +1,13 @@
-@font-face {
-  font-family: customFont;
-  src: url(./TTRamillas-Regular.otf);
-}
-
-.bg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-  /* background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1); */
-  /* background: url(bg.jpg); */
-}
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 70vw;
-  height: 75vh;
-  background-color: white;
-  border-radius: 12px;
-  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
-}
-
 .payment-box {
-  width: 45%;
+  width: 75%;
 }
 
 .payment-box h2 {
   font-size: 1.4rem;
   text-align: center;
   margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
 }
 
 .payment-box .total-price-box {
@@ -81,4 +58,8 @@ main {
   font-weight: bold;
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.payment-box #payment-Btn:active {
+  transform: scale(0.98);
 }
