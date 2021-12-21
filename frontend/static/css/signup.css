@@ -1,0 +1,131 @@
+@font-face {
+  font-family: customFont;
+  src: url(../assets/fonts/TTRamillas-Regular.otf);
+}
+
+.bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1);
+  /* background: url(bg.jpg); */
+}
+.sign-in {
+  display: flex;
+  width: 70vw;
+  height: 75vh;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.sign-in_contents {
+  width: 50%;
+  height: 100%;
+}
+.left {
+  width: 50%;
+  height: 100%;
+  /* background-color: #e7dcc8; */
+  background-image: url("../assets/images/leftbg.jpg");
+  background-size: cover;
+  border-radius: 12px 0 0 12px; /* 수정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo_container {
+  width: 30vw;
+}
+.logo {
+  width: 100%;
+  height: 100%;
+}
+.right {
+  position: relative;
+  width: 50%;
+  height: 100%;
+}
+.sign-in_container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 60%;
+  height: 80%;
+  border-radius: 2px solid black;
+}
+.sign-in_title {
+  font-size: 4vmin;
+  font-family: customFont;
+}
+
+.sign-in_form {
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sign-in_form label {
+  width: 100%;
+  left: 0;
+  margin-top: 2vmin;
+  margin-bottom: 3px;
+  font-size: 2vmin;
+  font-family: customFont;
+}
+.sign-in_form input {
+  width: 100%;
+  height: 1.5rem;
+  border-style: none;
+  border: 0.5px solid rgb(188, 188, 188);
+  border-radius: 0.3em;
+}
+.sign-in_form input::placeholder {
+  color: rgb(189, 189, 189);
+  font-size: 1.5vmin;
+}
+.sign-in_form input:-ms-input-placeholder {
+  color: rgb(189, 189, 189);
+}
+
+.btn_container {
+  margin-top: 6vmin;
+  display: flex;
+  width: 100%;
+}
+.btn_container a {
+  width: 100%;
+  margin-right: 2px;
+}
+.btn_container .btn {
+  width: 100%;
+  height: 2rem;
+  border: none;
+  border-radius: 0.7em;
+  font-size: 0.7rem;
+  font-family: customFont;
+}
+.btn_container .btn.btn-cancel {
+  border: unset;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 0.7em;
+}
+.btn_container .btn.btn-signup {
+  background-color: black;
+  color: #e7dcc8;
+}
+.btn_container .btn.btn-cancel:active {
+  background-color: rgb(216, 216, 216);
+}
+.btn_container .btn.btn-signup:active {
+  background-color: rgba(0, 0, 0, 0.7);
+}

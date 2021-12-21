@@ -1,0 +1,127 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Chonburi&family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap");
+
+.main-navbar {
+  background-color: #edf0eb;
+}
+
+.main-navbar .navbar-brand {
+  font-family: "Chonburi", cursive;
+  font-size: 34px;
+  padding-left: 20px;
+}
+
+.nav-item.dropdown .userIcon {
+  padding: 0.5rem 2rem;
+  color: black;
+}
+
+.border-line-bg {
+  background-color: #edf0eb;
+}
+
+.border-line {
+  border: solid 1px black;
+  width: 95%;
+  margin: auto;
+  opacity: 1;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 91vh;
+  background-color: #edf0eb;
+  /* background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAAXNSR0IArs4c6QAAABBJREFUGFdjZMACGKkv+B8AAqMBBV3ctK0AAAAASUVORK5CYII=)
+    repeat; */
+}
+
+.main-section {
+  width: 60vw;
+  /* height: 70vh; */
+  background-color: #e7dcc8;
+  border-radius: 12px;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+}
+
+.main-section__info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+
+  border-radius: 12px 12px 0 0;
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.main-section__info #ticket-info {
+  background-color: #edf0eb;
+  /* border: 2px solid; */
+  text-align: center;
+  line-height: 50px;
+  border-radius: 40px;
+  margin: 20px;
+}
+
+.main-section__info #seat-info {
+  text-align: center;
+  background-color: #edf0eb;
+  /* border: 2px solid; */
+  text-align: center;
+  line-height: 50px;
+  border-radius: 40px;
+  margin: 20px;
+}
+.main-section__info #check-info {
+  text-align: center;
+  background-color: #edf0eb;
+  /* border: 2px solid; */
+  text-align: center;
+  line-height: 50px;
+  border-radius: 40px;
+  margin: 20px;
+}
+
+.main-section__timer {
+  text-align: center;
+}
+
+.main-section__timer #timer {
+  width: 50vmin;
+}
+
+.main-section__btn--check-in {
+  text-align: center;
+  grid-column: 1 / 3;
+  margin: 20px 20px 40px 20px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.main-section__btn--check-out {
+  text-align: center;
+  grid-column: 1 / 3;
+  margin: 20px 20px 30px 20px;
+
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.main-section__btn--check-in .btn,
+.main-section__btn--check-out .btn {
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: black;
+  font-size: 14px;
+  cursor: pointer;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+}
