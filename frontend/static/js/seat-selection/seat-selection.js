@@ -1,5 +1,4 @@
 import { createTable, createSmallTable } from "./Table.js";
-import { fetchSeatData } from "../data.js";
 import selectSeat from "./selectSeat.js";
 
 export default function initSeats() {
@@ -53,10 +52,6 @@ export default function initSeats() {
     }
   }
 
-  // window.onload = () => {
-  //   createSeats();
-  //   showSeatInfo();
-  // };
   bringSeatInfo();
   createSeats();
 
