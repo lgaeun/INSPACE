@@ -18,7 +18,7 @@ require("./passport")();
 mongoose.connect(process.env.DB_URL);
 
 mongoose.connection.on("connected", () => {
-  console.log("MongoDB Connected");
+    console.log("MongoDB Connected");
 });
 
 var app = express();
@@ -34,41 +34,41 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
-  session({
-    secret: "Inspace",
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({
-      mongoUrl: process.env.DB_URL,
-    }),
-  })
+    session({
+        secret: "Inspace",
+        resave: false,
+        saveUninitialized: true,
+        store: MongoStore.create({
+            mongoUrl: process.env.DB_URL,
+        }),
+    })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
-app.use("/payments", paymentsRouter);
-app.use("/users", usersRouter);
-app.use("/reservation", reservationRouter);
-// app.use("/payments", loginRequired, paymentsRouter);
-// app.use("/users", loginRequired, usersRouter);
-// app.use('/reservation', loginRequired, reservationRouter)
+// app.use("/payments", paymentsRouter);
+// app.use("/users", usersRouter);
+// app.use("/reservation", reservationRouter);
+app.use("/payments", loginRequired, paymentsRouter);
+app.use("/users", loginRequired, usersRouter);
+app.use('/reservation', loginRequired, reservationRouter)
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
+app.use(function(req, res, next) {
+    next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  // res.locals.message = err.message;
-  // res.locals.error = req.app.get("env") === "development" ? err : {};
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    // res.locals.message = err.message;
+    // res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.json({ err: err.message });
+    // render the error page
+    res.status(err.status || 500);
+    res.json({ err: err.message });
 });
 
 module.exports = app;
