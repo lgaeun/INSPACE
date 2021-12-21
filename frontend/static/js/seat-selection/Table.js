@@ -1,6 +1,5 @@
 import selectSeat from "./selectSeat.js";
 
-let count = 0;
 const defaultChairs = {
   small: 2,
   normal: 4,
@@ -15,8 +14,10 @@ function bringChair(position, chairStartIdx, amount) {
 
   for (let i = 0; i < amount; i++) {
     const li = document.createElement("li");
-    li.classList.add("seat", position);
+    li.classList.add("seat", position, "available");
     li.setAttribute("idx", index);
+    li.innerText = `${index}번`;
+    li.style.fontSize = "0.7rem";
     li.addEventListener("click", selectSeat);
     index++;
     ul.append(li);
@@ -28,6 +29,7 @@ function bringChair(position, chairStartIdx, amount) {
 function bringTable(tableNumber, type) {
   const tableDiv = document.createElement("div");
   tableDiv.classList.add("table", type);
+  tableDiv.id = `table${tableNumber}`;
 
   const table = document.createElement("div");
   const tableBar = document.createElement("div");
@@ -49,8 +51,7 @@ function bringTable(tableNumber, type) {
   return tableDiv;
 }
 
-export function createTable(chairStartIdx, containerId) {
-  count++;
+function createTable(tableNumber, chairStartIdx, containerId) {
   const newSection = document.createElement("div");
   const tableSpace = document.getElementById(containerId);
 
@@ -58,7 +59,7 @@ export function createTable(chairStartIdx, containerId) {
   newSection.id = `section`;
 
   const [ul1, chairNextIdx] = bringChair("top", chairStartIdx, 2);
-  const table = bringTable(count, "normal");
+  const table = bringTable(tableNumber, "normal");
   const [ul2, chairFinalIdx] = bringChair("bottom", chairNextIdx, 2);
 
   newSection.append(ul1, table, ul2);
@@ -67,8 +68,7 @@ export function createTable(chairStartIdx, containerId) {
   return chairFinalIdx;
 }
 
-export function createSmallTable(chairStartIdx, containerId) {
-  count++;
+function createSmallTable(tableNumber, chairStartIdx, containerId) {
   const newSection = document.createElement("div");
   const tableSpace = document.getElementById(containerId);
 
@@ -76,7 +76,7 @@ export function createSmallTable(chairStartIdx, containerId) {
   newSection.id = `section-small`;
 
   const [ul1, chairNextIdx] = bringChair("top", chairStartIdx, 1);
-  const table = bringTable(count, "small");
+  const table = bringTable(tableNumber, "small");
   const [ul2, chairFinalIdx] = bringChair("bottom", chairNextIdx, 1);
 
   newSection.append(ul1, table, ul2);
@@ -84,3 +84,5 @@ export function createSmallTable(chairStartIdx, containerId) {
 
   return chairFinalIdx;
 }
+
+export { createSmallTable, createTable };
