@@ -24,7 +24,7 @@ export default class extends AbstractView {
                 <li class="info-payment">이용시간<a>4시간</a></li>
                 <li class="info-payment">결제수단<a>카드결제</a></li>
               </div>
-              <input type="button" value="결제하기" id="payment-Btn" />
+              <a href='/paycheck' data-link><input type="button" value="결제하기" id="payment-Btn" /></a>
             </div>
           </section>
 

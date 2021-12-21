@@ -4,6 +4,7 @@ import SignupView from "../views/SignupView.js";
 import TicketView from "../views/TicketView.js";
 import FindView from "../views/FindView.js";
 import SelectView from "../views/SelectView.js";
+import PayCheckView from "../views/PayCheckView.js";
 
 const pathToRegex = (path) =>
   new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -33,6 +34,7 @@ const router = async () => {
     { path: "/select", view: SelectView },
     { path: "/main", view: MainView },
     { path: "/ticket", view: TicketView },
+    { path: "/paycheck", view: PayCheckView },
   ];
 
   const potentialMatches = routes.map((route) => {
