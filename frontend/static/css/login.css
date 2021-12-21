@@ -1,0 +1,130 @@
+@font-face {
+  font-family: customFont;
+  src: url(../assets/fonts/TTRamillas-Regular.otf);
+}
+
+.bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1);
+  /* background: url(bg.jpg); */
+}
+
+.sign-in {
+  display: flex;
+  width: 70vw;
+  height: 75vh;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.logo_container {
+  width: 30vw;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+}
+
+.left {
+  width: 50%;
+  height: 100%;
+  /* background-color: #e7dcc8; */
+  background-image: url("../assets/images/leftbg.jpg");
+  background-size: cover;
+  border-radius: 12px 0 0 12px; /* 수정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.right {
+  position: relative;
+  display: flex;
+  width: 50%;
+  height: 100%;
+}
+
+.sign-in #login-box {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-in #login-box h3 {
+  margin-bottom: 2rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.sign-in .login-input {
+  margin: 5px;
+  background-color: rgb(247, 247, 247);
+  border: 0;
+  padding: 10px;
+  border-radius: 5px;
+  width: 15rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+input:focus {
+  outline: none;
+}
+
+.sign-in #login-Btn {
+  font-weight: bold;
+  width: 16.35rem;
+  border: 0;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  background-color: rgba(7, 7, 7, 0.838);
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  color: white;
+  cursor: pointer;
+}
+
+.sign-in #google-login {
+  width: 16.35rem;
+  background-color: rgba(247, 247, 247, 0.712);
+  border: 0;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sign-in #form-box ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  font-size: smaller;
+  margin-top: 2rem;
+  color: rgb(106, 106, 106);
+}
+
+.sign-in #form-box ul li {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+#register-Btn,
+#find-Btn {
+  border: none;
+  font-family: customFont;
+  background-color: white;
+  font-weight: 350;
+  color: gray;
+  margin-top: -2.5px;
+  cursor: pointer;
+}
