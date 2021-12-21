@@ -1,6 +1,10 @@
 // import { doc } from "prettier";
 // import { response } from "express";
+<<<<<<< HEAD
+//import e from "express";
+=======
 // import e from "express";
+>>>>>>> 1089744a0424ab577792d810b89da6950b5012a7
 import AbstractView from "./AbstractView.js";
 import userData from "../js/data.js";
 
@@ -93,6 +97,7 @@ export default class extends AbstractView {
         );
       }
 
+      $loginBtn.parentElement.href = "/main";
       const loginSuccessedUser = userData.find(
         (user) => loginUser.id === user.id
       );
