@@ -1,6 +1,6 @@
 // import { doc } from "prettier";
 // import { response } from "express";
-import e from "express";
+//import e from "express";
 import AbstractView from "./AbstractView.js";
 import SignupView from "./SignupView.js";
 
@@ -9,7 +9,7 @@ export default class extends AbstractView {
     super(params);
     this.setTitle("Dashboard");
   }
-  async getHtml() {
+  getHtml() {
     return `
     <div class="bg">
       <main class="sign-in">
@@ -44,7 +44,7 @@ export default class extends AbstractView {
             </form>  
             <div id="form-box">
               <ul>
-                <a href='/signup' data-link ><button id="register-Btn">회원가입</button></a>
+                <a href='/signup' data-link><button id="register-Btn">회원가입</button></a>
                 <li> | </li>
                 <li id="findPassword">비밀번호 찾기</li>
               </ul>
@@ -56,7 +56,7 @@ export default class extends AbstractView {
   `;
   }
 
-  async defaultFunc() {
+  defaultFunc() {
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
 

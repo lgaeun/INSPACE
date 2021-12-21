@@ -7,9 +7,13 @@ export default class {
     document.title = title;
   }
 
-  async getHtml() {
+  setData(data) {
+    this.data = data;
+  }
+
+  getHtml() {
     return "";
   }
 
-  async defaultFunc() {}
+  defaultFunc() {}
 }

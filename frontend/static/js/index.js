@@ -4,6 +4,9 @@ import SignupView from "../views/SignupView.js";
 
 //연결한 뷰 컴포넌트 가져오기
 
+let view = null;
+let data = null;
+
 const pathToRegex = (path) =>
   new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 //정규표현식 객체 생성
@@ -33,6 +36,12 @@ const navigateTo = (url) => {
 
   // history.pushState(state, title, url)
 
+  if (view.data) {
+    data = view.data;
+  } else {
+    data = null;
+  }
+
   history.pushState(null, null, url);
   router();
 };
@@ -45,7 +54,6 @@ const router = async () => {
   const routes = [
     { path: "/signup", view: SignupView },
     { path: "/", view: LoginView },
-    { path: "/select", view: SelectView },
     { path: "/main", view: MainView },
   ];
 
@@ -77,14 +85,19 @@ const router = async () => {
     };
   }
 
-  const view = new match.route.view(getParams(match));
+  view = new match.route.view(getParams(match));
+
+  if (data) {
+    console.log("in");
+    view.setData(data);
+  }
   // match = {
   //   route: { path: "/", view: Dashboard },
   //   result: [location.pathname],
   // };
 
   //index.html의  app div 에 view의 html 태그들을 넣어줌.
-  document.querySelector("#root").innerHTML = await view.getHtml();
+  document.querySelector("#root").innerHTML = view.getHtml();
   view.defaultFunc();
 };
 
