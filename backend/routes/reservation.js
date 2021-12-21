@@ -7,7 +7,7 @@ const calcTime = require("../utils/calc-time");
 // 테이블 전체가 보일때 사용하고 있는 좌석의 위치와 남은시간을 보내줍니다.
 router.get(
   "/table",
-  asyncHandler(async (res, req, next) => {
+  asyncHandler(async (req, res, next) => {
     const reservedSeat = await Position.find({
       isempty: false,
     }).populate("user");

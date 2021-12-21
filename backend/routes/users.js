@@ -62,10 +62,10 @@ router.get(
     const { remainingTime } = user;
     const remainingTimeMilSec =
       new Date().getTime() + new Date(remainingTime * 1000).getTime();
-    const remainingTime = new Date(remainingTimeMilSec);
+    const remainedTime = new Date(remainingTimeMilSec);
 
     // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
-    res.json({ category, startTime, remainingTime, table, position, duration });
+    res.json({ category, startTime, remainedTime, table, position, duration });
     // res.status(200).json({ message: "success" });
   })
 );
