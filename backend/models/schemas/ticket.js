@@ -18,8 +18,6 @@ const TicketSchema = new Schema({
     //   type: Schema.Types.ObjectId,
     //   ref: "User",
     // },
-  },
-  { timestamps: true }
-);
+}, { timestamps: true });
 
 module.exports = TicketSchema;
