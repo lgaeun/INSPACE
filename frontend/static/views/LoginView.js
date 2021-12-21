@@ -1,8 +1,12 @@
 // import { doc } from "prettier";
 // import { response } from "express";
+<<<<<<< HEAD
 //import e from "express";
+=======
+// import e from "express";
+>>>>>>> 1089744a0424ab577792d810b89da6950b5012a7
 import AbstractView from "./AbstractView.js";
-import SignupView from "./SignupView.js";
+import userData from "../js/data.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -36,7 +40,7 @@ export default class extends AbstractView {
                 placeholder="PASSWORD"
                 class="login-input"
               />
-              <a href=""><input type="button" id="login-Btn" value="로그인" /></a>
+              <a href="/" data-link><input type="button" id="login-Btn" value="로그인" /></a>
               <button id="google-login">
                 <img src="/static/assets/images/Google_2015_logo.svg.png" width="40" />
                 계정으로 로그인
@@ -70,35 +74,59 @@ export default class extends AbstractView {
         alert("6자 이상 아이디를 입력해주세요.");
       } else if (PASSWORD.length < 8) {
         alert("8자 이상 비밀번호를 입력해주세요.");
-      } else {
-        // 전달할 유저 데이터
-        const loginUser = {
-          id: ID,
-          password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
-        };
-
-        //서버 fetch
-        fetch("url", {
-          method: "POST",
-          cache: "no-cache",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(loginUser),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              alert("존재하지 않는 회원이거나 아이디와 비밀번호가 틀렸습니다.");
-            } else {
-              response.json();
-            }
-          })
-          .then(console.log);
-        //만약 충전권 회원이라면 바로 메인페이지로 이동하고
-        // 당일권 회원이라면 이용권 구매 UI로 이동한다.
       }
 
-      $loginBtn.parentElement.href = "/select";
+      // 전달할 유저 데이터
+      const loginUser = {
+        id: ID,
+        password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
+      };
+
+      // 예비) 서버에서 유효성 체크
+      const idCheck = userData.some((user) => {
+        return user.id === loginUser.id;
+      });
+
+      const passwordCheck = userData.some((user) => {
+        return user.password === loginUser.password;
+      });
+
+      if (!idCheck || !passwordCheck) {
+        alert(
+          "존재하지 않는 계정이거나 아이디와 비밀번호가 일치하지 않습니다."
+        );
+      }
+
+      $loginBtn.parentElement.href = "/main";
+      const loginSuccessedUser = userData.find(
+        (user) => loginUser.id === user.id
+      );
+
+      //서버 fetch
+      // fetch("url", {
+      //   method: "POST",
+      //   cache: "no-cache",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(loginUser),
+      // })
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       alert("존재하지 않는 회원이거나 아이디와 비밀번호가 틀렸습니다.");
+      //     } else {
+      //       response.json();
+      //     }
+      //   })
+      //   .then(console.log);
+      //만약 충전권 회원이라면 바로 메인페이지로 이동하고
+      // 당일권 회원이라면 이용권 구매 UI로 이동한다.
+
+      if (loginSuccessedUser.leftTime) {
+        $loginBtn.parentElement.href = "/main";
+      } else {
+        $loginBtn.parentElement.href = "/ticket";
+      }
     });
   }
 }

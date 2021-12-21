@@ -1,11 +1,12 @@
 import AbstractView from "./AbstractView.js";
+import userData from "../js/data.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
     this.setTitle("Dashboard");
   }
-  async getHtml() {
+  getHtml() {
     return `
     <div class="bg">
       <main class="sign-in">
@@ -39,7 +40,7 @@ export default class extends AbstractView {
               />
             </form>
             <div class="btn_container">
-            <a href='/' data-link>Cancel</a>
+            <a href='/' data-link><button>Cancel</button></a>
             <a href='/' data-link><button id="signUp">Sign up</button></a>
             </div>
           </div>
@@ -49,7 +50,7 @@ export default class extends AbstractView {
   `;
   }
 
-  async defaultFunc() {
+  defaultFunc() {
     const $signUp = document.getElementById("signUp");
 
     $signUp.addEventListener("click", () => {
@@ -75,32 +76,36 @@ export default class extends AbstractView {
       } else if (password !== passwordconfirm) {
         $signUp.parentElement.href = "";
         alert("비밀번호가 맞지 않습니다.");
-      } else {
-        // 회원가입 유저 요청 데이터
-        const createdUser = {
-          name: name,
-          email: email,
-          password: password,
-        };
-
-        // 서버 전달
-        fetch("url", {
-          method: "POST",
-          cache: "no-cache",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(createdUser),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              alert("이미 존재하는 회원입니다.");
-            } else {
-              response.json();
-            }
-          })
-          .then(console.log);
       }
+      // 회원가입 유저 요청 데이터
+
+      const createdUser = {
+        name: name,
+        email: email,
+        password: password,
+      };
+      // 예비) userData에 회원정보 push
+      userData.push(createdUser);
+
+      // 서버 전달
+      //     fetch("url", {
+      //       method: "POST",
+      //       cache: "no-cache",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(createdUser),
+      //     })
+      //       .then((response) => {
+      //         if (!response.ok) {
+      //           alert("이미 존재하는 회원입니다.");
+      //         } else {
+      //           response.json();
+      //         }
+      //       })
+      //       .then(console.log);
+      //   }
+      // });
     });
   }
 }
