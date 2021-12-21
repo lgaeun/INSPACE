@@ -50,7 +50,7 @@ export default class extends AbstractView {
               <ul>
                 <a href='/signup' data-link><button id="register-Btn">회원가입</button></a>
                 <li> | </li>
-                <li id="findPassword">비밀번호 찾기</li>
+                <a href='/find' data-link><button id="find-Btn">비밀번호 찾기</button></a>
               </ul>
             </div>
           </div>
