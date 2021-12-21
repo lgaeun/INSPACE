@@ -1,0 +1,84 @@
+{
+  "table": [
+    {
+      "position": 1,
+      "table": "T1",
+      "remainingTime": {
+        "hour": 2,
+        "min": 30
+      }
+    },
+    {
+      "position": 2,
+      "table": "T1",
+      "remainingTime": {
+        "hour": 2,
+        "min": 30
+      }
+    },
+    {
+      "position": 1,
+      "table": "T1",
+      "remainingTime": {
+        "hour": 2,
+        "min": 30
+      }
+    },
+    {
+      "position": 1,
+      "table": "T1",
+      "remainingTime": {
+        "hour": 2,
+        "min": 30
+      }
+    },
+    {
+      "position": 1,
+      "table": "T1",
+      "remainingTime": {
+        "hour": 2,
+        "min": 30
+      }
+    }
+  ],
+  "times": [
+    {
+      "table-row1": [
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null,
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null
+      ]
+    },
+    {
+      "table-row2": [null, "1h", "2h3m", "30m", null, null]
+    },
+    {
+      "table-row3": [null, "1h", "2h3m", "30m", null, null]
+    },
+    {
+      "table-row4": [
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null,
+        null,
+        "1h",
+        "2h3m",
+        "30m",
+        null,
+        null
+      ]
+    }
+  ]
+}
