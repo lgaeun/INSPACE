@@ -98,7 +98,8 @@ router.post('/info-change', asyncHandler(async(req, res, next) => {
     if (user.name != name) {
         throw new Error('이름이 다릅니다.')
     }
-    // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
+    console.log('test')
+        // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
     if (user.isModified('password')) {
         throw new Error('기존 비밀번호를 다시 입력해주세요')
     } else if (hashPassword(password) == hashPassword(newpassword)) {
