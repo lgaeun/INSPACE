@@ -242,7 +242,7 @@ export default class extends AbstractView {
             <a href="/" data-link
               ><button class="btn" type="button">시간 연장하기</button></a
             >
-            <a href="/" data-link
+            <a href="/select" data-link
               ><button class="btn" type="button">좌석 이동하기</button></a
             >
             <a href="javascript:void(0);"

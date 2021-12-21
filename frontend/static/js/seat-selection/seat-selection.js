@@ -1,38 +1,52 @@
 import { createTable, createSmallTable } from "./Table.js";
 import selectSeat from "./selectSeat.js";
 
+// let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
+
 export default function initSeats() {
   const section = document.getElementById("section-container");
   const row1 = document.getElementById("table-row1");
   const row2 = document.getElementById("table-row2");
   const row3 = document.getElementById("table-row3");
   const row4 = document.getElementById("table-row4");
+  let finalSeatsLeft;
 
   function bringSeatInfo() {
+    let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
+
     fetch("http://localhost:3000/table")
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
-        data.forEach((obj) => {
-          const { position, remainingTime, table } = obj;
-          console.log(position, remainingTime, table);
-          const row = Object.entries(obj)[0][0];
-          const hours = Object.entries(obj)[0][1];
-          const occupied = document.querySelectorAll(`#${row} li`);
+        for (let i = 0; i < data.length; i++) {
+          const { position, remainingTime, table } = data[i];
 
-          hours.forEach((hour, idx) => {
-            if (hour !== null) {
-              occupied[idx].innerText = hour;
-              occupied[idx].style.color = "white";
-            } else {
-              occupied[idx].classList.add("available");
-              occupied[idx].innerText = `${occupied[idx].getAttribute(
-                "idx"
-              )}번`;
+          const min = remainingTime.min === 0 ? "00" : remainingTime.min;
+          const hour = remainingTime.hour === 0 ? "00" : remainingTime.hour;
+          const hourText = hour + ":" + min;
+
+          const occupiedSeat = document.querySelector(`li[idx='${position}']`);
+
+          occupiedSeat.innerHTML = hourText;
+          occupiedSeat.style.color = "white";
+          occupiedSeat.classList.remove("available");
+
+          countSeatsLeft[table] = countSeatsLeft[table] - 1;
+        }
+
+        const tableTexts = document.getElementsByClassName(
+          "table__contents__seats-left"
+        );
+        for (let i = 0; i < countSeatsLeft.length; i++) {
+          tableTexts[i].innerText = `(${countSeatsLeft[i]}자리 남음)`;
+          if (countSeatsLeft[i] === 0) {
+            const table = document.getElementById(`table${i}`);
+            let selector = `#table${i} .table__color-bar`;
+            if (table.classList.contains("small")) {
+              selector += ".small";
             }
-            occupied[idx].style.fontSize = "0.7rem";
-          });
-        });
+            document.querySelector(selector).style.backgroundColor = "tomato";
+          }
+        }
       })
       .catch((err) => console.log(err));
   }

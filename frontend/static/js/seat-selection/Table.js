@@ -1,6 +1,5 @@
 import selectSeat from "./selectSeat.js";
 
-// let tableCount = 0;
 const defaultChairs = {
   small: 2,
   normal: 4,
@@ -15,8 +14,10 @@ function bringChair(position, chairStartIdx, amount) {
 
   for (let i = 0; i < amount; i++) {
     const li = document.createElement("li");
-    li.classList.add("seat", position);
+    li.classList.add("seat", position, "available");
     li.setAttribute("idx", index);
+    li.innerText = `${index}번`;
+    li.style.fontSize = "0.7rem";
     li.addEventListener("click", selectSeat);
     index++;
     ul.append(li);
@@ -28,6 +29,7 @@ function bringChair(position, chairStartIdx, amount) {
 function bringTable(tableNumber, type) {
   const tableDiv = document.createElement("div");
   tableDiv.classList.add("table", type);
+  tableDiv.id = `table${tableNumber}`;
 
   const table = document.createElement("div");
   const tableBar = document.createElement("div");
