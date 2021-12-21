@@ -69,7 +69,7 @@ router.post(
     //try catch 로 오류를 잡을 때(롤백) 이런 방식으로 하면 되는지 궁금합니다.
     try {
       //기존에 이용중인 좌석이 있던 경우 기존 좌석 정보도 같이 수정해야 합니다.
-      if (user.userSeat) {
+      if (!user.userSeat.isempty) {
         const prevPosition = await Position.findOneAndUpdate(
           { _id: user.userSeat },
           { isempty: true, deletedAt: new Date() },
@@ -121,7 +121,7 @@ router.post(
 // case5 : 이용중인 사람 -> 시간연장만
 router.post(
   "/payments/:id",
-  asyncHandler(async (res, req, next) => {
+  asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const user = await User.findOne({ _id: id });
     const { category, duration, price } = req.body; //시간연장에 필요한 데이터만 저장
@@ -132,6 +132,12 @@ router.post(
       user: user._id,
     });
 
+    if (!user.userSeat.isempty) {
+      await Position.updateOne(
+        { _id: user.userSeat },
+        { ticket: newTicket._id }
+      );
+    }
     await User.updateOne(
       { _id: id },
       {
@@ -143,12 +149,6 @@ router.post(
         },
       }
     );
-    if (user.userSeat) {
-      await Position.updateOne(
-        { _id: user.userSeat },
-        { ticket: newTicket_id }
-      );
-    }
     res.status(200).json({ message: "success" });
   })
 );
@@ -158,7 +158,7 @@ router.post(
 //case6: 이용중인 사람 → 좌석이동 , 이 경우 기존 좌석 데이터도 수정해야함
 router.post(
   "/position/:id",
-  asyncHandler(async (res, req, next) => {
+  asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const { position, table } = req.body;
     const user = await User.findOne({ _id: id });
@@ -185,7 +185,7 @@ router.post(
       ticket: user.userTicket,
     });
     //기존에 이용하던 좌석이 있는 경우
-    if (user.userSeat) {
+    if (!user.userSeat.isempty) {
       const prevPosition = await Position.findOneAndUpdate(
         { _id: user.userSeat },
         { isempty: true, deletedAt: new Date() },
