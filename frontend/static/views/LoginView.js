@@ -1,6 +1,10 @@
 // import { doc } from "prettier";
 // import { response } from "express";
+<<<<<<< HEAD
+//import e from "express";
+=======
 // import e from "express";
+>>>>>>> 1089744a0424ab577792d810b89da6950b5012a7
 import AbstractView from "./AbstractView.js";
 import userData from "../js/data.js";
 
@@ -44,7 +48,7 @@ export default class extends AbstractView {
             </form>  
             <div id="form-box">
               <ul>
-                <a href='/signup' data-link ><button id="register-Btn">회원가입</button></a>
+                <a href='/signup' data-link><button id="register-Btn">회원가입</button></a>
                 <li> | </li>
                 <li id="findPassword">비밀번호 찾기</li>
               </ul>

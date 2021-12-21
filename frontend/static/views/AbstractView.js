@@ -7,6 +7,13 @@ export default class {
     document.title = title;
   }
 
+<<<<<<< HEAD
+  setData(data) {
+    this.data = data;
+  }
+
+=======
+>>>>>>> 1089744a0424ab577792d810b89da6950b5012a7
   getHtml() {
     return "";
   }
