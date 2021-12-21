@@ -9,11 +9,13 @@ export default function initSeats() {
   const row4 = document.getElementById("table-row4");
 
   function bringSeatInfo() {
-    fetch("http://localhost:3000/times")
+    fetch("http://localhost:3000/table")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         data.forEach((obj) => {
+          const { position, remainingTime, table } = obj;
+          console.log(position, remainingTime, table);
           const row = Object.entries(obj)[0][0];
           const hours = Object.entries(obj)[0][1];
           const occupied = document.querySelectorAll(`#${row} li`);
@@ -37,18 +39,26 @@ export default function initSeats() {
 
   function createSeats() {
     let numChairs = 0;
+    let tableNumber = 0;
 
     for (let i = 0; i < 3; i++) {
-      numChairs = createTable(numChairs, row1.id);
+      numChairs = createTable(tableNumber, numChairs, row1.id);
+      tableNumber++;
     }
+
     for (let i = 0; i < 3; i++) {
-      numChairs = createSmallTable(numChairs, row2.id);
+      numChairs = createSmallTable(tableNumber, numChairs, row2.id);
+      tableNumber++;
     }
+
     for (let i = 0; i < 3; i++) {
-      numChairs = createSmallTable(numChairs, row3.id);
+      numChairs = createSmallTable(tableNumber, numChairs, row3.id);
+      tableNumber++;
     }
+
     for (let i = 0; i < 3; i++) {
-      numChairs = createTable(numChairs, row4.id);
+      numChairs = createTable(tableNumber, numChairs, row4.id);
+      tableNumber++;
     }
   }
 
