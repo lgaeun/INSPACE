@@ -19,8 +19,9 @@ const local = new LocalStrategy(config, async(userId, password, done) => {
 
         done(null, {
             userId: user.userId,
-            id: user._id,
-
+            id: user._id.toString(),
+            //user.id로 수정 ?
+            //password : user.password
             // id: user.userId,
             //passwordReset: user.passwordReset
         });
