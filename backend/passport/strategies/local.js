@@ -19,7 +19,7 @@ const local = new LocalStrategy(config, async(userId, password, done) => {
         }
         console.log('local done 위에 콘솔')
 
-        done(null, {
+        done(null, { //전달해주고 싶은부분만 골라서..!
             userId: user.userId,
             id: user._id.toString(),
             //user.id로 수정 ?
