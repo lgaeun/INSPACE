@@ -128,10 +128,10 @@ export default class extends AbstractView {
             <canvas id="timer" width="400" height="400"></canvas>
           </div>
           <div class="main-section__btn--check-in">
-            <a href="/" data-link
+            <a href="/ticket" data-link
               ><button class="btn" type="button">시간 연장하기</button></a
             >
-            <a href="/" data-link
+            <a href="/select" data-link
               ><button class="btn" type="button">좌석 이동하기</button></a
             >
             <a href="javascript:void(0);"

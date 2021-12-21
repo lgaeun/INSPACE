@@ -140,28 +140,31 @@ export default class extends AbstractView {
       );
 
       //서버 fetch
-      // fetch("url", {
-      //   method: "POST",
-      //   cache: "no-cache",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(loginUser),
-      // })
-      //   .then((response) => {
-      //     if (!response.ok) {
-      //       alert("존재하지 않는 회원이거나 아이디와 비밀번호가 틀렸습니다.");
-      //     } else {
-      //       response.json();
-      //     }
-      //   })
-      //   .then(console.log);
+      fetch("http://localhost:3000/users", {
+        method: "POST",
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginUser),
+      })
+        .then((res) => res.json())
+        .then(console.log);
+      // fetch("http://localhost:3000/users")
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     console.log(data);
+      //   });
+      // .then((data) => console.log(data));
+
       //만약 충전권 회원이라면 바로 메인페이지로 이동하고
       // 당일권 회원이라면 이용권 구매 UI로 이동한다.
 
       if (loginSuccessedUser.leftTime) {
+        sessionStorage.setItem("history", "main");
         $loginBtn.parentElement.href = "/main";
       } else {
+        sessionStorage.setItem("history", "login");
         $loginBtn.parentElement.href = "/ticket";
       }
     });
