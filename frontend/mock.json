@@ -65,60 +65,6 @@
       }
     }
   ],
-  "times": [
-    {
-      "table-row1": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row2": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row3": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row4": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    }
-  ],
   "users": [
     {
       "name": "김민규",
@@ -145,8 +91,12 @@
       "leftTime": "false"
     },
     {
+      "name": "이가은",
       "id": 4,
-      "password": ""
+      "userId": "ga@gmail.com",
+      "password": "a11111111",
+      "category": "saving",
+      "leftTime": "false"
     },
     {
       "id": "mike2211@gmail.com",
@@ -158,6 +108,22 @@
     },
     {
       "id": 5,
+      "password": ""
+    },
+    {
+      "id": "kat315@naver.com",
+      "password": "ddd"
+    },
+    {
+      "id": 6,
+      "password": ""
+    },
+    {
+      "id": "ga@gmail.com",
+      "password": "a"
+    },
+    {
+      "id": 7,
       "password": ""
     }
   ]
