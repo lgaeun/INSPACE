@@ -3,6 +3,7 @@ const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Position } = require("../models/index");
 const { modelNames } = require("mongoose");
 var router = express.Router();
+const calcTime = require("../utils/calc-time");
 
 //사용중인 유저의 유저페이지에 필요한 정보를 보여줍니다.
 //이용중인 메인페이지로 들어오는 경우는
@@ -79,33 +80,39 @@ router.get(
         position: null,
         duration: null,
       });
+      return;
     }
     //회원가입하고 이용권만 사고 한번도 좌석이용을 안 해본 경우
     if (!checkoutUser.userSeat) {
       const { category, duration } = checkoutUser.userTicket;
       const { remainingTime } = user;
-      const remainingTimeMilSec =
-        new Date().getTime() + new Date(remainingTime * 1000).getTime();
-      const remainedTime = new Date(remainingTimeMilSec);
       res.json({
         category,
         duration,
-        remainedTime,
+        remainedTime: calcTime(remainingTime),
         startTime: null,
         position: null,
         table: null,
       });
+      return;
     }
 
     const { category, duration } = checkoutUser.userTicket;
     const { table, position, startTime } = checkoutUser.userSeat;
     const { remainingTime } = user;
-    const remainingTimeMilSec =
-      new Date().getTime() + new Date(remainingTime * 1000).getTime();
-    const remainedTime = new Date(remainingTimeMilSec);
+    // const remainingTimeMilSec =
+    //   new Date().getTime() + new Date(remainingTime * 1000).getTime();
+    // const remainedTime = new Date(remainingTimeMilSec);
 
     // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
-    res.json({ category, startTime, remainedTime, table, position, duration });
+    res.json({
+      category,
+      startTime,
+      remainingTime: calcTime(remainingTime),
+      table,
+      position,
+      duration,
+    });
     // res.status(200).json({ message: "success" });
   })
 );
