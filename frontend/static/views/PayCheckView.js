@@ -37,5 +37,41 @@ export default class extends AbstractView {
     script.src =
       "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
     document.getElementById("root").appendChild(script);
+
+    const paycheckTitle = document.querySelector(".pay-chekc-title");
+    const totalPrice = document.querySelector(".total-price-box__price");
+    const totalPriceTitle = document.querySelector(".total-price-box__title");
+    const infoPayment = document.getElementsByClassName("info-payment");
+    const ticketPrice = sessionStorage.getItem("price");
+    const okBtn = document.querySelector("#payment-Btn");
+
+    const userName = infoPayment[0].querySelector("a");
+    const payedAmount = infoPayment[1].querySelector("a");
+    const payMethod = infoPayment[2].querySelector("a");
+    const payTime = infoPayment[3].querySelector("a");
+
+    //api get요청 - user id, 결제시각 받기
+    // const userData = fetch("/", {
+    //   method: "GET",
+    // });
+
+    if (sessionStorage.getItem("price")) {
+      totalPrice.innerText = ticketPrice;
+      payedAmount.innerText = ticketPrice;
+    } else {
+      paycheckTitle.innerHTML =
+        "Your Seat has been<br><br> Successfully Moved!";
+      paycheckTitle.style.fontSize = "1.5rem";
+      totalPriceTitle.innerText = "현재 좌석:";
+      totalPrice.innerText = sessionStorage.getItem("lastSelected");
+      payedAmount.innerText = "0원";
+    }
+
+    okBtn.addEventListener("click", () => {
+      sessionStorage.clear();
+    });
+
+    // userName.innerText = userData.user
+    // payTime.innerText = userData.time
   }
 }

@@ -66,7 +66,7 @@ export default class extends AbstractView {
           </div>
           <div class="main-section__btn--check-in">
             <a href="/ticket" data-link
-              ><button class="btn" type="button" id="btn--extend-time">시간 연장하기</button></a
+              ><button class="btn" type="button" id="check-in__btn--extend-time">시간 연장하기</button></a
             >
             <a href="/select" data-link
               ><button class="btn" type="button" id="btn--move-seat">좌석 이동하기</button></a
@@ -79,7 +79,7 @@ export default class extends AbstractView {
           </div>
           <div class="main-section__btn--check-out">
             <a href="/" data-link
-              ><button class="btn" type="button">시간 연장하기</button></a
+              ><button class="btn" type="button" id="check-out__btn--extend-time">시간 연장하기</button></a
             >
             <a href="/" data-link
               ><button class="btn" type="button" id="btn--select-seat">좌석 선택하기</button></a
@@ -100,17 +100,34 @@ export default class extends AbstractView {
     const $checkIn = document.querySelector(".main-section__btn--check-in");
     const $checkOut = document.querySelector(".main-section__btn--check-out");
 
-    const moveSeatBtn = document.querySelector("#btn--move-seat");
-    const extendTimeBtn = document.querySelector("#btn--extend-time");
     const selectSeatBtn = document.querySelector("#btn--select-seat");
+    const moveSeatBtn = document.querySelector("#btn--move-seat");
+    const extendTimeBtnIn = document.querySelector(
+      "#check-in__btn--extend-time"
+    );
+    const extendTimeBtnOut = document.querySelector(
+      "#check-out__btn--extend-time"
+    );
 
+    //퇴실 메인
     selectSeatBtn.addEventListener("click", function () {
       sessionStorage.setItem("path", "select");
     });
+    extendTimeBtnOut.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "extend");
+    });
+
+    // 이용중 메인
     moveSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
       sessionStorage.setItem("path", "move");
     });
-    extendTimeBtn.addEventListener("click", function () {
+    extendTimeBtnIn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
       sessionStorage.setItem("path", "extend");
     });
 
