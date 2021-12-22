@@ -161,7 +161,7 @@ export default class extends AbstractView {
       // 당일권 회원이라면 이용권 구매 UI로 이동한다.
 
       if (loginSuccessedUser.leftTime) {
-        sessionStorage.setItem("history", "main");
+        sessionStorage.setItem("history", "before");
         $loginBtn.parentElement.href = "/main";
       } else {
         sessionStorage.setItem("history", "login");

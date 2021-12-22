@@ -10,6 +10,12 @@
   justify-content: center;
 }
 
+#select-res {
+  background: none;
+  width: 50px;
+  border: none;
+}
+
 .payment-box .total-price-box {
   background-color: rgba(128, 128, 128, 0.173);
   padding: 3rem;

@@ -129,10 +129,10 @@ export default class extends AbstractView {
           </div>
           <div class="main-section__btn--check-in">
             <a href="/ticket" data-link
-              ><button class="btn" type="button">시간 연장하기</button></a
+              ><button class="btn" type="button" id="btn--extend-time">시간 연장하기</button></a
             >
             <a href="/select" data-link
-              ><button class="btn" type="button">좌석 이동하기</button></a
+              ><button class="btn" type="button" id="btn--move-seat">좌석 이동하기</button></a
             >
             <a href="javascript:void(0);"
               ><button class="btn" type="button" onclick="checkInOut(true)">
@@ -162,6 +162,16 @@ export default class extends AbstractView {
 
     const $checkIn = document.querySelector(".main-section__btn--check-in");
     const $checkOut = document.querySelector(".main-section__btn--check-out");
+
+    const moveSeatBtn = document.querySelector("#btn--move-seat");
+    const extendTimeBtn = document.querySelector("#btn--extend-time");
+
+    moveSeatBtn.addEventListener("click", function () {
+      sessionStorage.setItem("path", "move");
+    });
+    extendTimeBtn.addEventListener("click", function () {
+      sessionStorage.setItem("path", "extend");
+    });
 
     const endTime = new Date("2021-12-21 21:00:00");
 
