@@ -76,6 +76,85 @@ export default class extends AbstractView {
     );
   }
 
+  setButtonConnection(button, destination) {
+    button.parentElement.setAttribute("href", `/${destination}`);
+  }
+
+  composePaymentsInfo(ticketInfoArr, totalPrice, time, auth) {
+    const formattedPrice = `${Intl.NumberFormat("ko-KR").format(
+      Price[auth][time]
+    )}원`;
+
+    ticketInfoArr[0].innerText = auth === "oneday" ? "당일권" : "시간권";
+    ticketInfoArr[1].innerText = `${time}시간`;
+    totalPrice.innerText = formattedPrice;
+
+    return formattedPrice;
+  }
+
+  disablePaymentInfo(payBtn, totalPrice) {
+    const $usingTime = document.getElementById("charged-time");
+    const paymethod = document.getElementById("pay-method");
+
+    payBtn.value = "좌석 이동하기";
+    totalPrice.innerText = `0원`;
+    $usingTime.innerText = "";
+    paymethod.innerText = "시간권 차감";
+  }
+
+  disableSeatSelection(disableSelect, warningMessage) {
+    disableSelect.style.visibility = "visible";
+    warningMessage.innerText =
+      "좌석 선택은 이용권 연장 완료 후 시도해 주시기 바랍니다.";
+    warningMessage.style.color = "white";
+    warningMessage.style.fontSize = "50px";
+    warningMessage.style.padding = "2em";
+    disableSelect.append(warningMessage);
+  }
+
+  activateButton(payBtn, auth, time, hasSeatWithPrice) {
+    payBtn.addEventListener("click", (e) => {
+      const selectedSeat = sessionStorage.getItem("lastSelected");
+      //선택한 좌석이 있을 경우
+      if (!selectedSeat) {
+        this.setButtonConnection(payBtn, select);
+        // toast("좌석을 선택해주세요!");
+        alert("좌석을 선택해주세요");
+      } else {
+        //validation - 좌석 data fetch받아와서 자리 여전히 없으면 req 넘기고, 다음 페이지로 이동
+        // postSeatData()
+        if (true) {
+          this.setButtonConnection(payBtn, paycheck);
+          const req = {
+            category: auth,
+            duration: time,
+            price: Price[auth][time],
+            table: sessionStorage.getItem("table"),
+            position: Number(selectedSeat.replace(/[^0-9]/g, "")),
+            //현재 시각
+          };
+          //api.post(req)
+          console.log("selected seta", req);
+
+          sessionStorage.clear();
+          sessionStorage.setItem("history", "using");
+
+          if (hasSeatWithPrice) {
+            sessionStorage.setItem("price", formattedPrice);
+            sessionStorage.setItem("moved", selectedSeat);
+          }
+        } else {
+          alert("좌석을 다시 선택해주세요");
+          payBtn.parentElement.setAttribute("href", "/select");
+          localStorage.removeItem("table");
+          localStorage.removeItem("lastSelected");
+        }
+      }
+    });
+  }
+
+  postSeatData() {}
+
   defaultFunc() {
     const script = document.createElement("script");
     script.src =
@@ -83,7 +162,6 @@ export default class extends AbstractView {
     document.getElementById("root").appendChild(script);
 
     initSeats();
-    // countSelected = 0;
 
     const path = sessionStorage.getItem("path");
     const prevPath = sessionStorage.getItem("history");
@@ -92,126 +170,41 @@ export default class extends AbstractView {
     const seatTitle = document.querySelector(".seat-title");
     const totalPrice = document.querySelector(".total-price-box__price");
     const ticketInfoArr = document.querySelectorAll(".info-payment a");
+    const disableSelect = document.getElementById("disable--seat-view");
+    const warningMessage = document.createElement("h1");
+    const ticketType = document.querySelector(".seat__selected");
 
     //(1) 로그인으로부터 온 경우
     if (prevPath === "login") {
       prevBtn.setAttribute("href", "/ticket");
 
       const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
-      const formattedPrice = `${Intl.NumberFormat("ko-KR").format(
-        Price[auth][time]
-      )}원`;
-
-      ticketInfoArr[0].innerText = auth === "oneday" ? "당일권" : "시간권";
-      ticketInfoArr[1].innerText = `${time}시간`;
-      totalPrice.innerText = formattedPrice;
-
-      payBtn.addEventListener("click", (e) => {
-        const selectedSeat = sessionStorage.getItem("lastSelected");
-        //선택한 좌석이 있을 경우
-        if (!selectedSeat) {
-          payBtn.parentElement.setAttribute("href", "/select");
-          toast("좌석을 선택해주세요!");
-          // alert("좌석을 선택해주세요");
-        } else {
-          //validation - 좌석 data fetch받아와서 자리 여전히 없으면 req 넘기고, 다음 페이지로 이동
-          if (true) {
-            payBtn.parentElement.setAttribute("href", "/paycheck");
-            const req = {
-              category: auth,
-              duration: time,
-              price: Price[auth][time],
-              table: sessionStorage.getItem("table"),
-              position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-              //현재 시각
-            };
-            //api.post(req)
-            console.log("selected seta", req);
-
-            sessionStorage.clear();
-            sessionStorage.setItem("history", "using");
-            sessionStorage.setItem("price", formattedPrice);
-          } else {
-            alert("좌석을 다시 선택해주세요");
-            payBtn.parentElement.setAttribute("href", "/select");
-            localStorage.removeItem("table");
-            localStorage.removeItem("lastSelected");
-          }
-        }
-      });
+      this.composePaymentsInfo(ticketInfoArr, totalPrice, time, auth);
+      this.activateButton(payBtn, auth, time, true);
     }
     //퇴실 Main에서 버튼 선택
     else if (prevPath === "before") {
       prevBtn.setAttribute("href", "/main"); //이거 메인으로 이동안함?!?!
-
+      //좌석 선택
       if (path === "select") {
-        const $usingTime = document.getElementById("charged-time");
-        const paymethod = document.getElementById("pay-method");
-
-        payBtn.value = "좌석 이동하기";
-        totalPrice.innerText = `0원`;
-        $usingTime.innerText = "";
-        paymethod.innerText = "시간권 차감";
-
-        payBtn.addEventListener("click", (e) => {
-          const selectedSeat = sessionStorage.getItem("lastSelected");
-          //선택한 좌석이 있을 경우
-          if (!selectedSeat) {
-            payBtn.parentElement.setAttribute("href", "/select");
-            // toast("좌석을 선택해주세요!");
-            alert("좌석을 선택해주세요");
-          } else {
-            //validation - 좌석 data fetch받아와서 자리 여전히 없으면 req 넘기고, 다음 페이지로 이동
-            if (true) {
-              payBtn.parentElement.setAttribute("href", "/paycheck");
-              const req = {
-                category: auth,
-                duration: time,
-                price: Price[auth][time],
-                table: sessionStorage.getItem("table"),
-                position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-                //현재 시각
-              };
-              //api.post(req)
-              console.log("selected seta", req);
-
-              sessionStorage.clear();
-              sessionStorage.setItem("history", "using");
-            } else {
-              alert("좌석을 다시 선택해주세요");
-              payBtn.parentElement.setAttribute("href", "/select");
-              localStorage.removeItem("table");
-              localStorage.removeItem("lastSelected");
-            }
-          }
-        });
+        this.disablePaymentInfo(payBtn, totalPrice);
+        this.activateButton(payBtn, null, null, false);
       }
       //시간만 연장
       else if (path === "extend") {
-        const disableSelect = document.getElementById("disable--seat-view");
-        const warningMessage = document.createElement("h1");
-        const ticketType = document.querySelector(".seat__selected");
-
         const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
+        const formattedPrice = this.composePaymentsInfo(
+          ticketInfoArr,
+          totalPrice,
+          time,
+          auth
+        );
         localStorage.removeItem("ticket");
-        const formattedPrice = `${Intl.NumberFormat("ko-KR").format(
-          Price[auth][time]
-        )}원`;
-
-        ticketInfoArr[0].innerText = auth === "oneday" ? "당일권" : "시간권";
-        ticketInfoArr[1].innerText = `${time}시간`;
-        totalPrice.innerText = formattedPrice;
 
         seatTitle.innerHTML = "Your <br>Selected<br> Ticket";
         ticketType.innerText = ticketInfoArr[0].innerText;
-        disableSelect.style.visibility = "visible";
 
-        warningMessage.innerText =
-          "좌석 선택은 이용권 연장 완료 후 시도해 주시기 바랍니다.";
-        warningMessage.style.color = "white";
-        warningMessage.style.fontSize = "50px";
-        warningMessage.style.padding = "2em";
-        disableSelect.append(warningMessage);
+        this.disableSeatSelection(disableSelect, warningMessage);
 
         prevBtn.addEventListener("click", () => {
           sessionStorage.setItem("path", "extend");
@@ -226,72 +219,21 @@ export default class extends AbstractView {
     else if (prevPath === "using") {
       // &&시간이 남아있는 경우에만 자리이동 가능(이용중 메인에서 온 경우)
       if (path === "move") {
-        const $usingTime = document.getElementById("charged-time");
-        const paymethod = document.getElementById("pay-method");
-
-        payBtn.value = "좌석 이동하기";
-        totalPrice.innerText = `0원`;
-        $usingTime.innerText = "";
-        paymethod.innerText = "시간권 차감";
-
-        payBtn.addEventListener("click", (e) => {
-          const selectedSeat = sessionStorage.getItem("lastSelected");
-          //선택한 좌석이 있을 경우
-          if (!selectedSeat) {
-            payBtn.parentElement.setAttribute("href", "/select");
-            // toast("좌석을 선택해주세요!");
-            alert("좌석을 선택해주세요");
-          } else {
-            //validation - 좌석 data fetch받아와서 자리 여전히 없으면 req 넘기고, 다음 페이지로 이동
-            if (true) {
-              payBtn.parentElement.setAttribute("href", "/paycheck");
-              const req = {
-                category: auth,
-                duration: time,
-                price: Price[auth][time],
-                table: sessionStorage.getItem("table"),
-                position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-                //현재 시각
-              };
-              //api.post(req)
-              console.log("selected seta", req);
-
-              sessionStorage.clear();
-              sessionStorage.setItem("history", "using");
-              sessionStorage.setItem("price", formattedPrice);
-              sessionStorage.setItem("moved", selectedSeat);
-            } else {
-              alert("좌석을 다시 선택해주세요");
-              payBtn.parentElement.setAttribute("href", "/select");
-              localStorage.removeItem("table");
-              localStorage.removeItem("lastSelected");
-            }
-          }
-        });
+        this.disablePaymentInfo(payBtn, totalPrice);
+        this.activateButton(payBtn, null, null, true);
       }
       //이용중메인 -> 시간만 연장
       else if (path == "extend") {
-        const disableSelect = document.getElementById("disable--seat-view");
-        const warningMessage = document.createElement("h1");
-
         const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
-        const formattedPrice = `${Intl.NumberFormat("ko-KR").format(
-          Price[auth][time]
-        )}원`;
-
-        ticketInfoArr[0].innerText = auth === "oneday" ? "당일권" : "시간권";
-        ticketInfoArr[1].innerText = `${time}시간`;
-        totalPrice.innerText = formattedPrice;
+        const formattedPrice = this.composePaymentsInfo(
+          ticketInfoArr,
+          totalPrice,
+          time,
+          auth
+        );
 
         seatTitle.innerText = "Your Selected Ticket";
-        disableSelect.style.visibility = "visible";
-
-        warningMessage.innerText =
-          "좌석 선택은 이용권 연장 완료 후 시도해 주시기 바랍니다.";
-        warningMessage.style.color = "white";
-        warningMessage.style.fontSize = "50px";
-        warningMessage.style.margin = "2em";
-        disableSelect.append(warningMessage);
+        this.disableSeatSelection(disableSelect, warningMessage);
 
         sessionStorage.clear();
         sessionStorage.setItem("history", "using");
