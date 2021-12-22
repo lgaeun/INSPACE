@@ -65,60 +65,7 @@
       }
     }
   ],
-  "times": [
-    {
-      "table-row1": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row2": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row3": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row4": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    }
-  ],
+
   "users": [
     {
       "name": "김민규",
