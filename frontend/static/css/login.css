@@ -112,6 +112,7 @@ input:focus {
   color: black;
   box-shadow: 0 0 0 2px #000 inset;
   background-color: white;
+  transition: 0.5s;
 }
 
 .sign-in #google-login {
@@ -129,6 +130,7 @@ input:focus {
   color: black;
   box-shadow: 0 0 0 2px #000 inset;
   background-color: white;
+  transition: 0.5s;
 }
 /* .sign-in #login-Btn {
   font-weight: bold;

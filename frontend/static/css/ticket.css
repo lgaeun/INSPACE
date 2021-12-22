@@ -16,21 +16,21 @@
 .ticket-select {
   display: flex;
   flex-direction: column;
-  width: 70vw;
-  height: 75vh;
+  width: 60vw;
+  height: 65vh;
   background-color: white;
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
   position: relative;
 }
 
 .ticket-select h2 {
   font-family: "Chonburi", cursive;
   margin: 3rem;
-  font-size: 4.3rem;
+  font-size: 3.3rem;
   text-decoration: #c28ed1 wavy underline;
   text-underline-position: under;
+  text-align: center;
 }
 
 .ticket-box {
@@ -96,10 +96,13 @@
 }
 
 .oneday-box .oneday:hover,
-.charge-box .charge:hover {
+.charge-box .charge:hover,
+.charge-box .charge:active,
+.charge-box .charge:active {
   color: black;
   box-shadow: 0 0 0 2px #000 inset;
   background-color: white;
+  transition: 0.5s;
 }
 
 .next-btn-wrapper {
@@ -110,18 +113,21 @@
 }
 
 .next-btn-wrapper #next-btn {
+  font-family: "Chonburi", cursive;
   color: #ffff;
   width: 80%;
   padding: 1rem;
   border-radius: 40px;
   border: 0;
-  background-color: black;
+  background-color: #becfbb;
   font-size: 14px;
   cursor: pointer;
 }
 
-.next-btn-wrapper #next-btn:hover {
-  color: black;
-  box-shadow: 0 0 0 2px #000 inset;
+.next-btn-wrapper #next-btn:hover,
+.next-btn-wrapper #next-btn:active {
+  color: #becfbb;
+  box-shadow: 0 0 0 2px #becfbb inset;
   background-color: white;
+  transition: 0.5s;
 }

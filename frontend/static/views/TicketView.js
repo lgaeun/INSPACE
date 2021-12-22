@@ -41,7 +41,7 @@ export default class extends AbstractView {
         </section>
       </main>
       <div class="next-btn-wrapper">
-          <a href="/select" data-link><button id="next-btn">NEXT</button></a>
+          <a href="/select" data-link><button id="next-btn">Next</button></a>
         </div>
     </div>`
     );
