@@ -54,6 +54,9 @@ export default class extends AbstractView {
     document.getElementById("root").appendChild(script);
 
     const $tickets = document.querySelectorAll(".ticket");
+    const $nextBtn = document.getElementById("next-btn");
+    $nextBtn.disabled = true;
+    $nextBtn.style.backgroundColor = "#b0b0b0a3";
 
     $tickets.forEach((ticket) => {
       // ticket 클릭이벤트
@@ -65,6 +68,11 @@ export default class extends AbstractView {
         // 클릭시 버튼 눌림 효과 CSS적용
         e.target.style =
           "box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;";
+        e.target.style.backgroundColor = "white";
+        e.target.style.color = "black";
+
+        $nextBtn.disabled = false;
+        $nextBtn.style.backgroundColor = "#becfbb";
 
         // 이벤트 타깃이 아닌 버튼 이벤트 초기화
         $tickets.forEach((ticket) => {
