@@ -116,40 +116,22 @@ export default class extends AbstractView {
 
       // 전달할 유저 데이터
       const loginUser = {
-        id: ID,
+        useId: ID,
         password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
       };
 
-      // 예비) 서버에서 유효성 체크
-      const idCheck = userData.some((user) => {
-        return user.id === loginUser.id;
-      });
-
-      const passwordCheck = userData.some((user) => {
-        return user.password === loginUser.password;
-      });
-
-      if (!idCheck || !passwordCheck) {
-        alert(
-          "존재하지 않는 계정이거나 아이디와 비밀번호가 일치하지 않습니다."
-        );
-      }
-
-      const loginSuccessedUser = userData.find(
-        (user) => loginUser.id === user.id
-      );
-
+      const loginURL =
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login";
       //서버 fetch
-      fetch("http://localhost:3000/users", {
+      fetch(loginURL, {
         method: "POST",
+        body: JSON.stringify(loginUser),
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(loginUser),
-      })
-        .then((res) => res.json())
-        .then(console.log);
+        mode: "no-cors",
+      }).then(console.log);
       // fetch("http://localhost:3000/users")
       //   .then((res) => res.json())
       //   .then((data) => {
@@ -160,13 +142,13 @@ export default class extends AbstractView {
       //만약 충전권 회원이라면 바로 메인페이지로 이동하고
       // 당일권 회원이라면 이용권 구매 UI로 이동한다.
 
-      if (loginSuccessedUser.leftTime) {
-        sessionStorage.setItem("history", "main");
-        $loginBtn.parentElement.href = "/main";
-      } else {
-        sessionStorage.setItem("history", "login");
-        $loginBtn.parentElement.href = "/ticket";
-      }
+      // if (loginSuccessedUser.leftTime) {
+      //   sessionStorage.setItem("history", "main");
+      //   $loginBtn.parentElement.href = "/main";
+      // } else {
+      sessionStorage.setItem("history", "login");
+      $loginBtn.parentElement.href = "/ticket";
     });
   }
+  // });
 }
