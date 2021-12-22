@@ -21,10 +21,10 @@ export default class extends AbstractView {
             <h3>당일권</h3>
             <p>당일 내에 사용 가능하며 퇴실시 소멸됩니다.</p>
             <ul>
-              <li class="oneday ticket" data-name="1">1시간권 : 2,000원</li>
-              <li class="oneday ticket" data-name="4">4시간권 : 6,000원</li>
-              <li class="oneday ticket" data-name="12">12시간권 : 15,000원</li>
-              <li class="oneday ticket" data-name="24">24시간권 : 25,000원</li>
+              <li class="oneday ticket" data-name="1" data-price="2,000">1시간권 : 2,000원</li>
+              <li class="oneday ticket" data-name="4" data-price="6,000">4시간권 : 6,000원</li>
+              <li class="oneday ticket" data-name="12" data-price="15,000">12시간권 : 15,000원</li>
+              <li class="oneday ticket" data-name="24" data-price="25,000">24시간권 : 25,000원</li>
             </ul>
           </article>
           <div class="divider"></div>
@@ -33,8 +33,8 @@ export default class extends AbstractView {
             <p>시간 내에 사용 가능하며 퇴실시 유지됩니다.</p>
             <ul>
               <li>
-                <li class="charge ticket" data-name="50">50시간권 : 50,000원</li>
-                <li class="charge ticket" data-name="100">100시간권 : 100,000원</li>
+                <li class="charge ticket" data-name="50" data-price="50,000">50시간권 : 50,000원</li>
+                <li class="charge ticket" data-name="100" data-price="100,000">100시간권 : 100,000원</li>
               </li>
             </ul>
           </article>
@@ -62,6 +62,7 @@ export default class extends AbstractView {
       // ticket 클릭이벤트
       ticket.onclick = (e) => {
         const selectedTime = Number(ticket.dataset.name);
+        const selectedPrice = ticket.dataset.price;
 
         const userAuth =
           e.target.className === "charge ticket" ? "charge" : "oneday";
@@ -90,6 +91,7 @@ export default class extends AbstractView {
             time: selectedTime,
             auth: userAuth,
             history: `${sessionStorage.getItem("history")}`,
+            price: selectedPrice,
           };
         }
       };
