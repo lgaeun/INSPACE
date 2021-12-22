@@ -76,8 +76,5 @@ export default function initSeats() {
   bringSeatInfo();
   createSeats();
 
-  // console.log(section);
-  section.addEventListener("click", (e) => {
-    selectSeat(e);
-  });
+  section.addEventListener("click", selectSeat);
 }
