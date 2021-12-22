@@ -32,7 +32,9 @@ router.get(
   "/:id/checkOut",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     //좌석을 사용중이던 유저가 퇴실을 하는 경우
     if (user.userSeat && !user.userSeat.isempty) {
       const prevPosition = await Position.findOneAndUpdate(

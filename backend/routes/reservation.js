@@ -38,10 +38,10 @@ router.get(
     const { id } = req.params;
     const user = await User.findOne({
       _id: id,
-    });
+    }).populate("userTicket");
     //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
     if (user.userTicket && user.remainingTime >= 2) {
-      if (category != user.userTicket) {
+      if (category != user.userTicket.category) {
         throw new Error("이용중인 이용권과 같은 이용권이 아닙니다.");
       } else {
         res.json({ message: "success" });
