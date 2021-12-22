@@ -19,7 +19,7 @@ const selectSeat = (e) => {
   console.log(e.target);
   const classes = e.target.classList;
   let mySeat = e.target.innerText;
-  const display = document.querySelector(".payment-box h2 p");
+  const display = document.querySelector(".payment-box .seat__selected");
 
   if (classes.contains("seat") && classes.contains("available")) {
     if (countSelected == 0) {
@@ -27,7 +27,7 @@ const selectSeat = (e) => {
       countSelected++;
       classes.add("selected");
       classes.remove("available");
-      display.innerText = mySeat;
+      display.innerText = " : " + mySeat;
     } else {
       toast("자리를 이미 선택하셨습니다!");
     }

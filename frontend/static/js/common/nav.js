@@ -1,8 +1,5 @@
 export default function navComponent() {
   return `
-    <style>
-    @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
-  </style>
     <nav class="navbar navbar-light main-navbar">
       <div class="container-fluid">
         <a class="navbar-brand m-sm-2 mb-0" href="/">
@@ -108,6 +105,69 @@ export default function navComponent() {
                 닫기
               </button>
               <button type="button" class="btn btn-primary">수정하기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal fade"
+        id="modifyPwdModal"
+        aria-hidden="true"
+        aria-labelledby="modifyPwdModalLabel"
+        tabindex="-1"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modifyPwdModalLabel">비밀번호</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="oldPasswordInput"
+                  placeholder="Password"
+                />
+                <label for="oldPasswordInput">비밀번호</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPasswordInput"
+                  placeholder="Password"
+                />
+                <label for="newPasswordInput">새 비밀번호</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPasswordComfirm"
+                  placeholder="Password"
+                />
+                <label for="newPasswordComfirm">새 비밀번호 확인</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-secondary"
+                data-bs-target="#userInfoModal"
+                data-bs-toggle="modal"
+              >
+                뒤로 가기
+              </button>
+              <button type="button" class="btn btn-primary">
+                비밀번호 변경
+              </button>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ export default function initSeats() {
   function bringSeatInfo() {
     let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
 
-    fetch("http://localhost:3000/table")
+    fetch("http://localhost:3200/table")
       .then((res) => res.json())
       .then((data) => {
         for (let i = 0; i < data.length; i++) {
@@ -41,7 +41,7 @@ export default function initSeats() {
             if (table.classList.contains("small")) {
               selector += ".small";
             }
-            document.querySelector(selector).style.backgroundColor = "tomato";
+            document.querySelector(selector).style.backgroundColor = "#c28ed1";
           }
         }
       })
@@ -76,7 +76,7 @@ export default function initSeats() {
   bringSeatInfo();
   createSeats();
 
-  console.log(section);
+  // console.log(section);
   section.addEventListener("click", (e) => {
     selectSeat(e);
   });

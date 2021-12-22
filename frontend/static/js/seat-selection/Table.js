@@ -16,6 +16,8 @@ function bringChair(position, chairStartIdx, amount) {
     li.setAttribute("idx", index);
     li.innerText = `${index}번`;
     li.style.fontSize = "0.7rem";
+    li.style.fontWeight = "600";
+    li.style.lineHeight = "16px";
     index++;
     ul.append(li);
   }
