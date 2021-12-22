@@ -1,19 +1,6 @@
+import toast from "../common/toast.js";
+
 let countSelected = 0;
-let removeToast;
-
-function toast(string) {
-  const toast = document.getElementById("toast");
-
-  toast.classList.contains("reveal")
-    ? (clearTimeout(removeToast),
-      (removeToast = setTimeout(function () {
-        document.getElementById("toast").classList.remove("reveal");
-      }, 2000)))
-    : (removeToast = setTimeout(function () {
-        document.getElementById("toast").classList.remove("reveal");
-      }, 2000));
-  toast.classList.add("reveal"), (toast.innerText = string);
-}
 
 const selectSeat = (e) => {
   const classes = e.target.classList;
@@ -22,12 +9,16 @@ const selectSeat = (e) => {
 
   if (classes.contains("seat") && classes.contains("available")) {
     if (countSelected == 0) {
+      const tableNumber =
+        e.target.parentElement.parentElement.childNodes[1].id.substring(5);
       //자리 선택하기
       countSelected++;
       classes.add("selected");
       classes.remove("available");
       display.innerText = mySeat;
+
       sessionStorage.setItem("lastSelected", mySeat);
+      sessionStorage.setItem("table", tableNumber);
     } else {
       toast("자리를 이미 선택하셨습니다!");
     }
@@ -36,7 +27,10 @@ const selectSeat = (e) => {
     classes.add("available");
     classes.remove("selected");
     display.innerText = "";
+
     sessionStorage.removeItem("lastSelected");
+    sessionStorage.removeItem("table");
+
     countSelected--;
   }
 };
