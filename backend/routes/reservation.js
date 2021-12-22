@@ -12,14 +12,43 @@ router.get(
       isempty: false,
     }).populate("user");
     const editedReservedSeat = reservedSeat.reduce((acc, pos) => {
+      const remainingTimeSec = Math.floor(
+        (pos.startTime.getTime() +
+          new Date(pos.user.remainingTime * 1000).getTime() -
+          new Date().getTime()) /
+          1000
+      );
       acc.push({
         postion: pos.position,
         table: pos.table,
-        remainingTime: calcTime(pos.user.remainingTime),
+        remainingTime: calcTime(remainingTimeSec),
       });
       return acc;
     }, []);
     res.json(editedReservedSeat);
+  })
+);
+
+//티켓정보 확인하는 페이지
+//티켓을 선택하고 다음버튼 눌렀을 때 유저가 어떤 티켓을 가지고 있었는지 보내줍니다.
+router.get(
+  "/:id/ticket",
+  asyncHandler(async (req, res, next) => {
+    const { category } = req.query;
+    const { id } = req.params;
+    const user = await User.findOne({
+      _id: id,
+    });
+    //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
+    if (user.userTicket && user.remainingTime >= 2) {
+      if (category != user.userTicket) {
+        throw new Error("이용중인 이용권과 같은 이용권이 아닙니다.");
+      } else {
+        res.json({ message: "success" });
+      }
+    } else {
+      res.json({ message: "success" });
+    }
   })
 );
 
@@ -69,7 +98,7 @@ router.post(
     //try catch 로 오류를 잡을 때(롤백) 이런 방식으로 하면 되는지 궁금합니다.
     try {
       //기존에 이용중인 좌석이 있던 경우 기존 좌석 정보도 같이 수정해야 합니다.
-      if (!user.userSeat.isempty) {
+      if (user.userSeat && !user.userSeat.isempty) {
         const prevPosition = await Position.findOneAndUpdate(
           { _id: user.userSeat },
           { isempty: true, deletedAt: new Date() },
@@ -132,7 +161,7 @@ router.post(
       user: user._id,
     });
 
-    if (!user.userSeat.isempty) {
+    if (user.userSeat && !user.userSeat.isempty) {
       await Position.updateOne(
         { _id: user.userSeat },
         { ticket: newTicket._id }
@@ -166,12 +195,18 @@ router.post(
     //겹치는 좌석이 있는지 확인 후 에러처리
     const checkPosition = await Position.findOne({
       table: table,
-      name: position,
+      position: position,
+      isempty: false,
     });
 
     if (checkPosition) {
       throw new Error("이미 사용중인 좌석입니다.");
       return;
+    }
+
+    //남은 시간이 있는지 확인 후 에러처리
+    if (user.remainingTime <= 1) {
+      throw new Error("남은 시간이 없습니다.");
     }
 
     //새로운 좌석에 대한 데이터를 만듭니다.
@@ -185,7 +220,7 @@ router.post(
       ticket: user.userTicket,
     });
     //기존에 이용하던 좌석이 있는 경우
-    if (!user.userSeat.isempty) {
+    if (user.userSeat && !user.userSeat.isempty) {
       const prevPosition = await Position.findOneAndUpdate(
         { _id: user.userSeat },
         { isempty: true, deletedAt: new Date() },
