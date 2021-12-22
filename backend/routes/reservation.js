@@ -19,7 +19,7 @@ router.get(
           1000
       );
       acc.push({
-        postion: pos.position,
+        position: pos.position,
         table: pos.table,
         remainingTime: calcTime(remainingTimeSec),
       });
