@@ -145,7 +145,7 @@ export default class extends AbstractView {
               ><button class="btn" type="button">시간 연장하기</button></a
             >
             <a href="/" data-link
-              ><button class="btn" type="button">좌석 선택하기</button></a
+              ><button class="btn" type="button" id="btn--select-seat">좌석 선택하기</button></a
             >
           </div>
         </div>
@@ -165,7 +165,11 @@ export default class extends AbstractView {
 
     const moveSeatBtn = document.querySelector("#btn--move-seat");
     const extendTimeBtn = document.querySelector("#btn--extend-time");
+    const selectSeatBtn = document.querySelector("#btn--select-seat");
 
+    selectSeatBtn.addEventListener("click", function () {
+      sessionStorage.setItem("path", "select");
+    });
     moveSeatBtn.addEventListener("click", function () {
       sessionStorage.setItem("path", "move");
     });

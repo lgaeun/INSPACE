@@ -34,8 +34,8 @@ export default class extends AbstractView {
               <div class="total-price-box">총 결제금액: <a> 12,000원</a></div>
               <div class="info-payments">
                 <li class="info-payment">이용권정보<a>시간권</a></li>
-                <li class="info-payment">이용시간<a>4시간</a></li>
-                <li class="info-payment" id="pay-method">결제수단<a>카드결제</a></li>
+                <li class="info-payment" id="charged-time">이용시간<a>4시간</a></li>
+                <li class="info-payment" >결제수단<a id="pay-method">카드결제</a></li>
               </div>
               <a href='/paycheck' data-link><input type="button" value="결제하기" id="payment-Btn" /></a>
             </div>
@@ -79,18 +79,7 @@ export default class extends AbstractView {
 
   defaultFunc() {
     initSeats();
-    const ticketObj = sessionStorage
-      .getItem("ticket")
-      .split("{")[1]
-      .split("}")[0]
-      .split(",")
-      .reduce((obj, el) => {
-        const [key, val] = el.split(":").map((str) => str.replace(/\"/g, ""));
-        obj[key] = val;
-        return obj;
-      }, {});
 
-    const { time, auth, history } = ticketObj;
     const path = sessionStorage.getItem("path");
     const prevPath = sessionStorage.getItem("history");
     const prevBtn = document.querySelector("#prevBtn");
@@ -98,15 +87,26 @@ export default class extends AbstractView {
     const totalPrice = document.querySelector(".total-price-box a");
     const ticketInfoArr = document.querySelectorAll(".info-payment a");
 
-    ticketInfoArr[0].innerText = auth === "oneday" ? "당일권" : "시간권";
-    ticketInfoArr[1].innerText = `${time}시간`;
-
-    totalPrice.innerText = `${Price[auth][time]}원`;
-
     //(1) 로그인으로부터 온 경우
     if (prevPath === "login") {
       prevBtn.setAttribute("href", "/ticket");
-      // 로그인 뷰에서 넘어왔을 때
+
+      const ticketObj = sessionStorage
+        .getItem("ticket")
+        .split("{")[1]
+        .split("}")[0]
+        .split(",")
+        .reduce((obj, el) => {
+          const [key, val] = el.split(":").map((str) => str.replace(/\"/g, ""));
+          obj[key] = val;
+          return obj;
+        }, {});
+
+      const { time, auth, history } = ticketObj;
+      ticketInfoArr[0].innerText = auth === "oneday" ? "당일권" : "시간권";
+      ticketInfoArr[1].innerText = `${time}시간`;
+      totalPrice.innerText = `${Price[auth][time]}원`;
+
       payBtn.addEventListener("click", (e) => {
         const selectedSeat = sessionStorage.getItem("lastSelected");
         if (!selectedSeat) {
@@ -135,14 +135,13 @@ export default class extends AbstractView {
     }
     //(2) 퇴실 Main에서 온 경우
     else if (prevPath === "before") {
-      prevBtn.setAttribute("href", "/main");
-      //퇴실메인 - 좌석선택
+      prevBtn.setAttribute("href", "/main"); //퇴실메인으로 표시해야 함
+      //좌석 선택
       if (path === "select") {
-        // 왼편 결제하기 컴포넌트 지우기, 결제하기버튼 -> 이동하기 버튼으로 바꾸기
-        // 이용중 main으로 이동
         sessionStorage.clear();
+        sessionStorage.setItem("history", "main");
       }
-      //퇴실메인 - 시간연장
+      //시간만 연장
       else if (path === "extend") {
         const disableSelect = document.getElementById("disable--seat-view");
         const text = document.querySelector(".payment-box h2");
@@ -158,17 +157,14 @@ export default class extends AbstractView {
         disableSelect.append(warningMessage);
 
         sessionStorage.clear();
+        sessionStorage.setItem("history", "before");
       }
-    }
-    //(3)이용중 Main에서 온 경우
-    else {
-      console.log(prevPath);
-      //좌석 이동
+    } else {
+      // &&시간이 남아있는 경우에만 자리이동 가능(이용중 메인에서 온 경우)
       if (path === "move") {
         // 왼편 결제하기 컴포넌트 지우기, 결제하기버튼 -> 이동하기 버튼으로 바꾸기
-        // 이용중 main으로 이동
         const $paymentBtn = document.getElementById("payment-Btn");
-        const $usingTime = document.getElementsByName(".info-payment")[1];
+        const $usingTime = document.getElementById("charged-time");
         const paymethod = document.getElementById("pay-method");
 
         $paymentBtn.value = "좌석 이동하기";
@@ -177,6 +173,25 @@ export default class extends AbstractView {
         paymethod.innerText = "시간권 차감";
 
         sessionStorage.clear();
+        sessionStorage.setItem("history", "using");
+      }
+      //이용중메인 -> 시간만 연장
+      else if (path == "extend") {
+        const disableSelect = document.getElementById("disable--seat-view");
+        const text = document.querySelector(".payment-box h2");
+        const warningMessage = document.createElement("h1");
+
+        text.innerText = "선택한 이용권";
+        disableSelect.style.visibility = "visible";
+
+        warningMessage.innerText =
+          "좌석 선택은 이용권 연장 완료 후 시도해 주시기 바랍니다.";
+        warningMessage.style.color = "white";
+        warningMessage.style.fontSize = "50px";
+        disableSelect.append(warningMessage);
+
+        sessionStorage.clear();
+        sessionStorage.setItem("history", "using");
       }
     }
   }
