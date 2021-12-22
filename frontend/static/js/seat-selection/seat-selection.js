@@ -11,7 +11,7 @@ export default function initSeats() {
   function bringSeatInfo() {
     let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
 
-    fetch("http://localhost:3200/table")
+    fetch("http://localhost:3000/table")
       .then((res) => res.json())
       .then((data) => {
         for (let i = 0; i < data.length; i++) {
@@ -76,8 +76,5 @@ export default function initSeats() {
   bringSeatInfo();
   createSeats();
 
-  // console.log(section);
-  section.addEventListener("click", (e) => {
-    selectSeat(e);
-  });
+  section.addEventListener("click", selectSeat);
 }

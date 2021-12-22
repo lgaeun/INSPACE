@@ -7,6 +7,12 @@
   background-color: #edf0eb;
 }
 
+#select-res {
+  background: none;
+  width: 50px;
+  border: none;
+}
+
 .pay-check-container {
   display: flex;
   justify-content: center;
