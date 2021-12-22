@@ -75,7 +75,7 @@ export default class extends AbstractView {
         // 티켓데이터
         const ticketData = objectFunc();
         // localStorage에 추가
-        sessionStorage.setItem("ticket", JSON.stringify(ticketData));
+        localStorage.setItem("ticket", JSON.stringify(ticketData));
         //티켓데이터 obj생성함수
         function objectFunc() {
           return {

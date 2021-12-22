@@ -78,10 +78,10 @@ export default class extends AbstractView {
             >
           </div>
           <div class="main-section__btn-check-out">
-            <a href="/" data-link
+            <a href="/ticket" data-link
               ><button class="btn" type="button" id="check-out__btn--extend-time">시간 연장하기</button></a
             >
-            <a href="/" data-link
+            <a href="/select" data-link
               ><button class="btn" type="button" id="btn--select-seat">좌석 선택하기</button></a
             >
           </div>
@@ -110,8 +110,17 @@ export default class extends AbstractView {
       "#check-out__btn--extend-time"
     );
 
+    const view = sessionStorage.getItem("view");
+    if (view && view === "using") {
+      $checkIn.style.display = "grid";
+      $checkOut.style.display = "none";
+      sessionStorage.clear();
+    }
+
     //퇴실 메인
     selectSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
       sessionStorage.setItem("path", "select");
     });
     extendTimeBtnOut.addEventListener("click", function () {
