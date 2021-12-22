@@ -1,15 +1,14 @@
 /* ------------ index.html ------------ */
-.bg {
+.seat-bg {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
-  /* background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1); */
-  /* background: url(bg.jpg); */
+  height: 91vh;
+  background-color: #edf0eb;
 }
 
-.seat-container-border {
+/* .seat-container-border {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,43 +18,51 @@
   border-radius: 12px;
   perspective: 1000px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 20px;
-}
+} */
 
 .seat-container {
   display: flex;
   align-items: center;
-  width: 90vw;
-  height: 80vh;
+  width: 70vw;
+  height: 75vh;
   background-color: white;
   border-radius: 12px;
-  box-shadow: rgba(255, 255, 255, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .seat-detail {
-  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
   height: 100%;
-  background-color: #dcdada;
+  background-color: white;
   border-radius: 12px 0 0 12px;
+}
+
+.seat-container .divider {
+  border-left: 2px solid;
+  height: 80%;
 }
 
 .seat-view {
   width: 75%;
   height: 100%;
-  background-color: #f6f6f6;
+  background-color: white;
   border-radius: 0 12px 12px 0;
 }
 
-.seat-view__nav {
+/* .seat-view__nav {
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
   width: 100%;
   height: 7%;
   background-color: #b3b3b3;
-}
+} */
 
-.btn-primary {
-  /* position: relative; */
+/* .btn-primary {
+  position: relative;
   color: black;
   background-color: #c196d4;
   border: none;
@@ -64,12 +71,7 @@
   font-size: 0.8em;
   margin-right: 15px;
   padding-bottom: 20px;
-}
-.seat-detail {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+} */
 
 .plus-icon {
   position: absolute;
@@ -85,18 +87,32 @@
 .information {
   display: flex;
   flex-direction: row-reverse;
-  padding-right: 10px;
-  padding-top: 8px;
+  margin: 15px;
+  line-height: 10px;
 }
-.information img {
+
+.information .color-box__empty {
+  width: 20px;
+  height: 20px;
+  background: #bccbea;
+  border-radius: 4px;
+}
+
+.information .color-box__full {
+  width: 20px;
+  height: 20px;
+  background: #c28ed1;
+  border-radius: 4px;
+}
+
+/* .information img {
   width: 26px;
   height: 22px;
   margin-left: -14px;
-}
+} */
 
 .information p {
-  width: fit-content;
-  margin: 5px 15px 15px 12px;
+  margin: 5px 10px 5px 30px;
 }
 
 .select-label {
@@ -120,7 +136,7 @@
 
 .table {
   display: flex;
-  background-color: #464646;
+  background-color: black;
   border-radius: 1rem;
   margin-bottom: 0;
 }
@@ -142,21 +158,24 @@
 }
 
 .table-status {
-  color: #98c8d0;
+  font-family: "Chonburi", cursive;
+  color: black;
 }
 
-.table-status.full {
+/* .table-status.full {
   color: red;
-}
+} */
 
 .table__contents {
   width: 90%;
   height: 100%;
-  color: rgb(138, 138, 138);
+  color: white;
   padding: 10px;
 }
 .table__contents__name {
+  font-family: "Chonburi", cursive;
   font-size: 1.2rem;
+  margin-bottom: 5px;
 }
 .table__contents__seats-left {
   font-size: 0.9rem;
@@ -166,7 +185,7 @@
   border: unset;
   width: 10%;
   height: 100%;
-  background-color: #98c8d0;
+  background-color: #bccbea;
   border-radius: 0 1em 1em 0;
 }
 
@@ -212,23 +231,50 @@
 
 .seat.selected {
   cursor: pointer;
-  background-color: #ff9800;
-  transform: scaleY(1.3);
+  background-color: #e9967a;
+  transform: scaleX(1.3) scaleY(1.3);
 }
 
 .seat.available {
-  background-color: #98c8d0;
+  background-color: #bccbea;
 }
 
 .seat.available:hover {
   cursor: pointer;
-  transform: scaleY(1.3);
+  transform: scaleX(1.3) scaleY(1.3);
+}
+
+.prev-btn-wrapper {
+  position: absolute;
+  width: 160px;
+  left: 40px;
+  bottom: 40px;
+}
+
+.prev-btn-wrapper #prev-btn {
+  font-family: "Chonburi", cursive;
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: #becfbb;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.prev-btn-wrapper #prev-btn:hover,
+.prev-btn-wrapper #prev-btn:active {
+  color: #becfbb;
+  box-shadow: 0 0 0 2px #becfbb inset;
+  background-color: white;
+  transition: 0.5s;
 }
 
 #toast {
   position: fixed;
-  top: 60px;
-  left: 60%;
+  top: 19%;
+  left: 62%;
   padding: 15px 20px;
   transform: translate(-60%, 10px);
   border-radius: 30px;
@@ -236,7 +282,6 @@
   font-size: 0.8rem;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
   z-index: 10000;
@@ -246,9 +291,10 @@
   opacity: 1;
   visibility: visible;
   transform: translate(-60%, 0);
+  transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
 }
 
 /* -------------- Table.js -----------------*/
 .section-margin {
-  margin: 20px 30px 30px 30px;
+  margin: 45% 0 45% 0;
 }
