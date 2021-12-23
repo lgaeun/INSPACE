@@ -137,6 +137,7 @@
   width: 160px;
   right: 40px;
   bottom: 40px;
+  cursor: pointer;
 }
 
 .next-btn-wrapper #next-btn {

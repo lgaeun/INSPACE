@@ -94,6 +94,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
+    sessionStorage.clear();
     const script = document.createElement("script");
     script.src =
       "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
@@ -161,7 +162,7 @@ export default class extends AbstractView {
       // 당일권 회원이라면 이용권 구매 UI로 이동한다.
 
       if (loginSuccessedUser.leftTime) {
-        sessionStorage.setItem("history", "main");
+        sessionStorage.setItem("history", "before");
         $loginBtn.parentElement.href = "/main";
       } else {
         sessionStorage.setItem("history", "login");

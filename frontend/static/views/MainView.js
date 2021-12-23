@@ -151,9 +151,47 @@ export default class extends AbstractView {
     const $checkOut = document.querySelector(".main-section__btn-check-out");
     const $btnCheckOut = document.getElementById("btn-check-out");
 
-    const $seatInfo = document.querySelector("#seat-info span");
-    const $checkInfo = document.querySelector("#check-info span");
-    const $ticketInfo = document.querySelector("#ticket-info span");
+    const selectSeatBtn = document.querySelector("#btn--select-seat");
+    const moveSeatBtn = document.querySelector("#btn--move-seat");
+    const extendTimeBtnIn = document.querySelector(
+      "#check-in__btn--extend-time"
+    );
+    const extendTimeBtnOut = document.querySelector(
+      "#check-out__btn--extend-time"
+    );
+
+    const view = sessionStorage.getItem("view");
+    if (view && view === "using") {
+      $checkIn.style.display = "grid";
+      $checkOut.style.display = "none";
+      sessionStorage.clear();
+    }
+
+    //퇴실 메인
+    selectSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "select");
+    });
+    extendTimeBtnOut.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "extend");
+    });
+
+    // 이용중 메인
+    moveSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
+      sessionStorage.setItem("path", "move");
+    });
+    extendTimeBtnIn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
+      sessionStorage.setItem("path", "extend");
+    });
+
+    const endTime = new Date("2021-12-21 21:00:00");
 
     const progressColor = "#BCCBEA";
     const circleColor = "#EDF0EB";

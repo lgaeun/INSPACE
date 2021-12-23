@@ -46,10 +46,24 @@
 }
 
 .seat-view {
+  position: relative;
   width: 75%;
   height: 100%;
   background-color: white;
   border-radius: 0 12px 12px 0;
+}
+
+#disable--seat-view {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
 }
 
 /* .seat-view__nav {

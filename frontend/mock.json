@@ -65,46 +65,6 @@
       }
     }
   ],
-  "times": [
-    {
-      "table-row1": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    },
-    {
-      "table-row2": [null, "1h", "2h3m", "30m", null, null]
-    },
-    {
-      "table-row3": [null, "1h", "2h3m", "30m", null, null]
-    },
-    {
-      "table-row4": [
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null,
-        null,
-        "1h",
-        "2h3m",
-        "30m",
-        null,
-        null
-      ]
-    }
-  ],
   "users": [
     {
       "name": "김민규",
@@ -121,30 +81,6 @@
       "password": "aaaa1111",
       "category": "saving",
       "leftTime": "true"
-    },
-    {
-      "name": "백두산",
-      "id": 3,
-      "userId": "yeah123@gmail.com",
-      "password": "bbbb1111",
-      "category": "oneday",
-      "leftTime": "false"
-    },
-    {
-      "id": 4,
-      "password": ""
-    },
-    {
-      "id": "mike2211@gmail.com",
-      "password": "aaaa1111"
-    },
-    {
-      "id": "alsrb2918@gmail.com",
-      "password": "aaaa1111"
-    },
-    {
-      "id": 5,
-      "password": ""
     }
   ],
   "checkIn": [
