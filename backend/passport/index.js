@@ -26,6 +26,7 @@ module.exports = () => {
         User.findOne({ _id: user.id }, (err, user) => {
             done(null, user); //검증성공
             // console.log('deserialize user 찾은 후 user', user)
+            //test
         });
     })
 }
