@@ -14,6 +14,8 @@ const authRouter = require('./routes/auth')
     // const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
 const session = require("express-session");
+const cors = require("cors");
+
 require("dotenv").config();
 require("./passport")();
 mongoose.connect(process.env.DB_URL);
@@ -33,6 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
 
 app.use(
     session({
@@ -49,6 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
+
 app.use('/auth', authRouter)
     // app.use('/google', GoogleRouter);
     // app.use("/payments", paymentsRouter);
@@ -57,6 +61,7 @@ app.use('/auth', authRouter)
 app.use("/payments", loginRequired, paymentsRouter);
 app.use("/users", loginRequired, usersRouter);
 app.use('/reservation', loginRequired, reservationRouter)
+
 
 
 // catch 404 and forward to error handler
