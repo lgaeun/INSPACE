@@ -7,11 +7,12 @@ export default class extends AbstractView {
     super(params);
     //this.postId = params.id;
     this.setTitle("Main Page");
+    this.nav = new NavComponent();
   }
 
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="main-container">
         <div class="main-section">
           <div class="main-section__info">
@@ -143,10 +144,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     const $checkIn = document.querySelector(".main-section__btn-check-in");
     const $checkOut = document.querySelector(".main-section__btn-check-out");
@@ -179,25 +177,34 @@ export default class extends AbstractView {
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
-    const checkIn = false; //fetch
+    const checkIn = localStorage.getItem("checkIn"); //fetch
+    const id = localStorage.getItem("id");
+
     let clearTimer = false;
     let elapsed = 0;
 
-    if (checkIn) {
+    // fetch(
+    //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login"
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //   });
+
+    if (checkIn == "true") {
       checkInDisplay(true);
 
-      // fetch(
-      //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/61c1817a587a91d1b29f6f2d/checkIn"
-      // )
       fetch(
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/checkIn"
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
       )
+        //fetch("http://localhost:3000/checkIn")
         .then((res) => res.json())
         .then((data) => {
-          data = data[0];
+          //data = data[0];
 
+          console.log(data.startTime);
           const info = {
-            seat: data.table + "-" + data.position,
+            seat: "T" + data.table + "-" + data.position,
             check: formatDate(new Date(data.startTime)),
             ticket:
               data.duration +
@@ -222,11 +229,12 @@ export default class extends AbstractView {
       checkInDisplay(false);
 
       fetch(
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/checkOut"
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
       )
+        //fetch("http://localhost:3000/checkOut")
         .then((res) => res.json())
         .then((data) => {
-          data = data[0];
+          //data = data[0];
 
           const info = {
             seat: " - ",
@@ -237,9 +245,9 @@ export default class extends AbstractView {
           setInfo(info);
 
           elapsed =
-            Math.abs(data.remainedTime.hour) * (1000 * 60 * 60) +
-            data.remainedTime.min * (1000 * 60) +
-            data.remainedTime.sec * 1000;
+            Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
+            data.remainingTime.min * (1000 * 60) +
+            data.remainingTime.sec * 1000;
 
           drawTimer();
         })
@@ -321,16 +329,16 @@ export default class extends AbstractView {
 
     $btnCheckOut.addEventListener("click", () => {
       fetch(
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/checkOut"
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
       )
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
+        .then((res) => {
+          if (res.ok) {
+            localStorage.setItem("checkIn", false);
+            location.reload();
+          }
         })
+        .then((data) => {})
         .catch((err) => console.log(err));
-
-      checkInDisplay(false);
-      clearTimer = true;
     });
 
     function drawTimer() {

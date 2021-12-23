@@ -5,11 +5,12 @@ export default class extends AbstractView {
   constructor(params) {
     super(params);
     this.setTitle = "Paycheck Page";
+    this.nav = new NavComponent();
   }
 
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="pay-check-bg">
       <main class="pay-check-container">
         <div class="payment-box">
@@ -33,10 +34,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     const paycheckTitle = document.querySelector(".pay-chekc-title");
     const totalPrice = document.querySelector(".total-price-box__price");

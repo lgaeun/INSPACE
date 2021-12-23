@@ -20,10 +20,11 @@ export default class extends AbstractView {
   constructor(params) {
     super(params);
     this.setTitle("좌석 선택");
+    this.nav = new NavComponent();
   }
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="seat-bg" id="bg">
       <div class="seat-container-border">
         <div class="seat-container" id="seat-container">
@@ -156,10 +157,7 @@ export default class extends AbstractView {
   postSeatData() {}
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     initSeats();
 

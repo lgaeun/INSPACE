@@ -1,5 +1,7 @@
-export default function navComponent() {
-  return `
+export default class {
+  constructor() {}
+  getHtml() {
+    return `
     <nav class="navbar navbar-light main-navbar">
       <div class="container-fluid">
         <a class="navbar-brand m-sm-2 mb-0" href="/main">
@@ -104,7 +106,7 @@ export default function navComponent() {
               >
                 닫기
               </button>
-              <button type="button" class="btn btn-primary">수정하기</button>
+              <button type="button" class="btn btn-primary" id="userInfo-modify-btn" data-bs-dismiss="modal">수정하기</button>
             </div>
           </div>
         </div>
@@ -165,7 +167,7 @@ export default function navComponent() {
               >
                 뒤로 가기
               </button>
-              <button type="button" class="btn btn-primary">
+              <button type="button" class="btn btn-primary" id="pwd-change-btn">
                 비밀번호 변경
               </button>
             </div>
@@ -173,4 +175,33 @@ export default function navComponent() {
         </div>
       </div>
       `;
+  }
+  defaultFunc() {
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    document.getElementById("root").appendChild(script);
+
+    const $infoBtn = document.getElementById("userInfo-modify-btn");
+    const $pwdBtn = document.getElementById("pwd-change-btn");
+    const $modifyPwdModal = document.getElementById("modifyPwdModal");
+
+    let flag = true;
+
+    $infoBtn.addEventListener("click", () => {
+      console.log("modify");
+    });
+
+    $pwdBtn.addEventListener("click", () => {
+      console.log("change");
+      flag = false;
+    });
+
+    $modifyPwdModal.addEventListener("show.bs.modal", function (event) {
+      console.log(event);
+      if (!flag) {
+        return event.preventDefault(); // stops modal from being shown
+      }
+    });
+  }
 }
