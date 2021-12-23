@@ -40,6 +40,9 @@ export default class extends AbstractView {
           </article>
         </section>
       </main>
+      <div class="prev-btn-wrapper seat-view__nav">
+          <a href="/main" data-link><button id="prev-btn">Prev</button></a>
+        </div>
       <div class="next-btn-wrapper">
           <a href="/select" data-link><button id="next-btn">Next</button></a>
         </div>
@@ -75,12 +78,12 @@ export default class extends AbstractView {
         $nextBtn.disabled = false;
         $nextBtn.style.backgroundColor = "#becfbb";
 
-        // 이벤트 타깃이 아닌 버튼 이벤트 초기화
-        $tickets.forEach((ticket) => {
-          if (ticket !== e.target) {
-            ticket.style = "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;";
-          }
-        });
+        // // 이벤트 타깃이 아닌 버튼 이벤트 초기화
+        // $tickets.forEach((ticket) => {
+        //   if (ticket !== e.target) {
+        //     ticket.style = "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;";
+        //   }
+        // });
         // 티켓데이터
         const ticketData = objectFunc();
         // localStorage에 추가
