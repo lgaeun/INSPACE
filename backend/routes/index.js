@@ -46,29 +46,31 @@ router.post(
 router.get(
   "/login",
   asyncHandler(async (req, res, next) => {
-    console.log("req.user", req.user);
-    const { id } = req.query;
+    // console.log("req.session1212", req.session);
+    // const { id } = req.query;
+    const id = req.session.passport.user.id;
     const user = await User.findOne({ _id: id }).populate("userSeat");
+    const { name, userId } = user;
     const checkIn = !user.userSeat.isempty;
-    res.json({ checkIn });
+    res.json({ checkIn, id: id, name, userId });
   })
 );
 
-router.get("/logout", (req, res, next) => {
-  req.logout();
-  res.status(204).json({ message: "success" });
-});
+//기존에 있던 로그아웃 파일
+// router.get("/logout", (req, res, next) => {
+//   req.logout();
+//   res.status(204).json({ message: "success" });
+// });
 
-// router.post(
-//     '/findpw',
-//     asyncHandler(async(req, res, next) => {
-//         const { name } = req.body;
-//         const Pname = await User.findOne({ name });
-//         if (!Pname) {
-//             throw new Error('유효한 사용자가 아닙니다.')
-//         }
-//     })
-// )
+router.get(
+  "/logout",
+  asyncHandler(async (req, res, next) => {
+    const user = await User.findOne({ _id: req.user._id });
+
+    req.logout();
+    res.status(204).json({ message: "success" });
+  })
+);
 
 router.post(
   "/reset-password",
