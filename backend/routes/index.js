@@ -22,6 +22,8 @@ router.post(
         //     throw new Error("비밀번호가 일치하지 않습니다.");
         //     return;
         // }
+        //test
+
 
 
         await User.create({
@@ -45,31 +47,35 @@ router.post(
 );
 
 router.get(
+
     "/login",
     asyncHandler(async(req, res, next) => {
-        console.log("req.user", req.user);
-        const { id } = req.query;
+        // console.log("req.session1212", req.session);
+        // const { id } = req.query;
+        const id = req.session.passport.user.id;
         const user = await User.findOne({ _id: id }).populate("userSeat");
+        const { name, userId } = user;
         const checkIn = !user.userSeat.isempty;
-        res.json({ checkIn });
+        res.json({ checkIn, id: id, name, userId });
     })
 );
 
-router.get("/logout", (req, res, next) => {
-    req.logout();
-    res.status(204).json({ message: "success" });
-});
+//기존에 있던 로그아웃 파일
+// router.get("/logout", (req, res, next) => {
+//   req.logout();
+//   res.status(204).json({ message: "success" });
+// });
 
-// router.post(
-//     '/findpw',
-//     asyncHandler(async(req, res, next) => {
-//         const { name } = req.body;
-//         const Pname = await User.findOne({ name });
-//         if (!Pname) {
-//             throw new Error('유효한 사용자가 아닙니다.')
-//         }
-//     })
-// )
+
+router.get(
+    "/logout",
+    asyncHandler(async(req, res, next) => {
+        const user = await User.findOne({ _id: req.user._id });
+
+        req.logout();
+        res.status(204).json({ message: "success" });
+    })
+);
 
 router.post(
     "/reset-password",
@@ -111,15 +117,30 @@ router.post(
 // }))
 
 router.post(
-    "/info-change",
+
+    "/info-change-name",
     asyncHandler(async(req, res, next) => {
-        const { name, password, newpassword, confirmpassword } = req.body;
+        const { name } = req.body;
         const user = await User.findOne({ _id: req.user.id });
-        console.log("인포체인지에서 req.user", req.user);
+        console.log("인포체인지네임에서 req.user", req.user);
         console.log("인포체인지에서 user", user);
-        if (user.name != name) {
-            throw new Error("이름이 다릅니다.");
+        if (user.name == name) {
+            throw new Error("변경 전 이름과 같습니다.");
         }
+        await User.updateOne({ _id: user._id }, {
+            name,
+        });
+    })
+);
+
+router.post(
+    "/info-change-password",
+    asyncHandler(async(req, res, next) => {
+        const { password, newpassword, confirmpassword } = req.body;
+        const user = await User.findOne({ _id: req.user.id });
+        // console.log("인포체인지에서 req.user", req.user);
+        // console.log("인포체인지에서 user", user);
+
         // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
         if (user.isModified("password")) {
             throw new Error("기존 비밀번호를 다시 입력해주세요");
@@ -133,6 +154,7 @@ router.post(
             password: hashPassword(newpassword),
         });
     })
+
 );
 
 module.exports = router;

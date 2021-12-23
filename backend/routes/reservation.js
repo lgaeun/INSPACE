@@ -151,6 +151,7 @@ router.post(
 router.post(
   "/payments/:id",
   asyncHandler(async (req, res, next) => {
+    console.log("티켓구매", req.user);
     const { id } = req.params;
     const user = await User.findOne({ _id: id });
     const { category, duration, price } = req.body; //시간연장에 필요한 데이터만 저장
