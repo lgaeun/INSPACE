@@ -96,6 +96,7 @@ router.post(
             "비밀번호가 변경되었습니다.",
             `변경된 비밀번호는 : ${password} 입니다.`
         );
+        res.status(200).json({ message: "success" });
     })
 );
 
@@ -130,6 +131,7 @@ router.post(
         await User.updateOne({ _id: user._id }, {
             name,
         });
+        res.status(200).json({ message: "success" });
     })
 );
 
@@ -153,6 +155,7 @@ router.post(
         await User.updateOne({ _id: user._id }, {
             password: hashPassword(newpassword),
         });
+        res.status(200).json({ message: "success" });
     })
 
 );
