@@ -2,16 +2,15 @@
 //로그인성공->세션정보를 만듦->마이페이지 방문 시 세션검사
 //id를 이용해서 세션을 저장시킴(로그인 성공시 발동)
 
-
-const passport = require('passport');
-const { User } = require('../models');
-const local = require('./strategies/local');
-const jwt = require('./strategies/jwt')
-const google = require('./strategies/google');
+const passport = require("passport");
+const { User } = require("../models");
+const local = require("./strategies/local");
+const jwt = require("./strategies/jwt");
+const google = require("./strategies/google");
 
 module.exports = () => {
     passport.use(local);
-    passport.use(jwt)
+    passport.use(jwt);
     passport.use(google);
     // console.log('serialize 전 콘솔')
     passport.serializeUser((user, done) => {
@@ -26,7 +25,6 @@ module.exports = () => {
         User.findOne({ _id: user.id }, (err, user) => {
             done(null, user); //검증성공
             // console.log('deserialize user 찾은 후 user', user)
-            //test
         });
-    })
-}
+    });
+};
