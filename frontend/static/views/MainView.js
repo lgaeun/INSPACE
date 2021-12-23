@@ -49,7 +49,7 @@ export default class extends AbstractView {
           </div>
           <div class="main-section__btn-check-in">
           <a href="/select" data-link
-          ><button class="btn" type="button id="btn--move-seat"">
+          ><button class="btn" type="button" id="btn--move-seat">
           <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -162,36 +162,9 @@ export default class extends AbstractView {
 
     const view = sessionStorage.getItem("view");
     if (view && view === "using") {
-      $checkIn.style.display = "grid";
-      $checkOut.style.display = "none";
       sessionStorage.clear();
     }
 
-    //퇴실 메인
-    selectSeatBtn.addEventListener("click", function () {
-      sessionStorage.clear();
-      sessionStorage.setItem("history", "before");
-      sessionStorage.setItem("path", "select");
-    });
-    extendTimeBtnOut.addEventListener("click", function () {
-      sessionStorage.clear();
-      sessionStorage.setItem("history", "before");
-      sessionStorage.setItem("path", "extend");
-    });
-
-    // 이용중 메인
-    moveSeatBtn.addEventListener("click", function () {
-      sessionStorage.clear();
-      sessionStorage.setItem("history", "using");
-      sessionStorage.setItem("path", "move");
-    });
-    extendTimeBtnIn.addEventListener("click", function () {
-      sessionStorage.clear();
-      sessionStorage.setItem("history", "using");
-      sessionStorage.setItem("path", "extend");
-    });
-
-    const endTime = new Date("2021-12-21 21:00:00");
     const $seatInfo = document.querySelector("#seat-info span");
     const $checkInfo = document.querySelector("#check-info span");
     const $ticketInfo = document.querySelector("#ticket-info span");
@@ -205,7 +178,7 @@ export default class extends AbstractView {
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
-    const checkIn = true; //fetch
+    const checkIn = false; //fetch
     let clearTimer = false;
     let elapsed = 0;
 
@@ -317,6 +290,29 @@ export default class extends AbstractView {
         $checkOut.style.display = "grid";
       }
     }
+    //퇴실 메인
+    selectSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "select");
+    });
+    extendTimeBtnOut.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "extend");
+    });
+
+    // 이용중 메인
+    moveSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
+      sessionStorage.setItem("path", "move");
+    });
+    extendTimeBtnIn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
+      sessionStorage.setItem("path", "extend");
+    });
 
     $btnCheckOut.addEventListener("click", () => {
       fetch("http://localhost:3000/checkOut")
