@@ -30,7 +30,7 @@ export default class {
                 <a class="dropdown-item" href="javascript:void(0);">개인 정보 수정</a>
               </li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">로그아웃</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);" id="logout-Btn">로그아웃</a></li>
             </ul>
           </li>
         </ul>
@@ -202,6 +202,16 @@ export default class {
       if (!flag) {
         return event.preventDefault(); // stops modal from being shown
       }
+    });
+
+    const $logout = document.getElementById("logout-Btn");
+
+    $logout.addEventListener("click", () => {
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout"
+      )
+        .then((res) => res.json())
+        .then(console.log);
     });
   }
 }

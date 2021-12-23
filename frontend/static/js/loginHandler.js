@@ -45,6 +45,7 @@ function loginHandler() {
         localStorage.setItem("name", data.name);
 
         document.getElementById("login-Btn").parentElement.href = "/main";
+        document.getElementById("login-Btn").parentElement.href = "/main";
       })
       .catch((err) => {
         console.log(err);
