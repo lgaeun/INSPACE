@@ -39,13 +39,9 @@ router.post(
     failureRedirect: "/fail",
   }),
   asyncHandler(async (req, res, next) => {
-    // console.log("req.session1212", req.session);
+    console.log("req.session1212", req.session);
     // const { id } = req.query;
-    const dsds = req.session;
-    console.log(dsds);
     const id = req.session.passport.user.id;
-    console.log("type", typeof id);
-    console.log("id", id);
     const user = await User.findOne({ _id: id }).populate("userSeat");
     const { name, userId } = user;
     if (!user.userSeat) {
@@ -87,7 +83,11 @@ router.post(
 router.get(
   "/logout",
   asyncHandler(async (req, res, next) => {
-    const user = await User.findOne({ _id: req.user._id });
+    // const user = await User.findOne({ _id: req.user._id });
+    const dsds = req.session;
+    const requser = req.user;
+    console.log("dsds", dsds);
+    console.log("requser", requser);
 
     req.logout();
     res.status(204).json({ message: "success" });
