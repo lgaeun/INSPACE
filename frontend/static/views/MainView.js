@@ -64,24 +64,24 @@ export default class extends AbstractView {
           <div class="main-section__timer">
             <canvas id="timer" width="400" height="400"></canvas>
           </div>
-          <div class="main-section__btn--check-in">
+          <div class="main-section__btn-check-in">
             <a href="/ticket" data-link
-              ><button class="btn" type="button" id="btn--extend-time">시간 연장하기</button></a
+              ><button class="btn" type="button" id="check-in__btn--extend-time">시간 연장하기</button></a
             >
             <a href="/select" data-link
               ><button class="btn" type="button" id="btn--move-seat">좌석 이동하기</button></a
             >
             <a href="javascript:void(0);"
-              ><button class="btn" type="button" onclick="checkInOut(true)">
+              ><button class="btn" type="button" id="btn-check-out">
                 퇴실하기
               </button></a
             >
           </div>
-          <div class="main-section__btn--check-out">
-            <a href="/" data-link
-              ><button class="btn" type="button">시간 연장하기</button></a
+          <div class="main-section__btn-check-out">
+            <a href="/ticket" data-link
+              ><button class="btn" type="button" id="check-out__btn--extend-time">시간 연장하기</button></a
             >
-            <a href="/" data-link
+            <a href="/select" data-link
               ><button class="btn" type="button" id="btn--select-seat">좌석 선택하기</button></a
             >
           </div>
@@ -97,20 +97,47 @@ export default class extends AbstractView {
       "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
     document.getElementById("root").appendChild(script);
 
-    const $checkIn = document.querySelector(".main-section__btn--check-in");
-    const $checkOut = document.querySelector(".main-section__btn--check-out");
+    const $checkIn = document.querySelector(".main-section__btn-check-in");
+    const $checkOut = document.querySelector(".main-section__btn-check-out");
+    const $btnCheckOut = document.getElementById("btn-check-out");
 
-    const moveSeatBtn = document.querySelector("#btn--move-seat");
-    const extendTimeBtn = document.querySelector("#btn--extend-time");
     const selectSeatBtn = document.querySelector("#btn--select-seat");
+    const moveSeatBtn = document.querySelector("#btn--move-seat");
+    const extendTimeBtnIn = document.querySelector(
+      "#check-in__btn--extend-time"
+    );
+    const extendTimeBtnOut = document.querySelector(
+      "#check-out__btn--extend-time"
+    );
 
+    const view = sessionStorage.getItem("view");
+    if (view && view === "using") {
+      $checkIn.style.display = "grid";
+      $checkOut.style.display = "none";
+      sessionStorage.clear();
+    }
+
+    //퇴실 메인
     selectSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
       sessionStorage.setItem("path", "select");
     });
+    extendTimeBtnOut.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "extend");
+    });
+
+    // 이용중 메인
     moveSeatBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
       sessionStorage.setItem("path", "move");
     });
-    extendTimeBtn.addEventListener("click", function () {
+    extendTimeBtnIn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "using");
       sessionStorage.setItem("path", "extend");
     });
 
@@ -125,44 +152,34 @@ export default class extends AbstractView {
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
-    let now = new Date();
-    let elapsed = endTime.getTime() - now.getTime();
+    const checkIn = true; //fetch
 
-    const data = 0;
+    fetch("http://localhost:3000/checkIn")
+      .then((res) => res.json())
+      .then((data) => {
+        const endTime = new Date(data[0].finishTime);
 
-    // function runTimer(){
-    //   if (elapsed > 0) {
-    //     var interval = setInterval(function () {
-    //       drawTimer(ctx);
-    //     }, 1000);
-    //   } else {
-    //     drawTimer(ctx);
-    //   }
-    // }
+        let now = new Date();
+        let elapsed = endTime.getTime() - now.getTime();
 
-    if (elapsed > 0) {
-      var interval = setInterval(function () {
-        drawTimer(ctx);
-      }, 1000);
-    } else {
+        if (elapsed > 0) {
+          var interval = setInterval(function () {
+            drawTimer(ctx, elapsed, now, endTime);
+          }, 1000);
+        } else {
+          drawTimer(ctx, elapsed, now);
+        }
+      });
+
+    $btnCheckOut.addEventListener("click", () => {
+      $checkIn.style.display = "none";
+      $checkOut.style.display = "grid";
+
+      clearInterval(interval);
       drawTimer(ctx);
-    }
+    });
 
-    function btnRerange() {}
-
-    function checkInOut(flag) {
-      if (flag) {
-        $checkIn.style.display = "none";
-        $checkOut.style.display = "grid";
-
-        clearInterval(interval);
-        drawTimer(ctx);
-      } else {
-        interval();
-      }
-    }
-
-    function drawTimer(ctx) {
+    function drawTimer(ctx, elapsed, now, endTime) {
       //timer process circle
       const restTimeHour = (elapsed > 0 ? elapsed : 0) / (1000 * 60 * 60);
 
