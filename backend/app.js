@@ -10,10 +10,12 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const paymentsRouter = require("./routes/payments");
 const reservationRouter = require("./routes/reservation");
-// const loginRouter = require("./routes/login");
+const authRouter = require("./routes/auth");
+// const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
 const session = require("express-session");
 const cors = require("cors");
+
 require("dotenv").config();
 require("./passport")();
 mongoose.connect(process.env.DB_URL);
@@ -41,10 +43,11 @@ app.use(cookieParser());
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
 
 app.use(
   session({
-    secret: "Inspace",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
@@ -57,6 +60,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
+
+app.use("/auth", authRouter);
+// app.use("/google", GoogleRouter);
 app.use("/payments", paymentsRouter);
 app.use("/users", usersRouter);
 app.use("/reservation", reservationRouter);

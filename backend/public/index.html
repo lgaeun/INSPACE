@@ -9,6 +9,7 @@
   </head>
 
   <body>
+    <p>pm2 restart 잘 되었을까</p>
     <form action="/signup" method="post">
       이름 : <input type="text" name="name" /> 아이디el :
       <input type="text" name="userId" /> 비빌번호 :
@@ -16,5 +17,14 @@
       <input type="text" name="checkPassword" /> 비빌번호확인 :
       <input type="submit" />
     </form>
+    <div>
+      <a
+        class="btn btn-block"
+        href="/auth/google"
+        role="button"
+        autocomplete="on"
+        >sign in google</a
+      >
+    </div>
   </body>
 </html>
