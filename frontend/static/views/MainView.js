@@ -6,11 +6,12 @@ export default class extends AbstractView {
     super(params);
     //this.postId = params.id;
     this.setTitle("Main Page");
+    this.nav = new NavComponent();
   }
 
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="main-container">
         <div class="main-section">
           <div class="main-section__info">
@@ -142,10 +143,11 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
+    // const script = document.createElement("script");
+    // script.src =
+    //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    // document.getElementById("root").appendChild(script);
 
     const $checkIn = document.querySelector(".main-section__btn-check-in");
     const $checkOut = document.querySelector(".main-section__btn-check-out");
@@ -178,23 +180,37 @@ export default class extends AbstractView {
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
-    const checkIn = false; //fetch
+    const checkIn = localStorage.getItem("checkIn"); //fetch
+    const id = localStorage.getItem("id");
+
     let clearTimer = false;
     let elapsed = 0;
 
-    if (checkIn) {
+    // fetch(
+    //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login"
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //   });
+
+    console.log(`1 ---------- ${checkIn}`);
+    if (checkIn == "true") {
+      console.log(`2 ---------- ${checkIn}`);
+
       checkInDisplay(true);
 
-      // fetch(
-      //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/61c1817a587a91d1b29f6f2d/checkIn"
-      // )
-      fetch("http://localhost:3000/checkIn")
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
+      )
+        //fetch("http://localhost:3000/checkIn")
         .then((res) => res.json())
         .then((data) => {
-          data = data[0];
+          //data = data[0];
 
+          console.log(data.startTime);
           const info = {
-            seat: data.table + "-" + data.position,
+            seat: "T" + data.table + "-" + data.position,
             check: formatDate(new Date(data.startTime)),
             ticket:
               data.duration +
@@ -216,12 +232,17 @@ export default class extends AbstractView {
         })
         .catch((err) => console.log(err));
     } else {
+      console.log(`3 ---------- ${checkIn}`);
+
       checkInDisplay(false);
 
-      fetch("http://localhost:3000/checkOut")
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+      )
+        //fetch("http://localhost:3000/checkOut")
         .then((res) => res.json())
         .then((data) => {
-          data = data[0];
+          //data = data[0];
 
           const info = {
             seat: " - ",
@@ -315,7 +336,9 @@ export default class extends AbstractView {
     });
 
     $btnCheckOut.addEventListener("click", () => {
-      fetch("http://localhost:3000/checkOut")
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/61c425ce93990056902f33fa/checkOut"
+      )
         .then((res) => res.json())
         .then((data) => {})
         .catch((err) => console.log(err));

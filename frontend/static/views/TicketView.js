@@ -8,11 +8,12 @@ export default class extends AbstractView {
     super(params);
     this.setTitle("INSPACE");
     this.obj = {};
+    this.nav = new NavComponent();
   }
 
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="ticket-bg">
       <main class="ticket-select">
         <h2>Ticket</h2>
@@ -51,10 +52,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     const $tickets = document.querySelectorAll(".ticket");
     const $nextBtn = document.getElementById("next-btn");
