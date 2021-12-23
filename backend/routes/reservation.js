@@ -61,7 +61,9 @@ router.post(
   "/table/position/payments/:id",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     //req.body 로 받는 duration은 hour
     // console.log("uesr", user);
     const { category, duration, price, table, position } = req.body;
@@ -154,7 +156,9 @@ router.post(
   asyncHandler(async (req, res, next) => {
     console.log("티켓구매", req.user);
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     const { category, duration, price } = req.body; //시간연장에 필요한 데이터만 저장
     const newTicket = await Ticket.create({
       category,
@@ -192,7 +196,9 @@ router.post(
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const { position, table } = req.body;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
 
     //겹치는 좌석이 있는지 확인 후 에러처리
     const checkPosition = await Position.findOne({
@@ -223,6 +229,8 @@ router.post(
     });
     //기존에 이용하던 좌석이 있는 경우
     if (user.userSeat && !user.userSeat.isempty) {
+      console.log("1", user.userSeat);
+      console.log("2", user.userSeat.isempty);
       const prevPosition = await Position.findOneAndUpdate(
         { _id: user.userSeat },
         { isempty: true, deletedAt: new Date() },
