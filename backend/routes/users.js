@@ -29,7 +29,7 @@ router.get(
 
 //이용중이다가 퇴실하기 눌럿을 때 유저시간 반영하는거 해야해!
 router.get(
-  "/:id/checkOut",
+  "/checkOut",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const user = await User.findOne({ _id: id });

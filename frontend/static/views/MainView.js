@@ -1,5 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
+// import { copy } from "../../../backend/app.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -188,7 +189,9 @@ export default class extends AbstractView {
       // fetch(
       //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/61c1817a587a91d1b29f6f2d/checkIn"
       // )
-      fetch("http://localhost:3000/checkIn")
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/checkIn"
+      )
         .then((res) => res.json())
         .then((data) => {
           data = data[0];
@@ -218,7 +221,9 @@ export default class extends AbstractView {
     } else {
       checkInDisplay(false);
 
-      fetch("http://localhost:3000/checkOut")
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/checkOut"
+      )
         .then((res) => res.json())
         .then((data) => {
           data = data[0];
@@ -315,9 +320,13 @@ export default class extends AbstractView {
     });
 
     $btnCheckOut.addEventListener("click", () => {
-      fetch("http://localhost:3000/checkOut")
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/checkOut"
+      )
         .then((res) => res.json())
-        .then((data) => {})
+        .then((data) => {
+          console.log(data);
+        })
         .catch((err) => console.log(err));
 
       checkInDisplay(false);

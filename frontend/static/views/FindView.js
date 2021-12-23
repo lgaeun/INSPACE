@@ -43,12 +43,11 @@ export default class extends AbstractView {
             </form>
             <div class="btn_container">
             <a href='/' data-link><button class="btn btn-cancel">Cancel</button></a>
-            <a href='/' data-link><button class="btn btn-signup">임시비밀번호 발급</button></a>
+            <a href='/find' data-link><button class="btn btn-signup">임시비밀번호 발급</button></a>
             </div>
           </div>
         </article>
       </main>
-      <div id="find-password-alert">임시 비밀번호가 발급되었습니다. <br>새로운 비밀번호로 로그인 해주세요.</div>
     </div>
   `;
   }
@@ -80,17 +79,12 @@ export default class extends AbstractView {
           "Content-Type": "application/json",
         },
       }).then((res) => {
-        // console.log(res);
-        // if (res.ok) {
-        //   document.getElementById("find-password-alert").style.display =
-        //     "block";
-        //   setTimeout(() => {
-        //     document.getElementById("find-password-alert").style.display =
-        //       "none";
-        //   }, 2500);
-        // } else {
-        //   alert("정보를 입력해주세요.");
-        // }
+        console.log(res);
+        if (res.ok) {
+          alert("임시 비밀번호가 발급되었습니다.");
+        } else {
+          alert("정보를 입력해주세요.");
+        }
       });
     });
   }
