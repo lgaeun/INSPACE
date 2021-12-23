@@ -40,6 +40,9 @@ export default class extends AbstractView {
           </article>
         </section>
       </main>
+      <div class="prev-btn-wrapper seat-view__nav">
+          <a href="/main" data-link><button id="prev-btn">Prev</button></a>
+        </div>
       <div class="next-btn-wrapper">
           <a href="/select" data-link><button id="next-btn">Next</button></a>
         </div>
@@ -63,15 +66,15 @@ export default class extends AbstractView {
         const userAuth =
           e.target.className === "charge ticket" ? "charge" : "oneday";
         // 클릭시 버튼 눌림 효과 CSS적용
-        e.target.style =
-          "box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;";
+        // e.target.style =
+        //   "box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;";
 
-        // 이벤트 타깃이 아닌 버튼 이벤트 초기화
-        $tickets.forEach((ticket) => {
-          if (ticket !== e.target) {
-            ticket.style = "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;";
-          }
-        });
+        // // 이벤트 타깃이 아닌 버튼 이벤트 초기화
+        // $tickets.forEach((ticket) => {
+        //   if (ticket !== e.target) {
+        //     ticket.style = "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;";
+        //   }
+        // });
         // 티켓데이터
         const ticketData = objectFunc();
         // localStorage에 추가

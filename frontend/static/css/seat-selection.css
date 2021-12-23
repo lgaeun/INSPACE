@@ -136,7 +136,7 @@
 
 .table {
   display: flex;
-  background-color: black;
+  background-color: #444451;
   border-radius: 1rem;
   margin-bottom: 0;
 }
