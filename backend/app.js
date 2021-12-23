@@ -15,10 +15,12 @@ const authRouter = require('./routes/auth')
 const loginRequired = require("./middlewares/login-required");
 const session = require("express-session");
 const cors = require("cors");
+// const cookieSession = require("cookie-session");
+// const keys = require('./utils/keys')
 
 require("dotenv").config();
 require("./passport")();
-mongoose.connect(process.env.DB_URL);
+mongoose.connect(process.env.DB_URL)
 
 mongoose.connection.on("connected", () => {
     console.log("MongoDB Connected");
@@ -48,11 +50,13 @@ app.use(
     })
 );
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/", indexRouter);
 
+
+app.use("/", indexRouter);
 app.use('/auth', authRouter)
     // app.use('/google', GoogleRouter);
     // app.use("/payments", paymentsRouter);

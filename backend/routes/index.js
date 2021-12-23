@@ -40,9 +40,12 @@ router.post(
     "/login",
     passport.authenticate("local", {
         failureRedirect: "/fail",
+
     }),
     function(req, res) {
         res.status(200).json({ message: "success" });
+        console.log("세션1", req.session.passport.user.id)
+        console.log("세션2", req.session)
     }
 );
 
@@ -53,6 +56,8 @@ router.get(
         // console.log("req.session1212", req.session);
         // const { id } = req.query;
         const id = req.session.passport.user.id;
+        console.log("세션1", req.session.passport.user.id)
+        console.log("세션2", req.session)
         const user = await User.findOne({ _id: id }).populate("userSeat");
         const { name, userId } = user;
         const checkIn = !user.userSeat.isempty;
@@ -70,9 +75,11 @@ router.get(
 router.get(
     "/logout",
     asyncHandler(async(req, res, next) => {
+        console.log('req.user ', req.user)
         const user = await User.findOne({ _id: req.user._id });
-
+        console.log(req.user)
         req.logout();
+
         res.status(204).json({ message: "success" });
     })
 );
@@ -142,8 +149,6 @@ router.post(
         const user = await User.findOne({ _id: req.user.id });
         // console.log("인포체인지에서 req.user", req.user);
         // console.log("인포체인지에서 user", user);
-
-        // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
         if (user.isModified("password")) {
             throw new Error("기존 비밀번호를 다시 입력해주세요");
         } else if (hashPassword(password) == hashPassword(newpassword)) {

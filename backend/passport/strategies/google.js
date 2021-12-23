@@ -1,5 +1,6 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { User, OAuth } = require('../../models');
+const findOrCreate = require('mongoose-findorcreate')
 
 const config = {
     clientID: '483541837822-l081si09sa61433r6im5osejheb8ges0.apps.googleusercontent.com',
@@ -7,35 +8,59 @@ const config = {
     callbackURL: "/auth/google/callback"
 };
 
-async function findOrCreateUser({ name, email }) {
-    const user = await User.findOne({
-        email,
-    });
+// module.exports = new GoogleStrategy(config, (accesstoken, refreshToken, profile, done) => {
+//     User.findOne({ googleId: profile.id }).then((existingUser) => {
+//         if (existingUser) {
+//             done(null, existingUser)
+//         } else {
+//             new User({ googleId: profile.id }).save().then((user) => {
+//                 done(null, user)
+//             })
+//         }
+//     })
+// })
 
-    if (user) {
-        return user;
-    }
+module.exports = new GoogleStrategy(config, function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ googleId: profile.id }, function(err, user) {
+        console.log('profile.id : ', profile.id)
+        console.log('profile : ', profile)
+        return done(err, {
+            userId: profile.emails[0].value,
+            name: profile.displayName,
+            password: profile.id
+        })
+    })
+})
 
-    const created = await User.create({
-        name,
-        email,
-        password: 'GOOGLE_OAUTH',
-    });
+// async function findOrCreateUser({ name, email }) {
+//     const user = await User.findOne({
+//         email,
+//     });
 
-    return created;
-}
+//     if (user) {
+//         return user;
+//     }
 
-module.exports = new GoogleStrategy(config, async(accessToken, refreshToken, profile, done) => {
-    const { email, name } = profile._json;
+//     const created = await User.create({
+//         name,
+//         email,
+//         password: 'GOOGLE_OAUTH',
+//     });
 
-    try {
-        const user = await findOrCreateUser({ email, name })
-        done(null, {
-            shortId: user.shortId,
-            email: user.email,
-            name: user.name,
-        });
-    } catch (e) {
-        done(e, null);
-    }
-});
+//     return created;
+// }
+
+// module.exports = new GoogleStrategy(config, async(accessToken, refreshToken, profile, done) => {
+//     const { email, name } = profile._json;
+
+//     try {
+//         const user = await findOrCreateUser({ email, name })
+//         done(null, {
+//             id: user._id,
+//             userId: user.userId,
+//             name: user.name,
+//         });
+//     } catch (e) {
+//         done(e, null);
+//     }
+// });
