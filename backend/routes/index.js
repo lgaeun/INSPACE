@@ -10,7 +10,6 @@ const passport = require("passport");
 router.post(
   "/signup",
   asyncHandler(async (req, res, next) => {
-    // const { name, userId, password, checkPassword } = req.body;
     const { name, userId, password } = req.body;
     const hashedPassword = hashPassword(password);
     const existId = await User.findOne({ userId });
@@ -19,9 +18,10 @@ router.post(
       return;
     }
     // if (password != checkPassword) {
-    //   throw new Error("비밀번호가 일치하지 않습니다.");
-    //   return;
+    //     throw new Error("비밀번호가 일치하지 않습니다.");
+    //     return;
     // }
+    //test
 
     await User.create({
       name,
@@ -115,15 +115,32 @@ router.post(
 // }))
 
 router.post(
-  "/info-change",
+  "/info-change-name",
   asyncHandler(async (req, res, next) => {
-    const { name, password, newpassword, confirmpassword } = req.body;
+    const { name } = req.body;
     const user = await User.findOne({ _id: req.user.id });
-    console.log("인포체인지에서 req.user", req.user);
+    console.log("인포체인지네임에서 req.user", req.user);
     console.log("인포체인지에서 user", user);
-    if (user.name != name) {
-      throw new Error("이름이 다릅니다.");
+    if (user.name == name) {
+      throw new Error("변경 전 이름과 같습니다.");
     }
+    await User.updateOne(
+      { _id: user._id },
+      {
+        name,
+      }
+    );
+  })
+);
+
+router.post(
+  "/info-change-password",
+  asyncHandler(async (req, res, next) => {
+    const { password, newpassword, confirmpassword } = req.body;
+    const user = await User.findOne({ _id: req.user.id });
+    // console.log("인포체인지에서 req.user", req.user);
+    // console.log("인포체인지에서 user", user);
+
     // 이부분이 오류가 나는데 단방향 암호화라 그런듯! 복호화 진행을 해봅시다
     if (user.isModified("password")) {
       throw new Error("기존 비밀번호를 다시 입력해주세요");
