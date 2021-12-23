@@ -5,9 +5,13 @@
 const passport = require('passport');
 const { User } = require('../models');
 const local = require('./strategies/local');
+const jwt = require('./strategies/jwt')
+const google = require('./strategies/google');
 
 module.exports = () => {
     passport.use(local);
+    passport.use(jwt)
+    passport.use(google);
     console.log('serialize 전 콘솔')
     passport.serializeUser((user, done) => {
         done(null, user); //_id로 받아주기

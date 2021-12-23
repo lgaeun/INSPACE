@@ -11,17 +11,17 @@ const passport = require('passport')
 router.post(
     "/signup",
     asyncHandler(async(req, res, next) => {
-        const { name, userId, password, checkPassword } = req.body;
+        const { name, userId, password } = req.body;
         const hashedPassword = hashPassword(password);
         const existId = await User.findOne({ userId });
         if (existId) {
             throw new Error("사용중인 아이디입니다.");
             return;
         }
-        if (password != checkPassword) {
-            throw new Error("비밀번호가 일치하지 않습니다.");
-            return;
-        }
+        // if (password != checkPassword) {
+        //     throw new Error("비밀번호가 일치하지 않습니다.");
+        //     return;
+        // }
 
         const doosan = await User.create({
             name,
