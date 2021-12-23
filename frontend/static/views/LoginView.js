@@ -4,7 +4,7 @@ import loginHandler from "../js/loginHandler.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("Dashboard");
+    this.setTitle("INSPACE");
   }
   getHtml() {
     return `

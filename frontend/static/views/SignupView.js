@@ -4,7 +4,7 @@ import userData from "../js/data.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("Dashboard");
+    this.setTitle("INSPACE");
   }
   getHtml() {
     return `
@@ -55,7 +55,7 @@ export default class extends AbstractView {
                   class="form-control"
                   placeholder="알바펫,숫자 포함 8자리 이상"
                 />
-                <label for="password">Password</label>
+                <label for="password">Password(알파벳, 숫자 포함 8자리 이상)</label>
               </div>
 
               <!-- <label for="password">Password</label>

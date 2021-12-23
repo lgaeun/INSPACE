@@ -1,6 +1,7 @@
 function loginHandler() {
   // id, password 입력값 받기
   // let loginSuccess = false;
+  const $loginBtn = document.getElementById("login-Btn");
 
   let ID = document.getElementById("ID").value;
   let PASSWORD = document.getElementById("password").value;
@@ -30,15 +31,21 @@ function loginHandler() {
     })
       .then((res) => {
         if (res.ok) {
-          console.log(res);
           // $loginBtn.parentElement.href = "/main";
-          window.location = "/main";
+          return res.json();
         } else {
           alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
           throw new Error("아이디가 틀립니다.");
         }
       })
-      .then(console.log)
+      .then((data) => {
+        localStorage.setItem("checkIn", data.checkIn);
+        localStorage.setItem("id", data.id);
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("name", data.name);
+
+        document.getElementById("login-Btn").parentElement.href = "/main";
+      })
       .catch((err) => {
         console.log(err);
       });

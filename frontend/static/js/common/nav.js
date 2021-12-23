@@ -2,7 +2,7 @@ export default function navComponent() {
   return `
     <nav class="navbar navbar-light main-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand m-sm-2 mb-0" href="/">
+        <a class="navbar-brand m-sm-2 mb-0" href="/main">
           InSpace
         </a>
         <ul class="nav justify-content-end">
