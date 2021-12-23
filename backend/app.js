@@ -55,12 +55,12 @@ app.use("/", indexRouter);
 
 app.use("/auth", authRouter);
 // app.use("/google", GoogleRouter);
-app.use("/payments", paymentsRouter);
-app.use("/users", usersRouter);
-app.use("/reservation", reservationRouter);
-// app.use("/payments", loginRequired, paymentsRouter);
-// app.use("/users", loginRequired, usersRouter);
-// app.use("/reservation", loginRequired, reservationRouter);
+// app.use("/payments", paymentsRouter);
+// app.use("/users", usersRouter);
+// app.use("/reservation", reservationRouter);
+app.use("/payments", loginRequired, paymentsRouter);
+app.use("/users", loginRequired, usersRouter);
+app.use("/reservation", loginRequired, reservationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
