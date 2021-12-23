@@ -70,6 +70,7 @@ export default class extends AbstractView {
     okBtn.addEventListener("click", () => {
       const path = sessionStorage.getItem("path");
       const history = sessionStorage.getItem("history");
+      localStorage.removeItem("ticket");
       sessionStorage.clear();
       if (path === "select" || history == "using")
         sessionStorage.setItem("view", "using");
