@@ -18,6 +18,7 @@ export default class extends AbstractView {
                 <h1 class="total-price-box__title">총 결제금액:</h1>
                 <h1 class="total-price-box__price">12,000원</h1>
               </div>
+          <div id="toast"></div>
           <div class="info-payments">
             <li class="info-payment">성함<a>김민규</a></li>
             <li class="info-payment">결제금액<a>12,000원</a></li>
@@ -56,6 +57,7 @@ export default class extends AbstractView {
     // });
 
     if (sessionStorage.getItem("price")) {
+      console.log("price");
       totalPrice.innerText = ticketPrice;
       payedAmount.innerText = ticketPrice;
     } else {
@@ -67,13 +69,16 @@ export default class extends AbstractView {
       payedAmount.innerText = "0원";
     }
 
+    const path = sessionStorage.getItem("path");
+    const history = sessionStorage.getItem("history");
+
     okBtn.addEventListener("click", () => {
-      const path = sessionStorage.getItem("path");
-      const history = sessionStorage.getItem("history");
       localStorage.removeItem("ticket");
       sessionStorage.clear();
-      if (path === "select" || history == "using")
+      if (path === "select" || history == "using") {
+        console.log("about to go using page");
         sessionStorage.setItem("view", "using");
+      }
     });
 
     // userName.innerText = userData.user

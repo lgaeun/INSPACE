@@ -6,6 +6,9 @@ import {
 } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
+// const baseURL =
+//   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
+const baseURL = "http://localhost:3000";
 const Price = {
   oneday: {
     1: 2000,
@@ -18,6 +21,17 @@ const Price = {
     100: 100000,
   },
 };
+let path = null;
+let prevPath = null;
+let prevBtn = null;
+let payBtn = null;
+let seatTitle = null;
+let totalPrice = null;
+let ticketInfoArr = null;
+let disableSelect = null;
+let warningMessage = null;
+let ticketType = null;
+let userId = null;
 
 export default class extends AbstractView {
   constructor(params) {
@@ -115,15 +129,97 @@ export default class extends AbstractView {
     disableSelect.append(warningMessage);
   }
 
-  checkSeat() {
-    const selectedSeat = sessionStorage.getItem("lastSelected");
+  checkSeat(selectedSeat, payBtn) {
     if (!selectedSeat) {
-      this.setButtonConnection(payBtn, select);
+      this.setButtonConnection(payBtn, "select");
       alert("좌석을 선택해주세요");
       return false;
     } else {
       return true;
     }
+  }
+
+  extendTime(nextStatus) {
+    const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
+    const formattedPrice = this.composePaymentsInfo(
+      ticketInfoArr,
+      totalPrice,
+      time,
+      auth
+    );
+    seatTitle.innerHTML = "Your <br>Selected<br> Ticket";
+    ticketType.innerText = ticketInfoArr[0].innerText;
+    this.disableSeatSelection(disableSelect, warningMessage);
+
+    prevBtn.addEventListener("click", () => {
+      let priceObj = {
+        category: "savingupTime",
+        duration: time,
+        price: Price[auth][time],
+      };
+      let priceData = {
+        method: "POST",
+        body: JSON.stringify({ priceObj }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      fetch(baseURL + `/payments/${userId}`, priceData)
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === "200") {
+            console.log("시간권 구매 success");
+            sessionStorage.setItem("path", "extend");
+            localStorage.removeItem("ticket");
+            sessionStorage.clear();
+            sessionStorage.setItem("history", nextStatus);
+            sessionStorage.setItem("price", formattedPrice);
+          }
+        })
+        .catch((err) => console.log("시간권 정보 전송 failed", err));
+    });
+  }
+
+  chooseSeat(nextStatus) {
+    this.setButtonConnection(prevBtn, "main");
+    this.disablePaymentInfo(payBtn, totalPrice);
+
+    payBtn.addEventListener("click", (e) => {
+      const selectedSeat = sessionStorage.getItem("lastSelected");
+      let isSelected = this.checkSeat(selectedSeat, payBtn);
+
+      if (isSelected) {
+        const seatObj = {
+          table: sessionStorage.getItem("table"),
+          position: Number(selectedSeat.replace(/[^0-9]/g, "")),
+        };
+        let seatData = {
+          method: "POST",
+          body: JSON.stringify({ seatObj }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        fetch(baseURL + `/reservation/position/${userId}`, seatData)
+          .then((response) => response.json)
+          .then((response) => {
+            if (response.status === "200") {
+              sessionStorage.clear();
+              sessionStorage.setItem("history", nextStatus);
+              sessionStorage.setItem("moved", selectedSeat);
+            } else {
+              if (response.err === "남은 시간이 없습니다.") {
+                alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
+                this.setButtonConnection(payBtn, "main");
+              } else if (response.err === "이미 사용중인 좌석입니다.") {
+                sessionStorage.setItem("denied", "true");
+                window.history.back();
+              }
+            }
+          });
+      }
+    });
   }
 
   defaultFunc() {
@@ -134,107 +230,117 @@ export default class extends AbstractView {
 
     initSeats();
 
-    const path = sessionStorage.getItem("path");
-    const prevPath = sessionStorage.getItem("history");
-    const prevBtn = document.querySelector("#prev-btn");
-    const payBtn = document.getElementById("payment-Btn");
-    const seatTitle = document.querySelector(".seat-title");
-    const totalPrice = document.querySelector(".total-price-box__price");
-    const ticketInfoArr = document.querySelectorAll(".info-payment a");
-    const disableSelect = document.getElementById("disable--seat-view");
-    const warningMessage = document.createElement("h1");
-    const ticketType = document.querySelector(".seat__selected");
-
-    //(1) 시간+좌석 연이어 선택
-    if (prevPath === "login") {
-      prevBtn.setAttribute("href", "/ticket");
-      this.composePaymentsInfo(ticketInfoArr, totalPrice, time, auth);
-
-      const id = localStorage.getItem("id");
-      const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
-      const seatTicketObj = {
-        category: auth,
-        duration: time,
-        price: Price[auth][time],
-        table: sessionStorage.getItem("table"),
-        position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-      };
-
-      payBtn.addEventListener("click", (e) => {
-        let isSelected = this.checkSeat();
-        let seatData = {
-          method: "POST",
-          body: JSON.stringify({ seatTicketObj }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        if (isSelected) {
-          fetch(`/reservation/table/position/payments/${id}`, seatData)
-            .then((response) => response.json)
-            .then((response) => {
-              if (response.status === "200") {
-                sessionStorage.clear();
-                sessionStorage.setItem("history", "using");
-                sessionStorage.setItem("price", formattedPrice);
-                sessionStorage.setItem("moved", selectedSeat);
-              } else {
-                this.setButtonConnection(payBtn, select); //화면 안넘어가게
-                // window.location.reload(true);
-                bringSeatInfo();
-                alert("이미 사용중인 좌석입니다!");
-              }
-            });
-        }
-      });
+    if (sessionStorage.getItem("denied") === "true") {
+      toast("이미 선택된 좌석입니다");
+      sessionStorage.removeItem("denied");
     }
+
+    path = sessionStorage.getItem("path");
+    prevPath = sessionStorage.getItem("history");
+    prevBtn = document.querySelector("#prev-btn");
+    payBtn = document.getElementById("payment-Btn");
+    seatTitle = document.querySelector(".seat-title");
+    totalPrice = document.querySelector(".total-price-box__price");
+    ticketInfoArr = document.querySelectorAll(".info-payment a");
+    disableSelect = document.getElementById("disable--seat-view");
+    warningMessage = document.createElement("h1");
+    ticketType = document.querySelector(".seat__selected");
+    userId = localStorage.getItem("id");
+
     //퇴실메인
-    else if (prevPath === "before") {
-      prevBtn.setAttribute("href", "/main"); //이거 메인으로 이동안함..?
+    if (prevPath === "before") {
       //좌석만 선택
       if (path === "select") {
-        this.disablePaymentInfo(payBtn, totalPrice);
-        // this.activateButton(payBtn, null, null, false);
+        this.chooseSeat("using");
+        // this.setButtonConnection(prevBtn, "main");
+        // this.disablePaymentInfo(payBtn, totalPrice);
 
-        const seatObj = {
-          table: sessionStorage.getItem("table"),
-          position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-        };
+        // payBtn.addEventListener("click", (e) => {
+        //   const selectedSeat = sessionStorage.getItem("lastSelected");
+        //   let isSelected = this.checkSeat(selectedSeat, payBtn);
 
-        payBtn.addEventListener("click", (e) => {
-          let isSelected = this.checkSeat();
-          let seatData = {
-            method: "POST",
-            body: JSON.stringify({ seatObj }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-          if (isSelected) {
-            fetch(`http://localhost:8080/reservation/position/${id}`, seatData)
-              .then((response) => response.json)
-              .then((response) => {
-                if (response.status === "200") {
-                  sessionStorage.clear();
-                  sessionStorage.setItem("history", "using");
-                  sessionStorage.setItem("moved", selectedSeat);
-                } else {
-                  if (response.err === "남은 시간이 없습니다.") {
-                    alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
-                    // main page 로 redirect??
-                  } else if (response.err === "이미 사용중인 좌석입니다.") {
-                    this.setButtonConnection(payBtn, select); //화면 안넘어가게
-                    // window.location.reload(true);
-                    bringSeatInfo();
-                    alert("이미 사용중인 좌석입니다!");
-                  }
-                }
-              });
-          }
-        });
+        //   if (isSelected) {
+        //     const seatObj = {
+        //       table: sessionStorage.getItem("table"),
+        //       position: Number(selectedSeat.replace(/[^0-9]/g, "")),
+        //     };
+        //     let seatData = {
+        //       method: "POST",
+        //       body: JSON.stringify({ seatObj }),
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //       },
+        //     };
+
+        //     fetch(baseURL + `/reservation/position/${userId}`, seatData)
+        //       .then((response) => response.json)
+        //       .then((response) => {
+        //         if (response.status === "200") {
+        //           sessionStorage.clear();
+        //           sessionStorage.setItem("history", "using");
+        //           sessionStorage.setItem("moved", selectedSeat);
+        //         } else {
+        //           if (response.err === "남은 시간이 없습니다.") {
+        //             alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
+        //             this.setButtonConnection(payBtn, "main");
+        //           } else if (response.err === "이미 사용중인 좌석입니다.") {
+        //             alert("이미 사용중인 좌석입니다!");
+        //             this.setButtonConnection(payBtn, "select");
+        //             // window.location.reload(true);
+        //             bringSeatInfo();
+        //           }
+        //         }
+        //       });
+        //   }
+        // });
       }
       //시간만 연장
       else if (path === "extend") {
+        this.extendTime("before");
+        // const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
+        // const formattedPrice = this.composePaymentsInfo(
+        //   ticketInfoArr,
+        //   totalPrice,
+        //   time,
+        //   auth
+        // );
+
+        // seatTitle.innerHTML = "Your <br>Selected<br> Ticket";
+        // ticketType.innerText = ticketInfoArr[0].innerText;
+
+        // this.disableSeatSelection(disableSelect, warningMessage);
+
+        // prevBtn.addEventListener("click", () => {
+        //   let priceObj = {
+        //     category: "savingupTime",
+        //     duration: time,
+        //     price: Price[auth][time],
+        //   };
+        //   let priceData = {
+        //     method: "POST",
+        //     body: JSON.stringify({ priceObj }),
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //   };
+
+        //   fetch(baseURL + `/payments/${userId}`, priceData)
+        //     .then((res) => {
+        //       if (res.ok) {
+        //         console.log("시간권 구매 success");
+        //         sessionStorage.setItem("path", "extend");
+        //         sessionStorage.clear();
+        //         sessionStorage.setItem("history", "before");
+        //         sessionStorage.setItem("price", formattedPrice);
+        //       }
+        //     })
+        //     .catch((err) => console.log("시간권 정보 전송 failed", err));
+        // });
+      }
+      // 선택+연장
+      else {
+        this.setButtonConnection(prevBtn, "ticket");
+
         const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
         const formattedPrice = this.composePaymentsInfo(
           ticketInfoArr,
@@ -242,131 +348,131 @@ export default class extends AbstractView {
           time,
           auth
         );
-        const userId = localStorage.getItem("id");
 
-        localStorage.removeItem("ticket");
-
-        seatTitle.innerHTML = "Your <br>Selected<br> Ticket";
-        ticketType.innerText = ticketInfoArr[0].innerText;
-
-        this.disableSeatSelection(disableSelect, warningMessage);
-
-        prevBtn.addEventListener("click", () => {
-          let priceObj = {
-            category: "savingupTime",
+        payBtn.addEventListener("click", (e) => {
+          const selectedSeat = sessionStorage.getItem("lastSelected");
+          let isSelected = this.checkSeat(selectedSeat, payBtn);
+          const seatTicketObj = {
+            category: auth,
             duration: time,
             price: Price[auth][time],
+            table: sessionStorage.getItem("table"),
+            position: Number(selectedSeat.replace(/[^0-9]/g, "")),
           };
-          let priceData = {
+          let seatData = {
             method: "POST",
-            body: JSON.stringify({ priceObj }),
+            body: JSON.stringify({ seatTicketObj }),
             headers: {
               "Content-Type": "application/json",
             },
           };
-          fetch(`http://localhost:8080/payments/${userId}`, priceData)
-            .then((res) => res.json())
-            .then((res) => {
-              if (res.status === "200") {
-                console.log("시간권 구매 success");
-                sessionStorage.setItem("path", "extend");
-                sessionStorage.clear();
-                sessionStorage.setItem("history", "before");
-                sessionStorage.setItem("price", formattedPrice);
-              }
-            })
-            .catch((err) => console.log("시간권 정보 전송 failed", err));
+          if (isSelected) {
+            fetch(
+              baseURL + `/reservation/table/position/payments/${userId}`,
+              seatData
+            )
+              .then((response) => response.json)
+              .then((response) => {
+                if (response.status === "200") {
+                  sessionStorage.clear();
+                  sessionStorage.setItem("history", "using");
+                  sessionStorage.setItem("price", formattedPrice);
+                  sessionStorage.setItem("moved", selectedSeat);
+                } else {
+                  sessionStorage.setItem("denied", "true");
+                  window.history.back();
+                }
+              });
+          }
         });
       }
     }
     // 사용중 Main
     else if (prevPath === "using") {
       if (path === "move") {
-        this.disablePaymentInfo(payBtn, totalPrice);
-        seatTitle.innerText = "Your Selected Ticket";
-        this.disableSeatSelection(disableSelect, warningMessage);
+        this.chooseSeat("using");
+        // this.setButtonConnection(prevBtn, "main");
+        // this.disablePaymentInfo(payBtn, totalPrice);
 
-        const seatObj = {
-          table: sessionStorage.getItem("table"),
-          position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-        };
+        // payBtn.addEventListener("click", (e) => {
+        //   const selectedSeat = sessionStorage.getItem("lastSelected");
+        //   let isSelected = this.checkSeat(selectedSeat, payBtn);
 
-        payBtn.addEventListener("click", (e) => {
-          let isSelected = this.checkSeat();
-          let seatData = {
-            method: "POST",
-            body: JSON.stringify({ seatObj }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-          if (isSelected) {
-            fetch(`http://localhost:8080/reservation/position/${id}`, seatData)
-              .then((response) => response.json)
-              .then((response) => {
-                if (response.status === "200") {
-                  sessionStorage.clear();
-                  sessionStorage.setItem("history", "using");
-                  sessionStorage.setItem("moved", selectedSeat);
-                } else {
-                  if (response.err === "남은 시간이 없습니다.") {
-                    alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
-                    // main page 로 redirect??
-                  } else if (response.err === "이미 사용중인 좌석입니다.") {
-                    this.setButtonConnection(payBtn, select); //화면 안넘어가게
-                    // window.location.reload(true);
-                    bringSeatInfo();
-                    alert("이미 사용중인 좌석입니다!");
-                  }
-                }
-              });
-          }
-        });
+        //   if (isSelected) {
+        //     const seatObj = {
+        //       table: sessionStorage.getItem("table"),
+        //       position: Number(selectedSeat.replace(/[^0-9]/g, "")),
+        //     };
+        //     let seatData = {
+        //       method: "POST",
+        //       body: JSON.stringify({ seatObj }),
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //       },
+        //     };
+
+        //     fetch(baseURL + `/reservation/position/${id}`, seatData)
+        //       .then((response) => response.json)
+        //       .then((response) => {
+        //         if (response.status === "200") {
+        //           sessionStorage.clear();
+        //           sessionStorage.setItem("history", "using");
+        //           sessionStorage.setItem("moved", selectedSeat);
+        //         } else {
+        //           if (response.err === "남은 시간이 없습니다.") {
+        //             alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
+        //             // main page 로 redirect??
+        //           } else if (response.err === "이미 사용중인 좌석입니다.") {
+        //             alert("이미 사용중인 좌석입니다!");
+        //             this.setButtonConnection(payBtn, "select");
+        //             // window.location.reload(true);
+        //             bringSeatInfo();
+        //           }
+        //         }
+        //       });
+        //   }
+        // });
       }
       //이용중메인 -> 시간만 연장
       else if (path == "extend") {
-        const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
-        const formattedPrice = this.composePaymentsInfo(
-          ticketInfoArr,
-          totalPrice,
-          time,
-          auth
-        );
-        const userId = localStorage.getItem("id");
-
-        localStorage.removeItem("ticket");
-
-        seatTitle.innerHTML = "Your <br>Selected<br> Ticket";
-        ticketType.innerText = ticketInfoArr[0].innerText;
-
-        this.disableSeatSelection(disableSelect, warningMessage);
-
-        prevBtn.addEventListener("click", () => {
-          let priceObj = {
-            category: "savingupTime",
-            duration: time,
-            price: Price[auth][time],
-          };
-          let priceData = {
-            method: "POST",
-            body: JSON.stringify({ priceObj }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-          fetch(`http://localhost:8080/payments/${userId}`, priceData)
-            .then((res) => res.json())
-            .then((res) => {
-              if (res.status === "200") {
-                console.log("시간권 구매 success");
-                sessionStorage.setItem("path", "extend");
-                sessionStorage.clear();
-                sessionStorage.setItem("history", "using");
-                sessionStorage.setItem("price", formattedPrice);
-              }
-            })
-            .catch((err) => console.log("시간권 정보 전송 failed", err));
-        });
+        this.extendTime("using");
+        // const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
+        // const formattedPrice = this.composePaymentsInfo(
+        //   ticketInfoArr,
+        //   totalPrice,
+        //   time,
+        //   auth
+        // );
+        // seatTitle.innerHTML = "Your <br>Selected<br> Ticket";
+        // ticketType.innerText = ticketInfoArr[0].innerText;
+        // this.disableSeatSelection(disableSelect, warningMessage);
+        // prevBtn.addEventListener("click", () => {
+        //   let priceObj = {
+        //     category: "savingupTime",
+        //     duration: time,
+        //     price: Price[auth][time],
+        //   };
+        //   let priceData = {
+        //     method: "POST",
+        //     body: JSON.stringify({ priceObj }),
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //   };
+        //   fetch(baseURL + `/payments/${userId}`, priceData)
+        //     .then((res) => res.json())
+        //     .then((res) => {
+        //       if (res.status === "200") {
+        //         console.log("시간권 구매 success");
+        //         sessionStorage.setItem("path", "extend");
+        //         localStorage.removeItem("ticket");
+        //         sessionStorage.clear();
+        //         sessionStorage.setItem("history", "using");
+        //         sessionStorage.setItem("price", formattedPrice);
+        //       }
+        //     })
+        //     .catch((err) => console.log("시간권 정보 전송 failed", err));
+        // });
       }
     }
   }

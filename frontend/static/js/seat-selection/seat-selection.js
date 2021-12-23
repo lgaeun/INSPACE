@@ -5,12 +5,14 @@ import toast from "../common/toast.js";
 export function bringSeatInfo() {
   let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
 
-  fetch("http://localhost:8080/reservation/table")
+  fetch(
+    "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/table"
+  )
     .then((res) => res.json())
     .then((data) => {
+      console.log("현재 이용중 좌석 정보:", data);
       for (let i = 0; i < data.length; i++) {
         const { position, remainingTime, table } = data[i];
-        console.log(data);
 
         const min = remainingTime.min === 0 ? "00" : remainingTime.min;
         const hour = remainingTime.hour === 0 ? "00" : remainingTime.hour;
