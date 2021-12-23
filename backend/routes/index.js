@@ -38,17 +38,13 @@ router.post(
   passport.authenticate("local", {
     failureRedirect: "/fail",
   }),
-  function (req, res) {
-    res.status(200).json({ message: "success" });
-  }
-);
-
-router.get(
-  "/login",
   asyncHandler(async (req, res, next) => {
     // console.log("req.session1212", req.session);
     // const { id } = req.query;
+    const dsds = req.session;
+    console.log(dsds);
     const id = req.session.passport.user.id;
+    console.log("type", typeof id);
     console.log("id", id);
     const user = await User.findOne({ _id: id }).populate("userSeat");
     const { name, userId } = user;
@@ -60,6 +56,27 @@ router.get(
     res.json({ checkIn, id: id, name, userId });
   })
 );
+
+// router.get(
+//   "/login",
+//   asyncHandler(async (req, res, next) => {
+//     // console.log("req.session1212", req.session);
+//     // const { id } = req.query;
+//     const dsds = req.session;
+//     console.log(dsds);
+//     const id = req.session.passport.user.id;
+//     console.log("type", typeof id);
+//     console.log("id", id);
+//     const user = await User.findOne({ _id: id }).populate("userSeat");
+//     const { name, userId } = user;
+//     if (!user.userSeat) {
+//       res.json({ checkIn: false, id: id, name, userId });
+//       return;
+//     }
+//     const checkIn = !user.userSeat.isempty;
+//     res.json({ checkIn, id: id, name, userId });
+//   })
+// );
 
 //기존에 있던 로그아웃 파일
 // router.get("/logout", (req, res, next) => {

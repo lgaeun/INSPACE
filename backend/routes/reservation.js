@@ -69,7 +69,8 @@ router.post(
     //겹치는 좌석이 있는지 확인하고 겹치는 좌석이 있으면 에러를 던집니다.
     const checkPosition = await Position.findOne({
       table: table,
-      name: position,
+      position: position,
+      isempty: false,
     });
     if (checkPosition) {
       throw new Error("이미 사용중인 좌석입니다.");
