@@ -88,6 +88,7 @@ export default class extends AbstractView {
             </div>
           </div>
         </article>
+        
       </main>
     </div>
   `;
@@ -102,9 +103,11 @@ export default class extends AbstractView {
 
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
-
     $loginBtn.addEventListener("click", () => {
       // id, password 입력값 받기
+
+      // let loginSuccess = false;
+
       let ID = document.getElementById("ID").value;
       let PASSWORD = document.getElementById("password").value;
 
@@ -113,61 +116,42 @@ export default class extends AbstractView {
         alert("6자 이상 아이디를 입력해주세요.");
       } else if (PASSWORD.length < 8) {
         alert("8자 이상 비밀번호를 입력해주세요.");
-      }
-
-      // 전달할 유저 데이터
-      const loginUser = {
-        id: ID,
-        password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
-      };
-
-      // 예비) 서버에서 유효성 체크
-      const idCheck = userData.some((user) => {
-        return user.id === loginUser.id;
-      });
-
-      const passwordCheck = userData.some((user) => {
-        return user.password === loginUser.password;
-      });
-
-      if (!idCheck || !passwordCheck) {
-        alert(
-          "존재하지 않는 계정이거나 아이디와 비밀번호가 일치하지 않습니다."
-        );
-      }
-
-      const loginSuccessedUser = userData.find(
-        (user) => loginUser.id === user.id
-      );
-
-      //서버 fetch
-      fetch("http://localhost:3000/users", {
-        method: "POST",
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginUser),
-      })
-        .then((res) => res.json())
-        .then(console.log);
-      // fetch("http://localhost:3000/users")
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     console.log(data);
-      //   });
-      // .then((data) => console.log(data));
-
-      //만약 충전권 회원이라면 바로 메인페이지로 이동하고
-      // 당일권 회원이라면 이용권 구매 UI로 이동한다.
-
-      if (loginSuccessedUser.leftTime) {
-        sessionStorage.setItem("history", "before");
-        $loginBtn.parentElement.href = "/main";
       } else {
-        sessionStorage.setItem("history", "login");
-        $loginBtn.parentElement.href = "/ticket";
+        // 전달할 유저 데이터
+        const loginUser = {
+          userId: ID,
+          password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
+        };
+
+        const loginURL =
+          "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login";
+        //서버 fetch
+        fetch(loginURL, {
+          method: "POST",
+          body: JSON.stringify(loginUser),
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (res.ok) {
+              // $loginBtn.parentElement.href = "/main";
+              window.location = "/main";
+            } else {
+              alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
+              throw new Error("아이디가 틀립니다.");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        // sessionStorage.setItem("history", "login");
+        // function movePage() {
+        //   $loginBtn.parentElement.href = "/main";
+        //}
       }
     });
   }
+  // });
 }

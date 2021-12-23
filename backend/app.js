@@ -13,6 +13,7 @@ const reservationRouter = require("./routes/reservation");
 // const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
 const session = require("express-session");
+const cors = require("cors");
 require("dotenv").config();
 require("./passport")();
 mongoose.connect(process.env.DB_URL);
@@ -32,7 +33,14 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use("../frontend/static", express.static(path.join(__dirname, "static")));
+
+// const corsOptions = {
+//   origin: "http://localhost:3300",
+//   credentials: true,
+// };
+
+app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
@@ -54,7 +62,7 @@ app.use("/users", usersRouter);
 app.use("/reservation", reservationRouter);
 // app.use("/payments", loginRequired, paymentsRouter);
 // app.use("/users", loginRequired, usersRouter);
-// app.use('/reservation', loginRequired, reservationRouter)
+// app.use("/reservation", loginRequired, reservationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -66,7 +74,7 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   // res.locals.message = err.message;
   // res.locals.error = req.app.get("env") === "development" ? err : {};
-
+  console.log(err);
   // render the error page
   res.status(err.status || 500);
   res.json({ err: err.message });

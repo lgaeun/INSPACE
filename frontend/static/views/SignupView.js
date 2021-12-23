@@ -124,33 +124,37 @@ export default class extends AbstractView {
       } else if (password !== passwordconfirm) {
         $signUp.parentElement.href = "";
         alert("비밀번호가 맞지 않습니다.");
-      }
-      // 회원가입 유저 요청 데이터
-
-      const createdUser = {
-        name: name,
-        userId: email,
-        password: password,
-        checkPassword: passwordconfirm,
-      };
-
-      // 서버 전달
-      fetch("url", {
-        method: "POST",
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(createdUser),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            alert("이미 존재하는 회원입니다.");
-          } else {
-            response.json();
-          }
+      } else {
+        // 회원가입 유저 요청 데이터
+        const createdUser = {
+          name: name,
+          userId: email,
+          password: password,
+          checkPassword: passwordconfirm,
+        };
+        // const dd = JSON.stringify(createdUser);
+        // console.log(dd);
+        const signupURL =
+          "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/signup";
+        // 서버 전달
+        fetch(signupURL, {
+          method: "POST",
+          body: JSON.stringify(createdUser),
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
-        .then(console.log);
+          .then((response) => {
+            if (!response.ok) {
+              alert("에러");
+              console.log(response);
+            } else {
+              response.json();
+            }
+          })
+          .then(console.log)
+          .catch((e) => console.log(e));
+      }
     });
   }
 }
