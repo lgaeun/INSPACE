@@ -6,9 +6,9 @@ import {
 } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
-// const baseURL =
-//   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
-const baseURL = "http://localhost:3000";
+const baseURL =
+  "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
+// const baseURL = "http://localhost:8000";
 const Price = {
   oneday: {
     1: 2000,
@@ -140,8 +140,9 @@ export default class extends AbstractView {
     }
   }
 
-  extendTime(nextStatus) {
-    const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
+  extendTime() {
+    const ticket = JSON.parse(localStorage.getItem("ticket"));
+    const { time, auth } = ticket;
     const formattedPrice = this.composePaymentsInfo(
       ticketInfoArr,
       totalPrice,
@@ -152,36 +153,34 @@ export default class extends AbstractView {
     ticketType.innerText = ticketInfoArr[0].innerText;
     this.disableSeatSelection(disableSelect, warningMessage);
 
-    prevBtn.addEventListener("click", () => {
+    payBtn.addEventListener("click", () => {
       let priceObj = {
-        category: "savingupTime",
+        category: auth,
         duration: time,
         price: Price[auth][time],
       };
       let priceData = {
         method: "POST",
-        body: JSON.stringify({ priceObj }),
+        body: JSON.stringify(priceObj),
         headers: {
           "Content-Type": "application/json",
         },
       };
-      fetch(baseURL + `/payments/${userId}`, priceData)
-        .then((res) => res.json())
+      console.log(priceData);
+      fetch(baseURL + `/reservation/payments/${userId}`, priceData)
         .then((res) => {
-          if (res.status === "200") {
-            console.log("시간권 구매 success");
-            sessionStorage.setItem("path", "extend");
-            localStorage.removeItem("ticket");
-            sessionStorage.clear();
-            sessionStorage.setItem("history", nextStatus);
-            sessionStorage.setItem("price", formattedPrice);
+          if (res.ok) {
+            localStorage.setItem("ticket", {
+              ...ticket,
+              price: formattedPrice,
+            });
           }
         })
         .catch((err) => console.log("시간권 정보 전송 failed", err));
     });
   }
 
-  chooseSeat(nextStatus) {
+  chooseSeat() {
     this.setButtonConnection(prevBtn, "main");
     this.disablePaymentInfo(payBtn, totalPrice);
 
@@ -196,29 +195,27 @@ export default class extends AbstractView {
         };
         let seatData = {
           method: "POST",
-          body: JSON.stringify({ seatObj }),
+          body: JSON.stringify(seatObj),
           headers: {
             "Content-Type": "application/json",
           },
         };
 
-        fetch(baseURL + `/reservation/position/${userId}`, seatData)
-          .then((response) => response.json)
-          .then((response) => {
-            if (response.status === "200") {
-              sessionStorage.clear();
-              sessionStorage.setItem("history", nextStatus);
-              sessionStorage.setItem("moved", selectedSeat);
+        fetch(baseURL + `/reservation/position/${userId}`, seatData).then(
+          (res) => {
+            if (res.ok) {
+              localStorage.setItem("checkIn", true);
             } else {
-              if (response.err === "남은 시간이 없습니다.") {
+              if (res.err === "남은 시간이 없습니다.") {
                 alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
                 this.setButtonConnection(payBtn, "main");
-              } else if (response.err === "이미 사용중인 좌석입니다.") {
+              } else if (res.err === "이미 사용중인 좌석입니다.") {
                 sessionStorage.setItem("denied", "true");
                 window.history.back();
               }
             }
-          });
+          }
+        );
       }
     });
   }
@@ -249,14 +246,17 @@ export default class extends AbstractView {
     if (prevPath === "before") {
       //좌석만 선택
       if (path === "select") {
-        this.chooseSeat("using");
+        console.log("좌석만 선택");
+        this.chooseSeat();
       }
       //시간만 연장
       else if (path === "extend") {
-        this.extendTime("before");
+        console.log("시간만 연장 ");
+        this.extendTime();
       }
       // 선택+연장
       else {
+        console.log("그냥 입장");
         this.setButtonConnection(prevBtn, "ticket");
 
         const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
@@ -279,7 +279,7 @@ export default class extends AbstractView {
           };
           let seatData = {
             method: "POST",
-            body: JSON.stringify({ seatTicketObj }),
+            body: JSON.stringify(seatTicketObj),
             headers: {
               "Content-Type": "application/json",
             },
@@ -288,19 +288,19 @@ export default class extends AbstractView {
             fetch(
               baseURL + `/reservation/table/position/payments/${userId}`,
               seatData
-            )
-              .then((response) => response.json)
-              .then((response) => {
-                if (response.status === "200") {
-                  sessionStorage.clear();
-                  sessionStorage.setItem("history", "using");
-                  sessionStorage.setItem("price", formattedPrice);
-                  sessionStorage.setItem("moved", selectedSeat);
-                } else {
-                  sessionStorage.setItem("denied", "true");
-                  window.history.back();
-                }
-              });
+            ).then((res) => {
+              console.log(res);
+              if (res.ok) {
+                localStorage.setItem("ticket", {
+                  ...ticket,
+                  price: formattedPrice,
+                });
+                localStorage.setItem("checkIn", true);
+              } else {
+                sessionStorage.setItem("denied", "true");
+                window.history.back();
+              }
+            });
           }
         });
       }
@@ -308,11 +308,11 @@ export default class extends AbstractView {
     // 사용중 Main
     else if (prevPath === "using") {
       if (path === "move") {
-        this.chooseSeat("using");
+        this.chooseSeat();
       }
       //이용중메인 -> 시간만 연장
       else if (path == "extend") {
-        this.extendTime("using");
+        this.extendTime();
       }
     }
   }
