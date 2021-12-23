@@ -1,5 +1,4 @@
 import AbstractView from "./AbstractView.js";
-import userData from "../js/data.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -29,8 +28,8 @@ export default class extends AbstractView {
                 class="form-control"
                 placeholder="Name"
               />
-              <label for="name">Name</label>
-            </div>
+                <label for="name">Name</label>
+              </div>
 
             <div class="form-floating mb-3">
             <input
@@ -40,7 +39,7 @@ export default class extends AbstractView {
               placeholder="name@example.com"
             />
             <label for="email">Email</label>
-          </div>
+            </div>
             </form>
             <div class="btn_container">
             <a href='/' data-link><button class="btn btn-cancel">Cancel</button></a>
@@ -49,6 +48,7 @@ export default class extends AbstractView {
           </div>
         </article>
       </main>
+      <div id="find-password-alert">임시 비밀번호가 발급되었습니다. <br>새로운 비밀번호로 로그인 해주세요.</div>
     </div>
   `;
   }
@@ -58,5 +58,40 @@ export default class extends AbstractView {
     script.src =
       "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
     document.getElementById("root").appendChild(script);
+
+    const $passwordReqBtn = document.querySelector(".btn-signup");
+
+    $passwordReqBtn.addEventListener("click", () => {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+
+      const user = {
+        userName: name,
+        userId: email,
+      };
+
+      const URL =
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reset-password";
+      fetch(URL, {
+        method: "POST",
+        body: JSON.stringify(user),
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        // console.log(res);
+        // if (res.ok) {
+        //   document.getElementById("find-password-alert").style.display =
+        //     "block";
+        //   setTimeout(() => {
+        //     document.getElementById("find-password-alert").style.display =
+        //       "none";
+        //   }, 2500);
+        // } else {
+        //   alert("정보를 입력해주세요.");
+        // }
+      });
+    });
   }
 }

@@ -135,15 +135,14 @@ export default class extends AbstractView {
         // const dd = JSON.stringify(createdUser);
         // console.log(dd);
         const signupURL =
-          "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/signup/";
+          "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/signup";
         // 서버 전달
         fetch(signupURL, {
           method: "POST",
           body: JSON.stringify(createdUser),
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
           },
-          mode: "no-cors",
         })
           .then((response) => {
             if (!response.ok) {
@@ -153,7 +152,8 @@ export default class extends AbstractView {
               response.json();
             }
           })
-          .then(console.log);
+          .then(console.log)
+          .catch((e) => console.log(e));
       }
     });
   }

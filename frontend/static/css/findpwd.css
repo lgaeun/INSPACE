@@ -16,3 +16,12 @@
   display: flex;
   width: 70%;
 }
+
+/* #find-password-alert {
+  display: none;
+  position: absolute;
+  color: white;
+  background-color: #8a8a8abb;
+  padding: 4rem;
+  border-radius: 7px;
+} */
