@@ -144,10 +144,6 @@ export default class extends AbstractView {
 
   defaultFunc() {
     this.nav.defaultFunc();
-    // const script = document.createElement("script");
-    // script.src =
-    //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    // document.getElementById("root").appendChild(script);
 
     const $checkIn = document.querySelector(".main-section__btn-check-in");
     const $checkOut = document.querySelector(".main-section__btn-check-out");
@@ -194,10 +190,7 @@ export default class extends AbstractView {
     //     console.log(data);
     //   });
 
-    console.log(`1 ---------- ${checkIn}`);
     if (checkIn == "true") {
-      console.log(`2 ---------- ${checkIn}`);
-
       checkInDisplay(true);
 
       fetch(
@@ -232,8 +225,6 @@ export default class extends AbstractView {
         })
         .catch((err) => console.log(err));
     } else {
-      console.log(`3 ---------- ${checkIn}`);
-
       checkInDisplay(false);
 
       fetch(
@@ -253,9 +244,9 @@ export default class extends AbstractView {
           setInfo(info);
 
           elapsed =
-            Math.abs(data.remainedTime.hour) * (1000 * 60 * 60) +
-            data.remainedTime.min * (1000 * 60) +
-            data.remainedTime.sec * 1000;
+            Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
+            data.remainingTime.min * (1000 * 60) +
+            data.remainingTime.sec * 1000;
 
           drawTimer();
         })
@@ -337,14 +328,16 @@ export default class extends AbstractView {
 
     $btnCheckOut.addEventListener("click", () => {
       fetch(
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/61c425ce93990056902f33fa/checkOut"
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
       )
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.ok) {
+            localStorage.setItem("checkIn", false);
+            location.reload();
+          }
+        })
         .then((data) => {})
         .catch((err) => console.log(err));
-
-      checkInDisplay(false);
-      clearTimer = true;
     });
 
     function drawTimer() {
