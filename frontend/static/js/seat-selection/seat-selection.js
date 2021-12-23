@@ -1,7 +1,9 @@
 import { createTable, createSmallTable } from "./Table.js";
-import selectSeat from "./selectSeat.js";
+import { selectSeat, releaseSeat } from "./selectSeat.js";
+import toast from "../common/toast.js";
 
 export default function initSeats() {
+  let countSelected = 0;
   const section = document.getElementById("section-container");
   const row1 = document.getElementById("table-row1");
   const row2 = document.getElementById("table-row2");
@@ -76,5 +78,18 @@ export default function initSeats() {
   bringSeatInfo();
   createSeats();
 
-  section.addEventListener("click", selectSeat);
+  section.addEventListener("click", (e) => {
+    if (countSelected === 0) {
+      selectSeat(e);
+      countSelected++;
+    } else {
+      if (e.target.classList.contains("selected")) {
+        releaseSeat(e);
+        countSelected--;
+      } else {
+        toast("자리를 이미 선택하셨습니다!");
+      }
+    }
+    console.log(countSelected);
+  });
 }
