@@ -22,6 +22,7 @@ router.post(
         //     throw new Error("비밀번호가 일치하지 않습니다.");
         //     return;
         // }
+        //test
 
         const doosan = await User.create({
             name,
