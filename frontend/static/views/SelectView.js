@@ -126,47 +126,6 @@ export default class extends AbstractView {
     }
   }
 
-  activateButton(payBtn, auth, time, hasSeatWithPrice) {
-    payBtn.addEventListener("click", (e) => {
-      const selectedSeat = sessionStorage.getItem("lastSelected");
-      //선택한 좌석이 있을 경우
-      if (!selectedSeat) {
-        this.setButtonConnection(payBtn, select);
-        // toast("좌석을 선택해주세요!");
-        alert("좌석을 선택해주세요");
-      } else {
-        //validation - 좌석 data fetch받아와서 자리 여전히 없으면 req 넘기고, 다음 페이지로 이동
-        // postSeatData()
-        if (true) {
-          this.setButtonConnection(payBtn, paycheck);
-          const req = {
-            category: auth,
-            duration: time,
-            price: Price[auth][time],
-            table: sessionStorage.getItem("table"),
-            position: Number(selectedSeat.replace(/[^0-9]/g, "")),
-            //현재 시각
-          };
-          //api.post(req)
-          console.log("selected seta", req);
-
-          sessionStorage.clear();
-          sessionStorage.setItem("history", "using");
-
-          if (hasSeatWithPrice) {
-            sessionStorage.setItem("price", formattedPrice);
-            sessionStorage.setItem("moved", selectedSeat);
-          }
-        } else {
-          alert("좌석을 다시 선택해주세요");
-          payBtn.parentElement.setAttribute("href", "/select");
-          localStorage.removeItem("table");
-          localStorage.removeItem("lastSelected");
-        }
-      }
-    });
-  }
-
   defaultFunc() {
     const script = document.createElement("script");
     script.src =
@@ -373,7 +332,7 @@ export default class extends AbstractView {
           time,
           auth
         );
-        onst userId = localStorage.getItem("id");
+        const userId = localStorage.getItem("id");
 
         localStorage.removeItem("ticket");
 
