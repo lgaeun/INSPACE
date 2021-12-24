@@ -35,22 +35,17 @@ router.get(
 router.get(
   "/:id/ticket",
   asyncHandler(async (req, res, next) => {
-    const { category } = req.query;
+    // const { category } = req.query;
     const { id } = req.params;
     const user = await User.findOne({
       _id: id,
     }).populate("userTicket");
-    //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
-    if (user.userTicket && user.remainingTime >= 2) {
-      if (category != user.userTicket.category) {
-        throw new Error("이용중인 이용권과 같은 이용권이 아닙니다.");
-      } else {
-        res.json({ message: "success", ticket: user.userTicket });
-      }
-    } else {
-      res.json({ message: "success", ticket: user.userTicket });
-    }
-    res.json({ message: "success", ticket: user });
+
+    // console.log("user", user);
+    // console.log("user.userTicket", user.userTicket);
+    // console.log("user.userTicket.category", user.userTicket.category);
+
+    res.json({ message: "success", category: user.userTicket.category });
   })
 );
 

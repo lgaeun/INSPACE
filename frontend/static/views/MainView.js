@@ -194,7 +194,9 @@ export default class extends AbstractView {
     if (checkIn == "true") {
       checkInDisplay(true);
 
-      fetch(`http://localhost:8080/users/${id}/checkIn`)
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
+      )
         //fetch("http://localhost:3000/checkIn")
         .then((res) => res.json())
         .then((data) => {
@@ -225,7 +227,9 @@ export default class extends AbstractView {
     } else {
       checkInDisplay(false);
 
-      fetch(`http://localhost:8080/users/${id}/checkOut`)
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+      )
         //fetch("http://localhost:3000/checkOut")
         .then((res) => res.json())
         .then((data) => {
@@ -328,7 +332,9 @@ export default class extends AbstractView {
     });
 
     $btnCheckOut.addEventListener("click", () => {
-      fetch(`http://localhost:8080/users/${id}/checkOut`)
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+      )
         .then((res) => {
           if (res.ok) {
             localStorage.setItem("checkIn", false);

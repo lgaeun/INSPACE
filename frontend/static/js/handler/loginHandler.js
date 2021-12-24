@@ -1,7 +1,7 @@
 function loginHandler() {
   // id, password 입력값 받기
   // let loginSuccess = false;
-  const $loginBtn = document.getElementById("login-Btn");
+  // const $loginBtn = document.getElementById("login-Btn");
 
   let ID = document.getElementById("ID").value;
   let PASSWORD = document.getElementById("password").value;
@@ -43,29 +43,10 @@ function loginHandler() {
         localStorage.setItem("id", data.id);
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("name", data.name);
-        // localStorage.setItem("cookie", document.cookie);
-        console.log(document.cookie);
-        // window.location.href = "/main";
       })
       .catch((err) => {
         console.log(err);
       });
-    // sessionStorage.setItem("history", "login");
-    // function movePage() {
-    //   $loginBtn.parentElement.href = "/main";
-    // //}
-    $loginBtn.parentElement.href = "/main";
-    function getCookie(cookieName) {
-      var cookieValue = null;
-      if (document.cookie) {
-        var array = document.cookie.split(escape(cookieName) + "=");
-        if (array.length >= 2) {
-          var arraySub = array[1].split(";");
-          cookieValue = unescape(arraySub[0]);
-        }
-      }
-      return cookieValue;
-    }
   }
 }
 
