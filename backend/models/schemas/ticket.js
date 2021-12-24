@@ -4,7 +4,7 @@ const TicketSchema = new Schema(
   {
     //이용권 종류
     category: {
-      type: String, //oneday , savingUpTime,
+      type: String, //oneday , savingupTime,
       required: true,
     }, //구매한 이용권의 시간
     duration: {

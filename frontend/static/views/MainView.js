@@ -1,5 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
+// import { copy } from "../../../backend/app.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -144,7 +145,6 @@ export default class extends AbstractView {
 
   defaultFunc() {
     this.nav.defaultFunc();
-
     const $checkIn = document.querySelector(".main-section__btn-check-in");
     const $checkOut = document.querySelector(".main-section__btn-check-out");
     const $btnCheckOut = document.getElementById("btn-check-out");
