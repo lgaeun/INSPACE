@@ -59,12 +59,12 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use('/auth', authRouter)
     // app.use('/google', GoogleRouter);
-    // app.use("/payments", paymentsRouter);
-    // app.use("/users", usersRouter);
-    // app.use("/reservation", reservationRouter);
-app.use("/payments", loginRequired, paymentsRouter);
-app.use("/users", loginRequired, usersRouter);
-app.use('/reservation', loginRequired, reservationRouter)
+app.use("/payments", paymentsRouter);
+app.use("/users", usersRouter);
+app.use("/reservation", reservationRouter);
+// app.use("/payments", loginRequired, paymentsRouter);
+// app.use("/users", loginRequired, usersRouter);
+// app.use('/reservation', loginRequired, reservationRouter)
 
 
 

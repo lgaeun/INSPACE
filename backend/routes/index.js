@@ -125,12 +125,12 @@ router.post(
 // }))
 
 router.post(
-
     "/info-change-name",
     asyncHandler(async(req, res, next) => {
         const { name } = req.body;
         const user = await User.findOne({ _id: req.user.id });
-        console.log("인포체인지네임에서 req.user", req.user);
+        console.log("인포체인지네임에서 req.user", req.session.passport.user.id);
+        console.log('인포체인지 req.user : ', req.user)
         console.log("인포체인지에서 user", user);
         if (user.name == name) {
             throw new Error("변경 전 이름과 같습니다.");
@@ -149,7 +149,11 @@ router.post(
         const user = await User.findOne({ _id: req.user.id });
         // console.log("인포체인지에서 req.user", req.user);
         // console.log("인포체인지에서 user", user);
-        if (user.isModified("password")) {
+        console.log('콘솔')
+        console.log(user.id)
+        console.log(user.password != hashPassword(password))
+            // console.log(user.password != hashPassword(password))
+        if (user.password != hashPassword(password)) {
             throw new Error("기존 비밀번호를 다시 입력해주세요");
         } else if (hashPassword(password) == hashPassword(newpassword)) {
             throw new Error("기존비밀번호와 새 비밀번호를 다르게 입력해주세요");

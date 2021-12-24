@@ -22,8 +22,7 @@ module.exports = () => {
     });
 
     passport.deserializeUser((id, done) => {
-        //디비에서 위에있는 user.id로 정보를 찾은다음
-        // console.log('deserialize user 찾기 전')
+        console.log('id값:', id)
         User.findById({ id }, (err, user) => {
             done(null, { user }); //검증성공
             // console.log('deserialize user 찾은 후 user', user)
@@ -33,9 +32,12 @@ module.exports = () => {
     // passport.deserializeUser((user, done) => {
     //     //디비에서 위에있는 user.id로 정보를 찾은다음
     //     // console.log('deserialize user 찾기 전')
+    //     console.log('user.id:', user.id)
     //     User.findOne({ _id: user.id }, (err, user) => {
+    //         console.log(user.id)
     //         done(null, user); //검증성공
     //         // console.log('deserialize user 찾은 후 user', user)
     //     });
     // });
+
 };

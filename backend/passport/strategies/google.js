@@ -1,6 +1,7 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { User, OAuth } = require('../../models');
 const findOrCreate = require('mongoose-findorcreate')
+const passport = require('passport')
 
 const config = {
     clientID: '483541837822-l081si09sa61433r6im5osejheb8ges0.apps.googleusercontent.com',
@@ -20,7 +21,8 @@ const config = {
 //     })
 // })
 
-module.exports = new GoogleStrategy(config, function(accessToken, refreshToken, profile, done) {
+
+const google = new GoogleStrategy(config, function(accessToken, refreshToken, profile, done) {
     User.findOrCreate({ googleId: profile.id }, function(err, user) {
         console.log('profile.id : ', profile.id)
         console.log('profile : ', profile)
@@ -30,8 +32,17 @@ module.exports = new GoogleStrategy(config, function(accessToken, refreshToken, 
             password: profile.id
         })
     })
+
+    // passport.serializeUser((user, done) => {
+    //     done(null, user)
+    // })
+
+    // passport.deserializeUser((id, done) => {
+    //     User.findById(id, (err, user) => done(err, user))
+    // })
 })
 
+module.exports = google;
 // async function findOrCreateUser({ name, email }) {
 //     const user = await User.findOne({
 //         email,
