@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
+const getUserFromJWT = require("./middlewares/get-user-from-jwt")
 const passport = require("passport");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -13,7 +14,7 @@ const reservationRouter = require("./routes/reservation");
 const authRouter = require('./routes/auth')
     // const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
-const session = require("express-session");
+// const session = require("express-session");
 const cors = require("cors");
 // const cookieSession = require("cookie-session");
 // const keys = require('./utils/keys')
@@ -39,32 +40,34 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
-app.use(
-    session({
-        secret: "Inspace",
-        resave: false,
-        saveUninitialized: true,
-        store: MongoStore.create({
-            mongoUrl: process.env.DB_URL,
-        }),
-    })
-);
+// app.use(
+//     session({
+//         secret: "Inspace",
+//         resave: false,
+//         saveUninitialized: true,
+//         store: MongoStore.create({
+//             mongoUrl: process.env.DB_URL,
+//         }),
+//     })
+// );
 
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(getUserFromJWT)
+    // app.use(passport.session());
+
 
 
 
 app.use("/", indexRouter);
 app.use('/auth', authRouter)
     // app.use('/google', GoogleRouter);
-app.use("/payments", paymentsRouter);
-app.use("/users", usersRouter);
-app.use("/reservation", reservationRouter);
-// app.use("/payments", loginRequired, paymentsRouter);
-// app.use("/users", loginRequired, usersRouter);
-// app.use('/reservation', loginRequired, reservationRouter)
+    // app.use("/payments", paymentsRouter);
+    // app.use("/users", usersRouter);
+    // app.use("/reservation", reservationRouter);
+app.use("/payments", loginRequired, paymentsRouter);
+app.use("/users", loginRequired, usersRouter);
+app.use('/reservation', loginRequired, reservationRouter)
 
 
 

@@ -4,6 +4,7 @@ const findOrCreate = require('mongoose-findorcreate')
 const UserSchema = new Schema({
     googleId: {
         type: String,
+        default: null
     },
     name: {
         type: String,
@@ -50,4 +51,3 @@ const UserSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = UserSchema;
-UserSchema.plugin(findOrCreate)
