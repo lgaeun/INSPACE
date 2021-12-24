@@ -141,6 +141,9 @@ router.post(
   "/info-change-name",
   asyncHandler(async (req, res, next) => {
     const { name } = req.body;
+    if (!req.user) {
+      throw new Error("다시 로그인해주세요.");
+    }
     const user = await User.findOne({ _id: req.user.id });
     console.log("인포체인지네임에서 req.user", req.user);
     console.log("인포체인지에서 user", user);

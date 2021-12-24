@@ -1,9 +1,7 @@
 module.exports = (req, res, next) => {
   if (!req.user) {
-    console.log(req);
-    // res.redirect('/');
+    res.json({ message: "세션이 만료되었습니다" });
     return;
   }
-  console.log(req);
   next();
 };

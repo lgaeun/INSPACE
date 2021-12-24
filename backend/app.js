@@ -15,6 +15,7 @@ const authRouter = require("./routes/auth");
 const loginRequired = require("./middlewares/login-required");
 const session = require("express-session");
 const cors = require("cors");
+var app = express();
 
 require("dotenv").config();
 require("./passport")();
@@ -24,13 +25,12 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected");
 });
 
-var app = express();
-
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 
 app.set("view engine", "pug");
 
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,13 +43,16 @@ app.use(cookieParser());
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors());
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      httpOnly: false,
+    },
     store: MongoStore.create({
       mongoUrl: process.env.DB_URL,
     }),
