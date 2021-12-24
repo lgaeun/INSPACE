@@ -97,7 +97,7 @@ router.get(
     }).populate("userTicket");
     //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
     if (user.userTicket && user.remainingTime >= 2) {
-      res.json({ message: "success", category: user.Ticket.category });
+      res.json({ message: "success", category: user.userTicket.category });
     } else {
       res.json({ message: "success", category: null });
     }
