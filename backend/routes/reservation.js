@@ -11,6 +11,7 @@ router.get(
     const reservedSeat = await Position.find({
       isempty: false,
     }).populate("user");
+    //여기에 시간 다 쓴 유저 캐치하는 코드 넣자
     const editedReservedSeat = reservedSeat.reduce((acc, pos) => {
       const remainingTimeSec = Math.floor(
         (pos.startTime.getTime() +
