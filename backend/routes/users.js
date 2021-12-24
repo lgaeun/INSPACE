@@ -45,6 +45,10 @@ router.get(
       const tempSecTime = Math.floor(
         (prevPosition.deletedAt - prevPosition.checkTime) / 1000
       );
+      await Position.updateOne(
+        { _id: user.userSeat },
+        { checkTime: new Date() }
+      );
       //oneday 유저의 경우 남은 시간 0으로 초기화됩니다.
       if (user.userTicket && user.userTicket.category == "oneday") {
         await User.updateOne(

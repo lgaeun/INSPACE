@@ -12,16 +12,18 @@ router.get(
     const renewedSeat = await Position.find({
       isempty: false,
     }).populate("user");
+    console.log(renewedSeat);
 
     //이용중인 좌석들을 사용한 시간을 업데이트합니다.
     //남은시간 < 사용한 시간이면 유저의 누적 사용시간을 남아있던 시간만큼 더하고 남은 시간을 0으로
     //남은시간 > 사용한 시간이면 유저의 누적 사용시간에서 사용한 시간을 더하고 남은 시간에서 사용한 시간을 빼는 로직입니다.
     for (const position of renewedSeat) {
-      const passedTime = Math.floor(
-        (new Date().getTime() - position.checkTime.getTime()) / 1000
-      );
+      const passedTime = Math.floor((new Date() - position.checkTime) / 1000);
+      console.log(passedTime);
       const user = await User.findOne({ _id: position.user });
+
       if (user.remainingTime <= passedTime) {
+        console.log(3);
         await User.updateOne(
           { _id: position.user },
           {
@@ -37,6 +39,9 @@ router.get(
           },
           {
             isempty: true,
+            checkTime: new Date(
+              position.checkTime.getTime() + user.remainingTime * 1000
+            ),
             deletedAt: new Date(
               position.checkTime.getTime() + user.remainingTime * 1000
             ),
@@ -50,6 +55,12 @@ router.get(
               usedTime: passedTime,
               remainingTime: -passedTime,
             },
+          }
+        );
+        await Position.updateOne(
+          { _id: position.id },
+          {
+            checkTime: new Date(),
           }
         );
       }
@@ -174,6 +185,8 @@ router.post(
     //try catch 로 오류를 잡을 때(롤백) 이런 방식으로 하면 되는지 궁금합니다.
     try {
       //기존에 이용중인 좌석이 있던 경우 기존 좌석 정보도 같이 수정해야 합니다.
+      // if (user.userSeat && !user.userSeat.isempty) {
+
       if (user.userSeat && !user.userSeat.isempty) {
         const prevPosition = await Position.findOneAndUpdate(
           { _id: user.userSeat },
@@ -183,6 +196,12 @@ router.post(
         //기존에 사용하던 좌석을 이용한 시간을 계산해서 유저데이터를 업데이트합니다.
         const tempSecTime = Math.floor(
           (prevPosition.deletedAt - prevPosition.checkTime) / 1000
+        );
+        await Position.updateOne(
+          { _id: user.userSeat },
+          {
+            checkTime: new Date(),
+          }
         );
         await User.updateOne(
           { _id: id },
@@ -311,7 +330,11 @@ router.post(
         { new: true }
       );
       const tempSecTime = Math.floor(
-        (prevPosition.deletedAt - prevPosition.startTime) / 1000
+        (prevPosition.deletedAt - prevPosition.checkTime) / 1000
+      );
+      await Position.updateOne(
+        { _id: user.userSeat },
+        { checkTime: new Date() }
       );
       await User.updateOne(
         { _id: id },
