@@ -8,11 +8,12 @@ export default class extends AbstractView {
     super(params);
     this.setTitle("INSPACE");
     this.obj = {};
+    this.nav = new NavComponent();
   }
 
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="ticket-bg">
       <main class="ticket-select">
         <h2>Ticket</h2>
@@ -44,22 +45,18 @@ export default class extends AbstractView {
           <a href="/main" data-link><button id="prev-btn">Prev</button></a>
         </div>
       <div class="next-btn-wrapper">
-          <a href="/select" data-link><button id="next-btn">Next</button></a>
+          <a href="/select" data-link><button id="next-btn" class="next-btn__disabled">Next</button></a>
         </div>
     </div>`
     );
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     const $tickets = document.querySelectorAll(".ticket");
     const $nextBtn = document.getElementById("next-btn");
     $nextBtn.disabled = true;
-    $nextBtn.style.backgroundColor = "#b0b0b0a3";
 
     $tickets.forEach((ticket) => {
       // ticket 클릭이벤트
@@ -70,13 +67,27 @@ export default class extends AbstractView {
         const userAuth =
           e.target.className === "charge ticket" ? "charge" : "oneday";
         // 클릭시 버튼 눌림 효과 CSS적용
-        e.target.style =
-          "box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;";
-        e.target.style.backgroundColor = "white";
-        e.target.style.color = "black";
+        // e.target.style = `color: black;
+        //   box-shadow: 0 0 0 2px #000 inset;
+        //   background-color: white;
+        //   transition: 0.5s`;
 
-        $nextBtn.disabled = false;
-        $nextBtn.style.backgroundColor = "#becfbb";
+        const $selected = document.querySelector(".ticket__selected");
+        if ($selected) {
+          $selected.classList.remove("ticket__selected");
+        }
+
+        if (e.target != $selected) {
+          e.target.classList.add("ticket__selected");
+
+          $nextBtn.disabled = false;
+          $nextBtn.classList.remove("next-btn__disabled");
+          $nextBtn.classList.add("next-btn__abled");
+        } else {
+          $nextBtn.disabled = true;
+          $nextBtn.classList.add("next-btn__disabled");
+          $nextBtn.classList.remove("next-btn__abled");
+        }
 
         // // 이벤트 타깃이 아닌 버튼 이벤트 초기화
         // $tickets.forEach((ticket) => {

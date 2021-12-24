@@ -137,11 +137,19 @@ export default class extends AbstractView {
           .then((res) => {
             if (res.ok) {
               // $loginBtn.parentElement.href = "/main";
-              window.location = "/main";
+              return res.json();
             } else {
               alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
               throw new Error("아이디가 틀립니다.");
             }
+          })
+          .then((data) => {
+            localStorage.setItem("checkIn", data.checkIn);
+            localStorage.setItem("id", data.id);
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("name", data.name);
+
+            window.location = "/main";
           })
           .catch((err) => {
             console.log(err);

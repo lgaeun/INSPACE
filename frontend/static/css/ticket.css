@@ -95,6 +95,7 @@
   margin-bottom: 20px;
 }
 
+.ticket.ticket__selected,
 .oneday-box .oneday:hover,
 .charge-box .charge:hover,
 .charge-box .charge:visited,
@@ -140,7 +141,7 @@
   cursor: pointer;
 }
 
-.next-btn-wrapper #next-btn {
+.next-btn-wrapper #next-btn.next-btn__abled {
   font-family: "Chonburi", cursive;
   color: #ffff;
   width: 80%;
@@ -152,10 +153,22 @@
   cursor: pointer;
 }
 
-.next-btn-wrapper #next-btn:hover,
-.next-btn-wrapper #next-btn:active {
+.next-btn-wrapper #next-btn.next-btn__abled:hover,
+.next-btn-wrapper #next-btn.next-btn__abled:active {
   color: #becfbb;
   box-shadow: 0 0 0 2px #becfbb inset;
   background-color: white;
   transition: 0.5s;
+}
+
+.next-btn-wrapper #next-btn.next-btn__disabled {
+  font-family: "Chonburi", cursive;
+  color: #ffff;
+  width: 80%;
+  padding: 1rem;
+  border-radius: 40px;
+  border: 0;
+  background-color: #b0b0b0a3;
+  font-size: 14px;
+  cursor: default;
 }

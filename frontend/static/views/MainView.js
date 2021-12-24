@@ -6,11 +6,12 @@ export default class extends AbstractView {
     super(params);
     //this.postId = params.id;
     this.setTitle("Main Page");
+    this.nav = new NavComponent();
   }
 
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="main-container">
         <div class="main-section">
           <div class="main-section__info">
@@ -107,7 +108,7 @@ export default class extends AbstractView {
           </svg>
             좌석 선택</button></a>
             <a href="/ticket" data-link
-              ><button class="btn" type="button">
+              ><button class="btn" type="button" id="btn--select-extend">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
   <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
@@ -142,10 +143,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     const $checkIn = document.querySelector(".main-section__btn-check-in");
     const $checkOut = document.querySelector(".main-section__btn-check-out");
@@ -153,6 +151,7 @@ export default class extends AbstractView {
 
     const selectSeatBtn = document.querySelector("#btn--select-seat");
     const moveSeatBtn = document.querySelector("#btn--move-seat");
+    const selectAndExtendBtn = document.querySelector("#btn--select-extend");
     const extendTimeBtnIn = document.querySelector(
       "#check-in__btn--extend-time"
     );
@@ -178,23 +177,34 @@ export default class extends AbstractView {
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
-    const checkIn = false; //fetch
+    const checkIn = localStorage.getItem("checkIn"); //fetch
+    const id = localStorage.getItem("id");
+
     let clearTimer = false;
     let elapsed = 0;
 
-    if (checkIn) {
+    // fetch(
+    //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login"
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //   });
+
+    if (checkIn == "true") {
       checkInDisplay(true);
 
-      // fetch(
-      //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/61c1817a587a91d1b29f6f2d/checkIn"
-      // )
-      fetch("http://localhost:3000/checkIn")
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
+      )
+        //fetch("http://localhost:3000/checkIn")
         .then((res) => res.json())
         .then((data) => {
-          data = data[0];
+          //data = data[0];
 
+          console.log(data.startTime);
           const info = {
-            seat: data.table + "-" + data.position,
+            seat: "T" + data.table + "-" + data.position,
             check: formatDate(new Date(data.startTime)),
             ticket:
               data.duration +
@@ -218,10 +228,13 @@ export default class extends AbstractView {
     } else {
       checkInDisplay(false);
 
-      fetch("http://localhost:3000/checkOut")
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+      )
+        //fetch("http://localhost:3000/checkOut")
         .then((res) => res.json())
         .then((data) => {
-          data = data[0];
+          //data = data[0];
 
           const info = {
             seat: " - ",
@@ -232,9 +245,9 @@ export default class extends AbstractView {
           setInfo(info);
 
           elapsed =
-            Math.abs(data.remainedTime.hour) * (1000 * 60 * 60) +
-            data.remainedTime.min * (1000 * 60) +
-            data.remainedTime.sec * 1000;
+            Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
+            data.remainingTime.min * (1000 * 60) +
+            data.remainingTime.sec * 1000;
 
           drawTimer();
         })
@@ -301,6 +314,11 @@ export default class extends AbstractView {
       sessionStorage.setItem("history", "before");
       sessionStorage.setItem("path", "extend");
     });
+    selectAndExtendBtn.addEventListener("click", function () {
+      sessionStorage.clear();
+      sessionStorage.setItem("history", "before");
+      sessionStorage.setItem("path", "both");
+    });
 
     // 이용중 메인
     moveSeatBtn.addEventListener("click", function () {
@@ -315,13 +333,17 @@ export default class extends AbstractView {
     });
 
     $btnCheckOut.addEventListener("click", () => {
-      fetch("http://localhost:3000/checkOut")
-        .then((res) => res.json())
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+      )
+        .then((res) => {
+          if (res.ok) {
+            localStorage.setItem("checkIn", false);
+            location.reload();
+          }
+        })
         .then((data) => {})
         .catch((err) => console.log(err));
-
-      checkInDisplay(false);
-      clearTimer = true;
     });
 
     function drawTimer() {
