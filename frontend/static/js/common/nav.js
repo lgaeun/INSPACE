@@ -286,6 +286,8 @@ export default class {
       )
         .then((res) => {
           if (res.ok) {
+            localStorage.clear();
+            sessionStorage.clear();
             location.href = "/";
           }
         })
