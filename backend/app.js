@@ -43,7 +43,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: false,
-      httpOnly: true,
+      httpOnly: false,
     },
     store: MongoStore.create({
       mongoUrl: process.env.DB_URL,
