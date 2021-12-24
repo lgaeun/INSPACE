@@ -202,7 +202,6 @@ export default class extends AbstractView {
         .then((data) => {
           //data = data[0];
 
-          console.log(data.startTime);
           const info = {
             seat: "T" + data.table + "-" + data.position,
             check: formatDate(new Date(data.startTime)),
