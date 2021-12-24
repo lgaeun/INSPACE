@@ -30,7 +30,7 @@ export default class {
                 <a class="dropdown-item" href="javascript:void(0);">개인 정보 수정</a>
               </li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">로그아웃</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#logoutModal">로그아웃</a></li>
             </ul>
           </li>
         </ul>
@@ -174,6 +174,24 @@ export default class {
           </div>
         </div>
       </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="logoutModalLabel">정말 로그아웃하시겠습니까? <br> 로그아웃하면 자동 퇴실처리가 됩니다. </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-primary" id="logout-btn" data-bs-dismiss="modal">확인</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       `;
   }
   defaultFunc() {
@@ -182,26 +200,103 @@ export default class {
       "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
     document.getElementById("root").appendChild(script);
 
+    const $userId = document.getElementById("userId");
+    $userId.value = localStorage.getItem("userId");
+    const $name = document.getElementById("userName");
+    $name.value = localStorage.getItem("name");
+
+    const $password = document.getElementById("oldPasswordInput");
+    const $newpassword = document.getElementById("newPasswordInput");
+    const $confirmpassword = document.getElementById("newPasswordComfirm");
+
     const $infoBtn = document.getElementById("userInfo-modify-btn");
     const $pwdBtn = document.getElementById("pwd-change-btn");
+    const $logoutBtn = document.getElementById("logout-btn");
     const $modifyPwdModal = document.getElementById("modifyPwdModal");
 
     let flag = true;
 
     $infoBtn.addEventListener("click", () => {
-      console.log("modify");
+      const userInfo = {
+        name: $name.value,
+      };
+
+      const loginURL =
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-name";
+      //서버 fetch
+      fetch(loginURL, {
+        method: "POST",
+        body: JSON.stringify(userInfo),
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.ok) {
+            localStorage.setItem("name", $name.value);
+            alert("정상적으로 변경되었습니다.");
+          } else {
+            $name.value = localStorage.getItem("name");
+            alert("변경이 안됐습니다.");
+            throw new Error("변경이 안됐습니다.");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 
     $pwdBtn.addEventListener("click", () => {
-      console.log("change");
-      flag = false;
+      const pwdInfo = {
+        password: $password.value,
+        newpassword: $newpassword.value,
+        confirmpassword: $confirmpassword.value,
+      };
+
+      console.log(pwdInfo);
+
+      const loginURL =
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-password";
+      //서버 fetch
+      fetch(loginURL, {
+        method: "POST",
+        body: JSON.stringify(pwdInfo),
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.ok) {
+            alert("정상적으로 변경되었습니다.");
+          } else {
+            alert("변경이 안됐습니다.");
+            throw new Error("변경이 안됐습니다.");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 
-    $modifyPwdModal.addEventListener("show.bs.modal", function (event) {
-      console.log(event);
-      if (!flag) {
-        return event.preventDefault(); // stops modal from being shown
-      }
+    $logoutBtn.addEventListener("click", () => {
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout`
+      )
+        .then((res) => {
+          if (res.ok) {
+            location.href = "/";
+          }
+        })
+        .catch((err) => console.log(err));
     });
+
+    // $modifyPwdModal.addEventListener("show.bs.modal", function (event) {
+    //   console.log(event);
+    //   if (!flag) {
+    //     return event.preventDefault(); // stops modal from being shown
+    //   }
+    // });
   }
 }
