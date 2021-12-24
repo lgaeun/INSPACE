@@ -58,6 +58,15 @@ export default class extends AbstractView {
     const $nextBtn = document.getElementById("next-btn");
     $nextBtn.disabled = true;
 
+    const ID = localStorage.getItem("id");
+    const ticket = JSON.parse(localStorage.getItem("ticket"));
+
+    fetch(
+      `http://localhost:8080/reservation/${ID}/ticket?category=${ticket.auth}`
+    )
+      .then((res) => res.json())
+      .then(console.log);
+
     $tickets.forEach((ticket) => {
       // ticket 클릭이벤트
       ticket.onclick = (e) => {

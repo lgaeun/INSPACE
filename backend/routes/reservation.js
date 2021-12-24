@@ -44,11 +44,12 @@ router.get(
       if (category != user.userTicket.category) {
         throw new Error("이용중인 이용권과 같은 이용권이 아닙니다.");
       } else {
-        res.json({ message: "success" });
+        res.json({ message: "success", ticket: user.userTicket });
       }
     } else {
-      res.json({ message: "success" });
+      res.json({ message: "success", ticket: user.userTicket });
     }
+    res.json({ message: "success", ticket: user });
   })
 );
 

@@ -53,6 +53,9 @@ app.use(
     store: MongoStore.create({
       mongoUrl: process.env.DB_URL,
     }),
+    cookie: {
+      maxAge: 60 * 10000,
+    },
   })
 );
 
@@ -66,6 +69,7 @@ app.use("/auth", authRouter);
 app.use("/payments", paymentsRouter);
 app.use("/users", usersRouter);
 app.use("/reservation", reservationRouter);
+
 // app.use("/payments", loginRequired, paymentsRouter);
 // app.use("/users", loginRequired, usersRouter);
 // app.use("/reservation", loginRequired, reservationRouter);

@@ -19,7 +19,7 @@ function loginHandler() {
     };
 
     const loginURL =
-      "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login";
+      "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login ";
     //서버 fetch
     fetch(loginURL, {
       method: "POST",
@@ -43,9 +43,9 @@ function loginHandler() {
         localStorage.setItem("id", data.id);
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("name", data.name);
-
-        document.getElementById("login-Btn").parentElement.href = "/main";
-        document.getElementById("login-Btn").parentElement.href = "/main";
+        // localStorage.setItem("cookie", document.cookie);
+        console.log(document.cookie);
+        // window.location.href = "/main";
       })
       .catch((err) => {
         console.log(err);
@@ -53,7 +53,19 @@ function loginHandler() {
     // sessionStorage.setItem("history", "login");
     // function movePage() {
     //   $loginBtn.parentElement.href = "/main";
-    //}
+    // //}
+    $loginBtn.parentElement.href = "/main";
+    function getCookie(cookieName) {
+      var cookieValue = null;
+      if (document.cookie) {
+        var array = document.cookie.split(escape(cookieName) + "=");
+        if (array.length >= 2) {
+          var arraySub = array[1].split(";");
+          cookieValue = unescape(arraySub[0]);
+        }
+      }
+      return cookieValue;
+    }
   }
 }
 

@@ -30,7 +30,7 @@ export default class {
                 <a class="dropdown-item" href="javascript:void(0);">개인 정보 수정</a>
               </li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="javascript:void(0);" id="logout-Btn">로그아웃</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);"><p id="logout-Btn">로그아웃<p></a></li>
             </ul>
           </li>
         </ul>
@@ -206,12 +206,26 @@ export default class {
 
     const $logout = document.getElementById("logout-Btn");
 
-    $logout.addEventListener("click", () => {
-      fetch(
+    $logout.addEventListener("click", temp);
+
+    async function temp() {
+      const res = await fetch(
         "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout"
-      )
-        .then((res) => res.json())
-        .then(console.log);
-    });
+      );
+
+      if (res.ok) {
+        window.location.href = "/";
+      }
+    }
+    // $logout.addEventListener("click", () => {
+    //   fetch(
+    //     "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout"
+    //   ).then((res) => {
+    //     if (res.ok) {
+    //       //세션 초기화 후 로그인 페이지 이동
+    //       $logout.parentElement.href = "/";
+    //     }
+    //   });
+    // });
   }
 }
