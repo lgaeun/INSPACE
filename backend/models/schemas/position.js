@@ -19,11 +19,16 @@ const PositionSchema = new Schema(
     deletedAt: {
       type: Date,
       default: null,
-    }, //좌석 사용 시간
+    }, //좌석 사용 시작 시간
     startTime: {
       type: Date,
       default: null, //timestamps 이용???
-    }, //유저와 연결
+    }, //마지막으로 좌석 이용시간 정보 업데이트한 시간
+    checkTime: {
+      type: Date,
+      defualt: null,
+    },
+    //유저와 연결
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
