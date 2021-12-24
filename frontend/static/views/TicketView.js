@@ -1,7 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
-import userData from "../js/data.js";
-// import e from "express";
+import ticketHandler from "../js/handler/ticketHandler.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -58,57 +57,40 @@ export default class extends AbstractView {
     const $nextBtn = document.getElementById("next-btn");
     $nextBtn.disabled = true;
 
-    $tickets.forEach((ticket) => {
-      // ticket 클릭이벤트
-      ticket.onclick = (e) => {
-        const selectedTime = Number(ticket.dataset.name);
-        const selectedPrice = ticket.dataset.price;
+    const ID = localStorage.getItem("id");
 
-        const userAuth =
-          e.target.className === "charge ticket" ? "charge" : "oneday";
-        // 클릭시 버튼 눌림 효과 CSS적용
-        // e.target.style = `color: black;
-        //   box-shadow: 0 0 0 2px #000 inset;
-        //   background-color: white;
-        //   transition: 0.5s`;
+    const $onedayTickets = document.querySelectorAll(".oneday");
+    const $chargeTickets = document.querySelectorAll(".charge");
 
-        const $selected = document.querySelector(".ticket__selected");
-        if ($selected) {
-          $selected.classList.remove("ticket__selected");
-        }
+    fetch(
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/${ID}/ticket`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        // 유저의 현재 사용하는 이용권이 충전권(charge)인 경우 충전권 버튼만 클릭 이벤트 활성화
+        console.log(data);
+        if (data.category === "charge") {
+          ticketHandler($chargeTickets);
 
-        if (e.target != $selected) {
-          e.target.classList.add("ticket__selected");
+          $onedayTickets.forEach((ticket) => {
+            ticket.style.pointerEvents = "none";
+            ticket.style.backgroundColor = "#ebebeb7d";
+          });
+          // 유저의 현재 사용하는 이용권이 시간권(oneday)인 경우 시간권 버튼만 클릭 이벤트 활성화
+        } else if (data.category === "oneday") {
+          ticketHandler($onedayTickets);
 
-          $nextBtn.disabled = false;
-          $nextBtn.classList.remove("next-btn__disabled");
-          $nextBtn.classList.add("next-btn__abled");
+          $chargeTickets.forEach((ticket) => {
+            ticket.style.pointerEvents = "none";
+            ticket.style.backgroundColor = "#ebebeb7d";
+          });
+          // 처음 이용하는 유저인 경우 모든 버튼 활성화
         } else {
-          $nextBtn.disabled = true;
-          $nextBtn.classList.add("next-btn__disabled");
-          $nextBtn.classList.remove("next-btn__abled");
+          ticketHandler($tickets);
         }
-
-        // // 이벤트 타깃이 아닌 버튼 이벤트 초기화
-        // $tickets.forEach((ticket) => {
-        //   if (ticket !== e.target) {
-        //     ticket.style = "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;";
-        //   }
-        // });
-        // 티켓데이터
-        const ticketData = objectFunc();
-        // localStorage에 추가
-        localStorage.setItem("ticket", JSON.stringify(ticketData));
-        //티켓데이터 obj생성함수
-        function objectFunc() {
-          return {
-            time: selectedTime,
-            auth: userAuth,
-            history: `${sessionStorage.getItem("history")}`,
-            price: selectedPrice,
-          };
-        }
-      };
-    });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 }

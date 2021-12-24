@@ -11,15 +11,41 @@ router.get(
     const reservedSeat = await Position.find({
       isempty: false,
     }).populate("user");
+    //여기에 시간 다 쓴 유저 캐치하는 코드 넣자
     const editedReservedSeat = reservedSeat.reduce((acc, pos) => {
+      const remainingTimeSec = Math.floor(
+        (pos.startTime.getTime() +
+          new Date(pos.user.remainingTime * 1000).getTime() -
+          new Date().getTime()) /
+          1000
+      );
       acc.push({
-        postion: pos.position,
+        position: pos.position,
         table: pos.table,
-        remainingTime: calcTime(pos.user.remainingTime),
+        remainingTime: calcTime(remainingTimeSec),
       });
       return acc;
     }, []);
     res.json(editedReservedSeat);
+  })
+);
+
+//티켓정보 확인하는 페이지
+//티켓을 선택하고 다음버튼 눌렀을 때 유저가 어떤 티켓을 가지고 있었는지 보내줍니다.
+router.get(
+  "/:id/ticket",
+  asyncHandler(async (req, res, next) => {
+    // const { category } = req.query;
+    const { id } = req.params;
+    const user = await User.findOne({
+      _id: id,
+    }).populate("userTicket");
+
+    // console.log("user", user);
+    // console.log("user.userTicket", user.userTicket);
+    // console.log("user.userTicket.category", user.userTicket.category);
+
+    res.json({ message: "success", category: user.userTicket.category });
   })
 );
 
@@ -32,7 +58,9 @@ router.post(
   "/table/position/payments/:id",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     //req.body 로 받는 duration은 hour
     // console.log("uesr", user);
     const { category, duration, price, table, position } = req.body;
@@ -40,7 +68,8 @@ router.post(
     //겹치는 좌석이 있는지 확인하고 겹치는 좌석이 있으면 에러를 던집니다.
     const checkPosition = await Position.findOne({
       table: table,
-      name: position,
+      position: position,
+      isempty: false,
     });
     if (checkPosition) {
       throw new Error("이미 사용중인 좌석입니다.");
@@ -69,7 +98,7 @@ router.post(
     //try catch 로 오류를 잡을 때(롤백) 이런 방식으로 하면 되는지 궁금합니다.
     try {
       //기존에 이용중인 좌석이 있던 경우 기존 좌석 정보도 같이 수정해야 합니다.
-      if (!user.userSeat.isempty) {
+      if (user.userSeat && !user.userSeat.isempty) {
         const prevPosition = await Position.findOneAndUpdate(
           { _id: user.userSeat },
           { isempty: true, deletedAt: new Date() },
@@ -122,8 +151,11 @@ router.post(
 router.post(
   "/payments/:id",
   asyncHandler(async (req, res, next) => {
+    console.log("티켓구매", req.user);
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     const { category, duration, price } = req.body; //시간연장에 필요한 데이터만 저장
     const newTicket = await Ticket.create({
       category,
@@ -132,7 +164,7 @@ router.post(
       user: user._id,
     });
 
-    if (!user.userSeat.isempty) {
+    if (user.userSeat && !user.userSeat.isempty) {
       await Position.updateOne(
         { _id: user.userSeat },
         { ticket: newTicket._id }
@@ -161,17 +193,25 @@ router.post(
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const { position, table } = req.body;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
 
     //겹치는 좌석이 있는지 확인 후 에러처리
     const checkPosition = await Position.findOne({
       table: table,
-      name: position,
+      position: position,
+      isempty: false,
     });
 
     if (checkPosition) {
       throw new Error("이미 사용중인 좌석입니다.");
       return;
+    }
+
+    //남은 시간이 있는지 확인 후 에러처리
+    if (user.remainingTime <= 1) {
+      throw new Error("남은 시간이 없습니다.");
     }
 
     //새로운 좌석에 대한 데이터를 만듭니다.
@@ -185,7 +225,9 @@ router.post(
       ticket: user.userTicket,
     });
     //기존에 이용하던 좌석이 있는 경우
-    if (!user.userSeat.isempty) {
+    if (user.userSeat && !user.userSeat.isempty) {
+      console.log("1", user.userSeat);
+      console.log("2", user.userSeat.isempty);
       const prevPosition = await Position.findOneAndUpdate(
         { _id: user.userSeat },
         { isempty: true, deletedAt: new Date() },

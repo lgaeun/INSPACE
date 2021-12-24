@@ -8,7 +8,7 @@ const PositionSchema = new Schema(
       required: true,
     }, //속한 섹션
     table: {
-      type: String,
+      type: Number,
       required: true,
     }, //좌석이용여부
     isempty: {
