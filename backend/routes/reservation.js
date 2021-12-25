@@ -301,7 +301,7 @@ router.post(
 
     if (checkPosition) {
       res
-        // .status(500)
+        .status(500)
         .json({ message: "이미 사용중인 좌석입니다.", type: "noPosition" });
       return;
     }
@@ -309,7 +309,7 @@ router.post(
     //남은 시간이 있는지 확인 후 에러처리
     if (user.remainingTime <= 1) {
       res
-        // .status(500)
+        .status(500)
         .json({ message: "남은 시간이 없습니다.", type: "noTime" });
       return;
     }
