@@ -38,6 +38,7 @@ module.exports = new GoogleStrategy(config, async(accessToken, refreshToken, pro
             name: profile.displayName,
             googleId: profile.id,
         });
+
     } catch (e) {
         done(e, null);
     }

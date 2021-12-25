@@ -54,6 +54,8 @@ router.post('/login', passport.authenticate('local', { session: false }),
     }
 )
 
+
+
 // router.get(
 //     '/login',
 //     asyncHandler(async(req, res, next) => {
@@ -77,6 +79,7 @@ router.post('/login', passport.authenticate('local', { session: false }),
 router.get(
     "/logout", (req, res, next) => {
         res.cookie('token', null, { maxAge: 0 })
+        res.json({ message: 'logout' })
     })
 
 router.post(
