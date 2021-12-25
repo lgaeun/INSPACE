@@ -5,6 +5,15 @@ import TicketView from "../views/TicketView.js";
 import FindView from "../views/FindView.js";
 import SelectView from "../views/SelectView.js";
 import PayCheckView from "../views/PayCheckView.js";
+// import toString from "./common/toString.js";
+
+const fs = require("fs");
+
+function toString() {
+  fs.readFile("toast.js", "utf-8", function (err, data) {
+    console.log(data);
+  });
+}
 
 const pathToRegex = (path) =>
   new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -58,6 +67,7 @@ const router = async () => {
   const view = new match.route.view(getParams(match));
 
   document.querySelector("#root").innerHTML = view.getHtml();
+  toString();
   view.defaultFunc();
 };
 
