@@ -1,14 +1,10 @@
-// import { doc } from "prettier";
-// import { response } from "express";
-//import e from "express";
-// import e from "express";
 import AbstractView from "./AbstractView.js";
-import userData from "../js/data.js";
+import loginHandler from "../js/handler/loginHandler.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("Dashboard");
+    this.setTitle("INSPACE");
   }
   getHtml() {
     return `
