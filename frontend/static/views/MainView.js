@@ -198,30 +198,44 @@ export default class extends AbstractView {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
       )
         //fetch("http://localhost:3000/checkIn")
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            return null;
+          }
+        })
         .then((data) => {
           //data = data[0];
 
-          const info = {
-            seat: "T" + data.table + "-" + data.position,
-            check: formatDate(new Date(data.startTime)),
-            ticket:
-              data.duration +
-              "시간 " +
-              (data.category == "savingupTime" ? "충전권" : "당일권"),
-          };
+          if (data) {
+            const info = {
+              seat: "T" + data.table + "-" + data.position,
+              check: formatDate(new Date(data.startTime)),
+              ticket:
+                data.duration +
+                "시간 " +
+                (data.category == "savingupTime" ? "충전권" : "당일권"),
+            };
 
-          setInfo(info);
+            setInfo(info);
 
-          const endTime = new Date(data.finishTime);
+            const endTime = new Date(data.finishTime);
 
-          let setTimer = setInterval(function () {
-            if (clearTimer) {
-              clearInterval(setTimer);
-            }
-            elapsed = endTime.getTime() - new Date().getTime();
-            drawTimer();
-          }, 1000);
+            let setTimer = setInterval(function () {
+              elapsed = endTime.getTime() - new Date().getTime();
+
+              if (elapsed <= 0) {
+                $btnCheckOut.click();
+              }
+
+              // if (clearTimer) {
+              //   clearInterval(setTimer);
+              // }
+
+              drawTimer();
+            }, 1000);
+          }
         })
         .catch((err) => console.log(err));
     } else {
@@ -257,23 +271,23 @@ export default class extends AbstractView {
       let formatted_date =
         current_datetime.getFullYear() +
         "-" +
-        (current_datetime.getMonth() + 1 > 10
+        (current_datetime.getMonth() + 1 >= 10
           ? current_datetime.getMonth() + 1
           : `0${current_datetime.getMonth() + 1}`) +
         "-" +
-        (current_datetime.getDate() > 10
+        (current_datetime.getDate() >= 10
           ? current_datetime.getDate()
           : `0${current_datetime.getDate()}`) +
         " " +
-        (current_datetime.getHours() > 10
+        (current_datetime.getHours() >= 10
           ? current_datetime.getHours()
           : `0${current_datetime.getHours()}`) +
         ":" +
-        (current_datetime.getMinutes() > 10
+        (current_datetime.getMinutes() >= 10
           ? current_datetime.getMinutes()
           : `0${current_datetime.getMinutes()}`) +
         ":" +
-        (current_datetime.getSeconds() > 10
+        (current_datetime.getSeconds() >= 10
           ? current_datetime.getSeconds()
           : `0${current_datetime.getSeconds()}`);
       return formatted_date;
