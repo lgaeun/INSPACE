@@ -1,5 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import userData from "../js/data.js";
+import toast from "../js/common/toast.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -21,6 +22,7 @@ export default class extends AbstractView {
         </aside>
         <article class="right">
           <div class="sign-in_container">
+          <div id="toast"></div>
             <h1 class="sign-in_title">Sign up</h1>
             <form class="sign-in_form">
               <div class="form-floating mb-3">
@@ -100,6 +102,18 @@ export default class extends AbstractView {
     // document.getElementById("root").appendChild(script);
 
     const $signUp = document.getElementById("signUp");
+    const error = sessionStorage.getItem("error");
+    const errorMessage = [
+      "이름을 입력해주세요.",
+      "이메일을 입력해주세요.",
+      "비밀번호를 정확히 입력해주세요.",
+      "비밀번호가 맞지 않습니다.",
+    ];
+
+    if (error) {
+      toast(errorMessage[error]);
+      sessionStorage.clear();
+    }
 
     $signUp.addEventListener("click", () => {
       const name = document.getElementById("name").value;
@@ -114,16 +128,16 @@ export default class extends AbstractView {
       // 이름, 이메일 , 비밀번호 검증
       if (name === "") {
         $signUp.parentElement.href = "";
-        alert("이름을 입력해주세요.");
+        sessionStorage.setItem("error", 0);
       } else if (regEmail.test(email) !== true) {
         $signUp.parentElement.href = "";
-        alert("이메일을 입력해주세요.");
+        sessionStorage.setItem("error", 1);
       } else if (regPassword.test(password) !== true) {
         $signUp.parentElement.href = "";
-        alert("비밀번호를 정확히 입력해주세요.");
+        sessionStorage.setItem("error", 2);
       } else if (password !== passwordconfirm) {
         $signUp.parentElement.href = "";
-        alert("비밀번호가 맞지 않습니다.");
+        sessionStorage.setItem("error", 3);
       } else {
         // 회원가입 유저 요청 데이터
         const createdUser = {
@@ -150,10 +164,11 @@ export default class extends AbstractView {
               alert("에러");
               console.log(response);
             } else {
+              localStorage.setItem("signup", true);
               response.json();
             }
           })
-          .then(console.log)
+          .then((res) => console.log(res))
           .catch((e) => console.log(e));
       }
     });

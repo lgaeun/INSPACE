@@ -3,6 +3,7 @@ import loginHandler from "../js/handler/loginHandler.js";
 // import jwt from "../../../backend/passport/strategies/jwt.js";
 import parseJwt from "../js/handler/tokenHandler.js";
 // import jwt_decode from "jwt-decode";
+import toast from "../js/common/toast.js";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -24,6 +25,7 @@ export default class extends AbstractView {
         </aside>
         <article class="right">
           <div id="login-box">
+            <div id="toast"></div>
             <h3>Log in</h3>
             <form action="post" id="login-form">
               <div class="form-floating mb-3">
@@ -104,6 +106,14 @@ export default class extends AbstractView {
     //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
     // document.getElementById("root").appendChild(script);
 
+    setTimeout(() => {
+      const signup = localStorage.getItem("signup");
+      if (signup) {
+        toast("회원가입이 완료되었습니다! 로그인 해주세요.");
+        localStorage.removeItem("signup");
+      }
+    }, 500);
+
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
     $loginBtn.addEventListener("click", (e) => {
@@ -119,9 +129,9 @@ export default class extends AbstractView {
 
         // 예외처리
         if (ID.length < 6) {
-          alert("6자 이상 아이디를 입력해주세요.");
+          toast("6자 이상 아이디를 입력해주세요.");
         } else if (PASSWORD.length < 8) {
-          alert("8자 이상 비밀번호를 입력해주세요.");
+          toast("8자 이상 비밀번호를 입력해주세요.");
         } else {
           // 전달할 유저 데이터
           const loginUser = {
@@ -144,15 +154,7 @@ export default class extends AbstractView {
               if (res.ok) {
                 return res.json();
               } else {
-                alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
-                throw new Error("아이디가 틀립니다.");
-              }
-            })
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
+                toast("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
                 throw new Error("아이디가 틀립니다.");
               }
             })
@@ -177,7 +179,7 @@ export default class extends AbstractView {
             });
           // sessionStorage.setItem("history", "login");
           // function movePage() {
-          //   $loginBtn.parentElement.href = "/main";
+          //   $loginBtn.parentElement.href = "/main"
           //}
         }
       }
