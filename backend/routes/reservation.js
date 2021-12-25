@@ -300,13 +300,18 @@ router.post(
     });
 
     if (checkPosition) {
-      throw new Error("이미 사용중인 좌석입니다.");
+      res
+        .status(500)
+        .json({ message: "이미 사용중인 좌석입니다.", type: "noPosition" });
       return;
     }
 
     //남은 시간이 있는지 확인 후 에러처리
     if (user.remainingTime <= 1) {
-      throw new Error("남은 시간이 없습니다.");
+      res
+        .status(500)
+        .json({ message: "남은 시간이 없습니다.", type: "noTime" });
+      return;
     }
 
     //새로운 좌석에 대한 데이터를 만듭니다.
