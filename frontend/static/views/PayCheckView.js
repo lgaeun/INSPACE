@@ -1,7 +1,8 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
 
-const baseURL = "http://localhost:5000";
+const baseURL =
+  "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
 
 export default class extends AbstractView {
   constructor(params) {

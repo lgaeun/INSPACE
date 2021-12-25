@@ -190,15 +190,19 @@ export default class extends AbstractView {
     //   .then((data) => {
     //     console.log(data);
     //   });
+    const token = localStorage.getItem("token");
 
     if (checkIn == "true") {
       checkInDisplay(true);
 
       fetch(
-        // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
-        `http://localhost:5000/users/${id}/checkIn`
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkIn`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
       )
-        //fetch("http://localhost:3000/checkIn")
         .then((res) => {
           if (res.ok) {
             return res.json();
@@ -242,8 +246,14 @@ export default class extends AbstractView {
     } else {
       checkInDisplay(false);
 
-      fetch(`http://localhost:5000/users/${id}/checkOut`)
-        //fetch("http://localhost:3000/checkOut")
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkOut`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           //data = data[0];
@@ -350,8 +360,13 @@ export default class extends AbstractView {
 
     $btnCheckOut.addEventListener("click", () => {
       fetch(
-        // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
-        `http://localhost:5000/users/${id}/checkOut`
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkOut`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+        // `http://localhost:5000/users/${id}/checkOut`
       )
         .then((res) => {
           if (res.ok) {

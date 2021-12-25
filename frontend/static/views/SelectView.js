@@ -199,24 +199,23 @@ export default class extends AbstractView {
           body: JSON.stringify(seatObj),
           headers: {
             "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
           },
         };
 
-        fetch(baseURL + `/reservation/position/${userId}`, seatData).then(
-          (res) => {
-            if (res.ok) {
-              localStorage.setItem("checkIn", true);
-            } else {
-              if (res.err === "남은 시간이 없습니다.") {
-                alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
-                this.setButtonConnection(payBtn, "main");
-              } else if (res.err === "이미 사용중인 좌석입니다.") {
-                sessionStorage.setItem("denied", "true");
-                window.history.back();
-              }
+        fetch(baseURL + `/reservation/position/`, seatData).then((res) => {
+          if (res.ok) {
+            localStorage.setItem("checkIn", true);
+          } else {
+            if (res.err === "남은 시간이 없습니다.") {
+              alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
+              this.setButtonConnection(payBtn, "main");
+            } else if (res.err === "이미 사용중인 좌석입니다.") {
+              sessionStorage.setItem("denied", "true");
+              window.history.back();
             }
           }
-        );
+        });
       }
     });
   }
@@ -287,7 +286,7 @@ export default class extends AbstractView {
           };
           if (isSelected) {
             fetch(
-              baseURL + `/reservation/table/position/payments/${userId}`,
+              baseURL + `/reservation/table/position/payments/`,
               seatData
             ).then((res) => {
               console.log(res);

@@ -9,8 +9,9 @@ const SendmailTransport = require("nodemailer/lib/sendmail-transport");
 const { User, Ticket, Seat } = require("../models/index");
 const sendMail = require("../utils/send-mail");
 const passport = require("passport");
-const { setUserToken } = require("../utils/jwt");
+const { setUserToken, secret } = require("../utils/jwt");
 const local = require("../passport/strategies/local");
+const jwt = require("jsonwebtoken");
 
 router.post(
   "/signup",
@@ -40,33 +41,54 @@ router.post(
   "/login",
   passport.authenticate("local", { session: false }),
   async (req, res, next) => {
-    const token = setUserToken(res, req.user.id);
-    const token0 = req.cookies.token;
-    const id = req.user.id;
-    const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
-    console.log("req.user : ", req.user);
+    // setUserToken(res, req.user)
+    const user = await User.findOne({ _id: req.user.id });
+    var checkIn = null;
     if (!user.userSeat) {
-      res.json({
-        checkIn: false,
-        id: id,
-        name: user.name,
-        userId: user.userId,
-        token: token0,
-      });
-      return;
+      checkIn = false;
     } else {
-      const checkIn = !user.userSeat.isempty;
-      res.json({
-        token0,
-        checkIn: false,
-        id: id,
-        name: user.name,
-        userId: user.userId,
-      });
+      checkIn = !user.userSeat.isempty;
     }
-    // next()
+
+    const token = jwt.sign(
+      {
+        userId: req.user.userId,
+        name: req.user.name,
+        id: req.user.id,
+        checkIn,
+      },
+      secret
+    ); //payload
+    res.cookie("token", token);
+    // res.json({ token })
+    console.log("req.user 안의 값12345:", req.user);
+    console.log("token555:", token);
+    console.log("req.cookies값좀 보자777", req.cookies);
+    // user = await User.findOne({ _id: req.user.id }).populate("userSeat");
+
+    res.json({ token });
   }
+  // next()
 );
+
+// router.post('/login', passport.authenticate('local', { session: false }),
+//     async(req, res, next) => {
+//         const token = setUserToken(res, req.user);
+//         const token0 = req.cookies.token
+//         const id = req.user.id
+//         const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
+
+//         if (!user.userSeat) {
+//             res.json({ checkIn: false, id: id, name: user.name, userId: user.userId, token0 });
+//             return;
+//         }
+//         const checkIn = !user.userSeat.isempty;
+//         res.json({ token0, checkIn: false, id: id, name: user.name, userId: user.userId })
+//             // next()
+//         console.log('req.user7777', req.user)
+
+//     }
+// )
 
 router.get("/logout", (req, res, next) => {
   res.cookie("token", null, { maxAge: 0 });

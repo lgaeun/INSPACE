@@ -63,8 +63,13 @@ export default class extends AbstractView {
     const $chargeTickets = document.querySelectorAll(".charge");
 
     fetch(
-      `http://localhost:5000/reservation/${ID}/ticket`
-      // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/${ID}/ticket`
+      // `http://localhost:5000/reservation/${ID}/ticket`
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/ticket`,
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
     )
       .then((res) => res.json())
       .then((data) => {
