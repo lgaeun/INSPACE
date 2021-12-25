@@ -29,6 +29,8 @@ const local = new LocalStrategy(config, async(userId, password, done) => {
         done(null, {
             userId: user.userId,
             id: user._id.toString(),
+            // checkIn ,
+            // name: user.name,
 
         });
 

@@ -3,6 +3,7 @@ const { secret } = require('../../utils/jwt');
 
 const cookieExtractor = (req) => {
     const { token } = req.cookies;
+    // console.log('req.cookies값좀 보자 777', req.cookies)
     return token;
 };
 
