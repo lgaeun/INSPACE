@@ -15,10 +15,10 @@ router.get(
       .populate("userTicket")
       .populate("userSeat");
     const { category, duration } = user.userTicket;
-    const { table, position, startTime } = user.userSeat;
+    const { table, position, startTime, checkTime } = user.userSeat;
     const { remainingTime } = user;
     const finishTimeMilSec =
-      startTime.getTime() + new Date(remainingTime * 1000).getTime();
+      checkTime.getTime() + new Date(remainingTime * 1000).getTime();
     const finishTime = new Date(finishTimeMilSec);
 
     // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
@@ -43,7 +43,11 @@ router.get(
         { new: true }
       );
       const tempSecTime = Math.floor(
-        (prevPosition.deletedAt - prevPosition.startTime) / 1000
+        (prevPosition.deletedAt - prevPosition.checkTime) / 1000
+      );
+      await Position.updateOne(
+        { _id: user.userSeat },
+        { checkTime: new Date() }
       );
       //oneday 유저의 경우 남은 시간 0으로 초기화됩니다.
       if (user.userTicket && user.userTicket.category == "oneday") {

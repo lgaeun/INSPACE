@@ -19,8 +19,8 @@ function loginHandler() {
     };
 
     const loginURL =
-      "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login ";
-    // `http://localhost:8080/login`;
+      // "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login ";
+      `http://localhost:8080/login`;
     //서버 fetch
     fetch(loginURL, {
       method: "POST",

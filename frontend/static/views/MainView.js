@@ -196,7 +196,7 @@ export default class extends AbstractView {
 
       fetch(
         // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
-        `http://localhost:8080/users/${id}/checkIn`
+        `http://localhost:5000/users/${id}/checkIn`
       )
         //fetch("http://localhost:3000/checkIn")
         .then((res) => {
@@ -242,9 +242,7 @@ export default class extends AbstractView {
     } else {
       checkInDisplay(false);
 
-      fetch(
-        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
-      )
+      fetch(`http://localhost:5000/users/${id}/checkOut`)
         //fetch("http://localhost:3000/checkOut")
         .then((res) => res.json())
         .then((data) => {
@@ -353,7 +351,7 @@ export default class extends AbstractView {
     $btnCheckOut.addEventListener("click", () => {
       fetch(
         // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
-        `http://localhost:8080/users/${id}/checkOut`
+        `http://localhost:5000/users/${id}/checkOut`
       )
         .then((res) => {
           if (res.ok) {

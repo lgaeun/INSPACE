@@ -127,8 +127,7 @@ export default class extends AbstractView {
               password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
             };
 
-            const loginURL =
-              "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login";
+            const loginURL = "http://localhost:5000/login";
             //서버 fetch
             fetch(loginURL, {
               method: "POST",
@@ -147,6 +146,7 @@ export default class extends AbstractView {
                 }
               })
               .then((data) => {
+                console.log(data);
                 localStorage.setItem("checkIn", data.checkIn);
                 localStorage.setItem("id", data.id);
                 localStorage.setItem("userId", data.userId);
