@@ -1,9 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
-import {
-  bringSeatInfo,
-  initSeats,
-} from "../js/seat-selection/seat-selection.js";
+import { initSeats } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
 const baseURL =
@@ -166,7 +163,6 @@ export default class extends AbstractView {
           "Content-Type": "application/json",
         },
       };
-      console.log(priceData);
       fetch(baseURL + `/reservation/payments/${userId}`, priceData)
         .then((res) => {
           if (res.ok) {
@@ -201,21 +197,27 @@ export default class extends AbstractView {
           },
         };
 
-        fetch(baseURL + `/reservation/position/${userId}`, seatData).then(
-          (res) => {
+        fetch(baseURL + `/reservation/position/${userId}`, seatData)
+          .then((res) => {
             if (res.ok) {
               localStorage.setItem("checkIn", true);
-            } else {
-              if (res.err === "남은 시간이 없습니다.") {
-                alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
-                this.setButtonConnection(payBtn, "main");
-              } else if (res.err === "이미 사용중인 좌석입니다.") {
-                sessionStorage.setItem("denied", "true");
-                window.history.back();
-              }
+              return;
             }
-          }
-        );
+            return res.json();
+          })
+          .then((res) => {
+            const status = {
+              ok: true,
+              msg: `${res.message}`,
+            };
+            status.msg +=
+              res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
+            sessionStorage.setItem("denied", JSON.stringify(status));
+            window.history.back();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     });
   }
@@ -225,8 +227,9 @@ export default class extends AbstractView {
 
     initSeats();
 
-    if (sessionStorage.getItem("denied") === "true") {
-      toast("이미 선택된 좌석입니다");
+    const denied = JSON.parse(sessionStorage.getItem("denied"));
+    if (denied) {
+      toast(denied.msg);
       sessionStorage.removeItem("denied");
     }
 
@@ -246,19 +249,16 @@ export default class extends AbstractView {
     if (prevPath === "before") {
       //좌석만 선택
       if (path === "select") {
-        console.log("좌석만 선택");
         this.chooseSeat();
       }
       //시간만 연장
       else if (path === "extend") {
-        console.log("시간만 연장 ");
         this.extendTime();
       }
       // 선택+연장
       else {
-        console.log("그냥 입장");
         this.setButtonConnection(prevBtn, "ticket");
-
+        const ticket = JSON.parse(localStorage.getItem("ticket"));
         const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
         const formattedPrice = this.composePaymentsInfo(
           ticketInfoArr,
@@ -289,7 +289,6 @@ export default class extends AbstractView {
               baseURL + `/reservation/table/position/payments/${userId}`,
               seatData
             ).then((res) => {
-              console.log(res);
               if (res.ok) {
                 localStorage.setItem("ticket", {
                   ...ticket,
