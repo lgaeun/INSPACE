@@ -254,7 +254,13 @@ export default class extends AbstractView {
           },
         }
       )
-        .then((res) => res.json())
+        //fetch("http://localhost:3000/checkOut")
+        .then((res) => {
+          // if (!res.ok) {
+          //   location.href = "/";
+          // }
+          return res.json();
+        })
         .then((data) => {
           //data = data[0];
 

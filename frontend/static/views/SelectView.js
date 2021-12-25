@@ -1,9 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
-import {
-  bringSeatInfo,
-  initSeats,
-} from "../js/seat-selection/seat-selection.js";
+import { initSeats } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
 // const baseURL =
@@ -134,7 +131,10 @@ export default class extends AbstractView {
   checkSeat(selectedSeat, payBtn) {
     if (!selectedSeat) {
       this.setButtonConnection(payBtn, "select");
-      alert("좌석을 선택해주세요");
+      sessionStorage.setItem(
+        "denied",
+        JSON.stringify({ ok: true, msg: "좌석을 선택해주세요!" })
+      );
       return false;
     } else {
       return true;
@@ -167,7 +167,6 @@ export default class extends AbstractView {
           "Content-Type": "application/json",
         },
       };
-      console.log(priceData);
       fetch(baseURL + `/reservation/payments/${userId}`, priceData)
         .then((res) => {
           if (res.ok) {
@@ -203,19 +202,27 @@ export default class extends AbstractView {
           },
         };
 
-        fetch(baseURL + `/reservation/position/`, seatData).then((res) => {
-          if (res.ok) {
-            localStorage.setItem("checkIn", true);
-          } else {
-            if (res.err === "남은 시간이 없습니다.") {
-              alert("남은 시간이 없습니다. 이용권 먼저 구매해주세요");
-              this.setButtonConnection(payBtn, "main");
-            } else if (res.err === "이미 사용중인 좌석입니다.") {
-              sessionStorage.setItem("denied", "true");
-              window.history.back();
+        fetch(baseURL + `/reservation/position/`, seatData)
+          .then((res) => {
+            if (res.ok) {
+              localStorage.setItem("checkIn", true);
+              return;
             }
-          }
-        });
+            return res.json();
+          })
+          .then((res) => {
+            const status = {
+              ok: true,
+              msg: `${res.message}`,
+            };
+            status.msg +=
+              res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
+            sessionStorage.setItem("denied", JSON.stringify(status));
+            window.history.back();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     });
   }
@@ -225,8 +232,9 @@ export default class extends AbstractView {
 
     initSeats();
 
-    if (sessionStorage.getItem("denied") === "true") {
-      toast("이미 선택된 좌석입니다");
+    const denied = JSON.parse(sessionStorage.getItem("denied"));
+    if (denied) {
+      toast(denied.msg);
       sessionStorage.removeItem("denied");
     }
 
@@ -242,23 +250,19 @@ export default class extends AbstractView {
     ticketType = document.querySelector(".seat__selected");
     userId = localStorage.getItem("id");
 
+    // 사용중 Main
+    if (prevPath === "using") {
+      if (path === "move") this.chooseSeat();
+      else if (path == "extend") this.extendTime();
+    }
     //퇴실메인
-    if (prevPath === "before") {
-      //좌석만 선택
-      if (path === "select") {
-        console.log("좌석만 선택");
-        this.chooseSeat();
-      }
-      //시간만 연장
-      else if (path === "extend") {
-        console.log("시간만 연장 ");
-        this.extendTime();
-      }
+    else if (prevPath === "before") {
+      if (path === "select") this.chooseSeat();
+      else if (path === "extend") this.extendTime();
       // 선택+연장
       else {
-        console.log("그냥 입장");
         this.setButtonConnection(prevBtn, "ticket");
-
+        const ticket = JSON.parse(localStorage.getItem("ticket"));
         const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
         const formattedPrice = this.composePaymentsInfo(
           ticketInfoArr,
@@ -289,7 +293,6 @@ export default class extends AbstractView {
               baseURL + `/reservation/table/position/payments/`,
               seatData
             ).then((res) => {
-              console.log(res);
               if (res.ok) {
                 localStorage.setItem("ticket", {
                   ...ticket,
@@ -303,16 +306,6 @@ export default class extends AbstractView {
             });
           }
         });
-      }
-    }
-    // 사용중 Main
-    else if (prevPath === "using") {
-      if (path === "move") {
-        this.chooseSeat();
-      }
-      //이용중메인 -> 시간만 연장
-      else if (path == "extend") {
-        this.extendTime();
       }
     }
   }

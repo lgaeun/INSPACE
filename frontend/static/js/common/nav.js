@@ -218,6 +218,8 @@ export default class {
 
     let flag = true;
 
+    const id = localStorage.getItem("id");
+
     $infoBtn.addEventListener("click", () => {
       const userInfo = {
         name: $name.value,
@@ -282,12 +284,19 @@ export default class {
         });
     });
 
+    const checkOut = fetch(
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+    );
+
+    const logOut = fetch(
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout`
+    );
+
     $logoutBtn.addEventListener("click", () => {
-      fetch(
-        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout`
-      )
+      Promise.all([checkOut, logOut])
         .then((res) => {
-          if (res.ok) {
+          if (res[0].ok && res[1].ok) {
+            console.log("in");
             localStorage.clear();
             sessionStorage.clear();
             location.href = "/";
