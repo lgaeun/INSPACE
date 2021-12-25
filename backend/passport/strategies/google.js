@@ -1,50 +1,50 @@
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const { User, OAuth } = require('../../models');
-
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const { User, OAuth } = require("../../models");
+const findOrCreate = require("mongoose-findorcreate");
 
 const config = {
-    clientID: '483541837822-l081si09sa61433r6im5osejheb8ges0.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: "/auth/google/callback"
+  clientID:
+    "483541837822-l081si09sa61433r6im5osejheb8ges0.apps.googleusercontent.com",
+  clientSecret: "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",
+  callbackURL: "/auth/google/callback",
 };
 
-
 async function findOrCreateUser({ googleId }) {
-    const user = await User.findOne({
-        googleId
-    });
+  const user = await User.findOne({
+    googleId,
+  });
 
-    if (user.googleId != undefined) {
-        return user;
-    }
+  if (user.googleId != null) {
+    return user;
+  }
 
-    const created = await User.create({
-        name,
-        userId,
-        googleId,
-        password: 'GOOGLE_OAUTH',
-    });
+  const created = await User.create({
+    name,
+    userId,
+    googleId,
+    password: "GOOGLE_OAUTH",
+  });
 
-    return created;
+  return created;
 }
 
-module.exports = new GoogleStrategy(config, async(accessToken, refreshToken, profile, done) => {
+module.exports = new GoogleStrategy(
+  config,
+  async (accessToken, refreshToken, profile, done) => {
     const { email, name } = profile._json;
     // console.log('profile 값 : ', profile)
     try {
-        const user = await findOrCreateUser({ googleId: profile.id })
-        done(null, {
-            userId: profile.emails[0].value,
-            name: profile.displayName,
-            googleId: profile.id,
-        });
-
+      const user = await findOrCreateUser({ googleId: profile.id });
+      done(null, {
+        userId: profile.emails[0].value,
+        name: profile.displayName,
+        googleId: profile.id,
+      });
     } catch (e) {
-        done(e, null);
+      done(e, null);
     }
-});
-
-
+  }
+);
 
 // const google = new GoogleStrategy(config, function(accessToken, refreshToken, profile, done) {
 //     User.findOrCreate({ googleId: profile.id }, function(err, user) {
