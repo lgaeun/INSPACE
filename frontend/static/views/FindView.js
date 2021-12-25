@@ -53,10 +53,10 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    // const script = document.createElement("script");
+    // script.src =
+    //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    // document.getElementById("root").appendChild(script);
 
     const $passwordReqBtn = document.querySelector(".btn-signup");
 

@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Chonburi&family=Noto+Sans+KR:wght@500&family=Permanent+Marker&display=swap");
 
-@font-face {
+/* @font-face {
   font-family: customFont;
   src: url(../assets/fonts/TTRamillas-Regular.otf);
-}
+} */
 
 .bg {
   display: flex;
