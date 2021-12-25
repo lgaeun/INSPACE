@@ -1,7 +1,7 @@
-@font-face {
+/* @font-face {
   font-family: customFont;
   src: url(./TTRamillas-Regular.otf);
-}
+} */
 
 .bg {
   display: flex;

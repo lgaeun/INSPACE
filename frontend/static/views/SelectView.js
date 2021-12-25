@@ -119,10 +119,11 @@ export default class extends AbstractView {
 
   disableSeatSelection(disableSelect, warningMessage) {
     disableSelect.style.visibility = "visible";
-    warningMessage.innerText =
-      "좌석 선택은 이용권 연장 완료 후 시도해 주시기 바랍니다.";
+    warningMessage.innerHTML =
+      "좌석 선택은 <br> 이용권 연장 완료 후 <br> 시도해 주시기 바랍니다.";
     warningMessage.style.color = "white";
     warningMessage.style.fontSize = "50px";
+    warningMessage.style.textAlign = "center";
     warningMessage.style.padding = "2em";
     disableSelect.append(warningMessage);
   }
