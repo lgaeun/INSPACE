@@ -18,7 +18,7 @@ router.get(
     const { table, position, startTime, checkTime } = user.userSeat;
     const { remainingTime } = user;
     const finishTimeMilSec =
-      checkTime.getTime() + new Date(remainingTime * 1000).getTime();
+      checkTime.getTime() + new Date(remainingTime).getTime();
     const finishTime = new Date(finishTimeMilSec);
 
     // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
@@ -35,6 +35,9 @@ router.get(
     const user = await User.findOne({ _id: id })
       .populate("userSeat")
       .populate("userTicket");
+    console.log("체크아웃 누르고 바로");
+    console.log("user 남은시간", user.remainingTime);
+    console.log("user 사용시간", user.usedTime);
     //좌석을 사용중이던 유저가 퇴실을 하는 경우
     if (user.userSeat && !user.userSeat.isempty) {
       const prevPosition = await Position.findOneAndUpdate(
@@ -42,24 +45,29 @@ router.get(
         { isempty: true, deletedAt: new Date() },
         { new: true }
       );
+
       const tempSecTime = Math.floor(
-        (prevPosition.deletedAt - prevPosition.checkTime) / 1000
+        prevPosition.deletedAt - prevPosition.checkTime
       );
+      console.log("tempSectime", tempSecTime);
       await Position.updateOne(
         { _id: user.userSeat },
         { checkTime: new Date() }
       );
       //oneday 유저의 경우 남은 시간 0으로 초기화됩니다.
+
+      console.log("이프문 시작전");
       if (user.userTicket && user.userTicket.category == "oneday") {
         await User.updateOne(
           { _id: id },
           {
             $inc: {
-              usedTime: tempSecTime,
-              remainingTime: 0,
+              usedTime: user.remainingTime,
+              remainingTime: -user.remainingTime,
             },
           }
         );
+        console.log("이건 안찍혀야하고");
       } else {
         await User.updateOne(
           { _id: id },
@@ -70,13 +78,18 @@ router.get(
             },
           }
         );
+        console.log("else 찍히나");
       }
+      console.log("이건 찍히겠지 왜죠");
     }
 
     const checkoutUser = await User.findOne({ _id: id })
       .populate("userTicket")
       .populate("userSeat");
     //회원가입만 한 상태
+    console.log("유저정보 업데이트 하고 나서");
+    console.log("user 남은시간", checkoutUser.remainingTime);
+    console.log("user 사용시간", checkoutUser.usedTime);
     if (!checkoutUser.userTicket) {
       res.json({
         category: null,
@@ -106,6 +119,8 @@ router.get(
     const { category, duration } = checkoutUser.userTicket;
     const { table, position, startTime } = checkoutUser.userSeat;
     const { remainingTime } = checkoutUser;
+
+    console.log("출력하기 전 ", checkoutUser.usedTime);
     // const remainingTimeMilSec =
     //   new Date().getTime() + new Date(remainingTime * 1000).getTime();
     // const remainedTime = new Date(remainingTimeMilSec);
