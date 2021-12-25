@@ -245,7 +245,12 @@ export default class extends AbstractView {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
       )
         //fetch("http://localhost:3000/checkOut")
-        .then((res) => res.json())
+        .then((res) => {
+          // if (!res.ok) {
+          //   location.href = "/";
+          // }
+          return res.json();
+        })
         .then((data) => {
           //data = data[0];
 
