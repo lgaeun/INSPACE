@@ -131,7 +131,10 @@ export default class extends AbstractView {
   checkSeat(selectedSeat, payBtn) {
     if (!selectedSeat) {
       this.setButtonConnection(payBtn, "select");
-      alert("좌석을 선택해주세요");
+      sessionStorage.setItem(
+        "denied",
+        JSON.stringify({ ok: true, msg: "좌석을 선택해주세요!" })
+      );
       return false;
     } else {
       return true;
@@ -246,16 +249,15 @@ export default class extends AbstractView {
     ticketType = document.querySelector(".seat__selected");
     userId = localStorage.getItem("id");
 
+    // 사용중 Main
+    if (prevPath === "using") {
+      if (path === "move") this.chooseSeat();
+      else if (path == "extend") this.extendTime();
+    }
     //퇴실메인
-    if (prevPath === "before") {
-      //좌석만 선택
-      if (path === "select") {
-        this.chooseSeat();
-      }
-      //시간만 연장
-      else if (path === "extend") {
-        this.extendTime();
-      }
+    else if (prevPath === "before") {
+      if (path === "select") this.chooseSeat();
+      else if (path === "extend") this.extendTime();
       // 선택+연장
       else {
         this.setButtonConnection(prevBtn, "ticket");
@@ -303,16 +305,6 @@ export default class extends AbstractView {
             });
           }
         });
-      }
-    }
-    // 사용중 Main
-    else if (prevPath === "using") {
-      if (path === "move") {
-        this.chooseSeat();
-      }
-      //이용중메인 -> 시간만 연장
-      else if (path == "extend") {
-        this.extendTime();
       }
     }
   }
