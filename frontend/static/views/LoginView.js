@@ -148,17 +148,8 @@ export default class extends AbstractView {
                 throw new Error("아이디가 틀립니다.");
               }
             })
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
-                throw new Error("아이디가 틀립니다.");
-              }
-            })
             .then((data) => {
               const token = data.token;
-              const tokenKey = "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";
               const decoded = parseJwt(token);
               // const decoded = jwt_decode(token);
               console.log(decoded);
