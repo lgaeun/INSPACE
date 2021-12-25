@@ -1,9 +1,11 @@
 const { Schema } = require("mongoose");
+const findOrCreate = require("mongoose-findorcreate");
 
 const UserSchema = new Schema(
   {
     googleId: {
       type: String,
+      default: null,
     },
     name: {
       type: String,

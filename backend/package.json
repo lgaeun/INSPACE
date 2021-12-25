@@ -9,6 +9,7 @@
     "dependencies": {
         "connect-mongo": "^4.6.0",
         "cookie-parser": "~1.4.4",
+        "cookie-session": "^2.0.0",
         "cors": "^2.8.5",
         "crypto": "^1.0.1",
         "crypto-js": "^4.1.1",
