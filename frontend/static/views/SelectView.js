@@ -3,9 +3,9 @@ import NavComponent from "../js/common/nav.js";
 import { initSeats } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
-const baseURL =
-  "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
-// const baseURL = "http://localhost:8000";
+// const baseURL =
+//   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
+const baseURL = "http://localhost:5000";
 const Price = {
   oneday: {
     1: 2000,
@@ -198,10 +198,11 @@ export default class extends AbstractView {
           body: JSON.stringify(seatObj),
           headers: {
             "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
           },
         };
 
-        fetch(baseURL + `/reservation/position/${userId}`, seatData)
+        fetch(baseURL + `/reservation/position/`, seatData)
           .then((res) => {
             if (res.ok) {
               localStorage.setItem("checkIn", true);
@@ -289,7 +290,7 @@ export default class extends AbstractView {
           };
           if (isSelected) {
             fetch(
-              baseURL + `/reservation/table/position/payments/${userId}`,
+              baseURL + `/reservation/table/position/payments/`,
               seatData
             ).then((res) => {
               if (res.ok) {

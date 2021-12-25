@@ -1,5 +1,8 @@
 import AbstractView from "./AbstractView.js";
 import loginHandler from "../js/handler/loginHandler.js";
+// import jwt from "../../../backend/passport/strategies/jwt.js";
+import parseJwt from "../js/handler/tokenHandler.js";
+// import jwt_decode from "jwt-decode";
 
 export default class extends AbstractView {
   constructor(params) {
@@ -145,11 +148,25 @@ export default class extends AbstractView {
                 throw new Error("아이디가 틀립니다.");
               }
             })
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
+                throw new Error("아이디가 틀립니다.");
+              }
+            })
             .then((data) => {
-              localStorage.setItem("checkIn", data.checkIn);
-              localStorage.setItem("id", data.id);
-              localStorage.setItem("userId", data.userId);
-              localStorage.setItem("name", data.name);
+              const token = data.token;
+              const tokenKey = "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";
+              const decoded = parseJwt(token);
+              // const decoded = jwt_decode(token);
+              console.log(decoded);
+              localStorage.setItem("token", data.token);
+              localStorage.setItem("checkIn", decoded.checkIn);
+              localStorage.setItem("id", decoded.id);
+              localStorage.setItem("userId", decoded.userId);
+              localStorage.setItem("name", decoded.name);
 
               target.setAttribute("href", "/main");
               target.setAttribute("data-link", "true");

@@ -1,16 +1,17 @@
-const JwtStrategy = require('passport-jwt').Strategy;
-const { secret } = require('../../utils/jwt');
+const JwtStrategy = require("passport-jwt").Strategy;
+const { secret } = require("../../utils/jwt");
 
 const cookieExtractor = (req) => {
-    const { token } = req.cookies;
-    return token;
+  const { token } = req.cookies;
+  // console.log('req.cookies값좀 보자 777', req.cookies)
+  return token;
 };
 
 const opts = {
-    secretOrKey: secret,
-    jwtFromRequest: cookieExtractor,
-}
+  secretOrKey: secret,
+  jwtFromRequest: cookieExtractor,
+};
 
 module.exports = new JwtStrategy(opts, (user, done) => {
-    done(null, user);
+  done(null, user);
 });
