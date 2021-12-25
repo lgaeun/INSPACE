@@ -63,9 +63,9 @@ router.post(
     console.log("req.cookies값좀 보자777", req.cookies);
     // user = await User.findOne({ _id: req.user.id }).populate("userSeat");
 
-    // res.json({
-    //   token,
-    // });
+    res.json({
+      token,
+    });
   }
 );
 
