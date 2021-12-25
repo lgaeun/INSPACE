@@ -63,25 +63,6 @@ router.post('/login', passport.authenticate('local', { session: false }),
 )
 
 
-// router.post('/login', passport.authenticate('local', { session: false }),
-//     async(req, res, next) => {
-//         const token = setUserToken(res, req.user);
-//         const token0 = req.cookies.token
-//         const id = req.user.id
-//         const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
-
-//         if (!user.userSeat) {
-//             res.json({ checkIn: false, id: id, name: user.name, userId: user.userId, token0 });
-//             return;
-//         }
-//         const checkIn = !user.userSeat.isempty;
-//         res.json({ token0, checkIn: false, id: id, name: user.name, userId: user.userId })
-//             // next()
-//         console.log('req.user7777', req.user)
-
-
-//     }
-// )
 
 router.get(
     "/logout", (req, res, next) => {
