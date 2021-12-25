@@ -19,17 +19,17 @@ const UserSchema = new Schema({
         required: true,
     }, //이제껏 결제한 총 시간
     totalTime: {
-        type: Number,
+        type: Number, //밀리초
         required: true,
         default: 0,
     }, //사용한 총 시간
     usedTime: {
-        type: Number,
+        type: Number, // 밀리초
         required: true,
         default: 0,
     },
     remainingTime: {
-        type: Number,
+        type: Number, //밀리초
         required: true,
         default: 0,
     },
