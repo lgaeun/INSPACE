@@ -29,7 +29,7 @@ router.get(
 );
 
 router.get(
-  "/checkOut",
+  "/:id/checkOut",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const user = await User.findOne({ _id: id })

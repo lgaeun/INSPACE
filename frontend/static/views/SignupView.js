@@ -136,6 +136,7 @@ export default class extends AbstractView {
         // console.log(dd);
         const signupURL =
           "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/signup";
+        // `http://localhost:8080/signup;`;
         // 서버 전달
         fetch(signupURL, {
           method: "POST",

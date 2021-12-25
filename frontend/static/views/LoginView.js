@@ -86,6 +86,7 @@ export default class extends AbstractView {
         </article>
         
       </main>
+      <div>비밀번호가 틀립니다.</div>
     </div>
   `;
   }

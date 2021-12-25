@@ -195,7 +195,8 @@ export default class extends AbstractView {
       checkInDisplay(true);
 
       fetch(
-        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
+        // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkIn`
+        `http://localhost:8080/users/${id}/checkIn`
       )
         //fetch("http://localhost:3000/checkIn")
         .then((res) => res.json())
@@ -242,7 +243,7 @@ export default class extends AbstractView {
           };
 
           setInfo(info);
-
+          console.log(data.remainingTime);
           elapsed =
             Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
             data.remainingTime.min * (1000 * 60) +
@@ -333,7 +334,8 @@ export default class extends AbstractView {
 
     $btnCheckOut.addEventListener("click", () => {
       fetch(
-        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+        // `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+        `http://localhost:8080/users/${id}/checkOut`
       )
         .then((res) => {
           if (res.ok) {

@@ -20,6 +20,7 @@ function loginHandler() {
 
     const loginURL =
       "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login ";
+    // `http://localhost:8080/login`;
     //서버 fetch
     fetch(loginURL, {
       method: "POST",
@@ -35,7 +36,7 @@ function loginHandler() {
           return res.json();
         } else {
           alert("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
-          throw new Error("아이디가 틀립니다.");
+          // throw new Error("아이디가 틀립니다.");
         }
       })
       .then((data) => {
