@@ -9,9 +9,13 @@ const SendmailTransport = require("nodemailer/lib/sendmail-transport");
 const { User, Ticket, Seat } = require("../models/index");
 const sendMail = require("../utils/send-mail");
 const passport = require("passport");
-const { setUserToken, secret } = require("../utils/jwt");
+// const { setUserToken, secret } = require("../utils/jwt");
 const local = require("../passport/strategies/local");
 const jwt = require("jsonwebtoken");
+const jwtAuth = require("../utils/jwt-auth");
+// const { secret } = require("../../utils/jwt");
+require("dotenv").config();
+const secret = process.env.SECRET_KEY;
 
 router.post(
   "/signup",
@@ -59,9 +63,9 @@ router.post(
     console.log("req.cookies값좀 보자777", req.cookies);
     // user = await User.findOne({ _id: req.user.id }).populate("userSeat");
 
-    res.json({
-      token,
-    });
+    // res.json({
+    //   token,
+    // });
   }
 );
 
@@ -91,7 +95,9 @@ router.get("/logout", (req, res, next) => {
 
 router.post(
   "/reset-password",
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
+    // const id = jwtAuth(req).id;
+
     const { userId } = req.body;
     const user = await User.findOne({ userId });
     if (!user) {
@@ -117,20 +123,23 @@ router.post(
 router.post(
   "/info-change-name",
   asyncHandler(async (req, res, next) => {
+    const id = jwtAuth(req).id;
+    console.log("id", id);
     const { name } = req.body;
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findOne({ _id: id });
     if (user.name == name) {
       throw new Error("변경 전 이름과 같습니다.");
     }
-    await User.updateOne({ _id: user._id }, { name });
+    await User.updateOne({ _id: id }, { name });
     res.status(200).json({ message: "success" });
   })
 );
 router.post(
   "/info-change-password",
   asyncHandler(async (req, res, next) => {
+    const id = jwtAuth(req).id;
     const { password, newpassword, confirmpassword } = req.body;
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findOne({ _id: id });
 
     if (user.password != hashPassword(password)) {
       throw new Error("기존 비밀번호를 다시 입력해주세요");
@@ -141,7 +150,7 @@ router.post(
       throw new Error("새비밀번호를 다시 확인해주세요.");
     }
     await User.updateOne(
-      { _id: user._id },
+      { _id: id },
       {
         password: hashPassword(newpassword),
       }

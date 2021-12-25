@@ -4,13 +4,14 @@ const { User, Ticket, Position } = require("../models/index");
 const { modelNames } = require("mongoose");
 var router = express.Router();
 const calcTime = require("../utils/calc-time");
+const jwtAuth = require("../utils/jwt-auth");
 
 //사용중인 유저의 유저페이지에 필요한 정보를 보여줍니다.
 //이용중인 메인페이지로 들어오는 경우는
 router.get(
-  "/:id/checkIn",
+  "/checkIn",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userTicket")
       .populate("userSeat");
@@ -29,9 +30,9 @@ router.get(
 );
 
 router.get(
-  "/:id/checkOut",
+  "/checkOut",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userSeat")
       .populate("userTicket");

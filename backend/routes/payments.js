@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Position } = require("../models/index");
-
+const jwtAuth = require("../utils/jwt-auth");
 //결제완료 페이지
 router.get(
-  "/:id/paymentsInfo",
+  "/paymentsInfo",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userTicket")
       .populate("userSeat");
@@ -24,9 +24,9 @@ router.get(
 
 //결제하기 페이지(결제하기 전)
 router.get(
-  "/:id/payments",
+  "/payments",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userTicket")
       .populate("userSeat");
