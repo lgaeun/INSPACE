@@ -7,7 +7,7 @@ const baseURL =
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle = "Paycheck Page";
+    this.setTitle = "InSpace";
     this.nav = new NavComponent();
   }
 

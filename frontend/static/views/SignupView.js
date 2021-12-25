@@ -5,7 +5,7 @@ import toast from "../js/common/toast.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("INSPACE");
+    this.setTitle("InSpace");
   }
   getHtml() {
     return `

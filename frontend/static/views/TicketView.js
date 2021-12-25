@@ -5,7 +5,7 @@ import ticketHandler from "../js/handler/ticketHandler.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("INSPACE");
+    this.setTitle("InSpace");
     this.obj = {};
     this.nav = new NavComponent();
   }
