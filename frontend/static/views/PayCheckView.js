@@ -24,8 +24,8 @@ export default class extends AbstractView {
               </div>
           <div id="toast"></div>
           <div class="info-payments">
-            <li class="info-payment">성함<a>김민규</a></li>
-            <li class="info-payment">결제금액<a>12,000원</a></li>
+            <li class="info-payment">성함<a>-</a></li>
+            <li class="info-payment">이용권 정보<a>-</a></li>
             <li class="info-payment">결제수단<a>카드결제</a></li>
             <li class="info-payment"><p>결제일시</p><a>2021.12.14 15:45</a></li>
           </div>
@@ -47,7 +47,7 @@ export default class extends AbstractView {
     const okBtn = document.querySelector("#payment-Btn");
 
     let userName = infoPayment[0].querySelector("a");
-    let payedAmount = infoPayment[1].querySelector("a");
+    let ticketInfo = infoPayment[1].querySelector("a");
     let paysubtitle = infoPayment[3].querySelector("p");
     let payTime = infoPayment[3].querySelector("a");
 
@@ -64,24 +64,33 @@ export default class extends AbstractView {
     if (path === "move" || path === "select") {
       paycheckTitle.innerHTML =
         path === "move"
-          ? "Your Seat has been<br><br> Successfully Moved!"
-          : "Your Seat has been<br><br> Successfully Selected!";
-      paycheckTitle.style.fontSize = "1.5rem";
+          ? "Successfully<br> Moved!"
+          : "Successfully<br> Selected!";
+      // paycheckTitle.style.fontSize = "1.5rem";
       totalPriceTitle.innerText = "현재 좌석:";
       totalPrice.innerText = sessionStorage.getItem("lastSelected");
-      payedAmount.innerText = "0원";
+      ticketInfo.innerText = "-";
       paysubtitle.innerText = "좌석변경일시";
     } else {
-      const price = JSON.parse(localStorage.getItem("ticket")).price;
-      console.log(price);
-      totalPrice.innerText = price;
-      payedAmount.innerText = price;
+      if (localStorage.hasOwnProperty("ticket")) {
+        totalPrice.innerText = JSON.parse(localStorage.getItem("ticket")).price;
+        ticketInfo.innerText =
+          JSON.parse(localStorage.getItem("ticket")).time + "시간권";
+      }
     }
 
-    okBtn.addEventListener("click", () => {
-      localStorage.removeItem("ticket");
-      sessionStorage.clear();
-    });
+    localStorage.removeItem("ticket");
+    sessionStorage.clear();
+
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1);
+    };
+
+    // okBtn.addEventListener("click", () => {
+    //   localStorage.removeItem("ticket");
+    //   sessionStorage.clear();
+    // });
 
     // userName.innerText = userData.user
     // payTime.innerText = userData.time

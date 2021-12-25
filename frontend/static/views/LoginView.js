@@ -63,7 +63,7 @@ export default class extends AbstractView {
                 placeholder="PASSWORD"
                 class="login-input"
               /> -->
-              <a href="/" data-link
+              <a
                 ><input type="button" id="login-Btn" value="로그인"
               /></a>
               <button id="google-login">
@@ -100,18 +100,17 @@ export default class extends AbstractView {
       document.getElementById("login-Btn").click();
     } else {
       sessionStorage.clear();
-      const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-      document.getElementById("root").appendChild(script);
+      // const script = document.createElement("script");
+      // script.src =
+      //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+      // document.getElementById("root").appendChild(script);
 
       // @@@@@ 로그인 기능 @@@@@@
       const $loginBtn = document.getElementById("login-Btn");
       $loginBtn.addEventListener("click", (e) => {
         const target = $loginBtn.parentElement;
         const href = target.getAttribute("href");
-
-        if (href === "/") {
+        if (href === null) {
           // id, password 입력값 받기
 
           // let loginSuccess = false;
@@ -156,9 +155,9 @@ export default class extends AbstractView {
                 localStorage.setItem("userId", data.userId);
                 localStorage.setItem("name", data.name);
 
-                //target.href = "/main";
-                //$loginBtn.click();
-                //window.location = "/main";
+                target.setAttribute("href", "/main");
+                target.setAttribute("data-link", "true");
+                $loginBtn.click();
               })
               .catch((err) => {
                 console.log(err);

@@ -9,7 +9,7 @@ export default class {
         </a>
         <ul class="nav justify-content-end">
           <li class="nav-item dropdown">
-            <a class="nav-link userIcon" href="javascript:void(0);" data-bs-toggle="dropdown">
+            <a class="nav-link userIcon" href="javascript:void(0);" data-bs-toggle="dropdown"  aria-expanded="false">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="35"
@@ -191,14 +191,16 @@ export default class {
           </div>
         </div>
       </div>
-      
       `;
   }
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    // <style>
+    //   @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+    // </style>
+    // const script = document.createElement("script");
+    // script.src =
+    //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    // document.getElementById("root").appendChild(script);
 
     const $userId = document.getElementById("userId");
     $userId.value = localStorage.getItem("userId");
