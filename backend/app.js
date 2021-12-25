@@ -14,8 +14,10 @@ const reservationRouter = require("./routes/reservation");
 const authRouter = require("./routes/auth");
 // const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
+const cookieSession = require("cookie-session");
 // const session = require("express-session");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 var app = express();
 
@@ -59,7 +61,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(passport.initialize());
 app.use(getUserFromJWT);
-// app.use(passport.session());
 
 app.use("/", indexRouter);
 

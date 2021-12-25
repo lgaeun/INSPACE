@@ -123,6 +123,8 @@ router.post(
 router.post(
   "/info-change-name",
   asyncHandler(async (req, res, next) => {
+    const token = req.headers.authorization;
+    console.log(token);
     const { name } = req.body;
     const user = await User.findOne({ _id: req.user.id });
     if (user.name == name) {
