@@ -14,10 +14,8 @@ const reservationRouter = require("./routes/reservation");
 const authRouter = require("./routes/auth");
 // const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
-const cookieSession = require("cookie-session");
 // const session = require("express-session");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 var app = express();
 
@@ -31,7 +29,6 @@ mongoose.connection.on("connected", () => {
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
-
 app.set("view engine", "pug");
 
 app.use(cors());
@@ -39,13 +36,6 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-// const corsOptions = {
-//   origin: "http://localhost:3300",
-//   credentials: true,
-// };
-
-app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 // app.use(
@@ -61,18 +51,18 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(passport.initialize());
 app.use(getUserFromJWT);
+// app.use(passport.session());
 
 app.use("/", indexRouter);
 
 app.use("/auth", authRouter);
 // app.use('/google', GoogleRouter);
 
-app.use("/payments", paymentsRouter);
-app.use("/users", usersRouter);
-app.use("/reservation", reservationRouter);
-
-// app.use("/payments", loginRequired, paymentsRouter);
-// app.use("/users", loginRequired, usersRouter);
+// app.use("/payments", paymentsRouter);
+// app.use("/users", usersRouter);
+app.use("/reservation", loginRequired, reservationRouter);
+app.use("/payments", loginRequired, paymentsRouter);
+app.use("/users", loginRequired, usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
