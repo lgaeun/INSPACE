@@ -257,10 +257,14 @@ export default class extends AbstractView {
 
           setInfo(info);
 
-          elapsed =
-            Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
-            data.remainingTime.min * (1000 * 60) +
-            data.remainingTime.sec * 1000;
+          if (data.remainedTime) {
+            elapsed =
+              Math.abs(data.remainedTime.hour) * (1000 * 60 * 60) +
+              data.remainedTime.min * (1000 * 60) +
+              data.remainedTime.sec * 1000;
+          } else {
+            elapsed = 0;
+          }
 
           drawTimer();
         })
