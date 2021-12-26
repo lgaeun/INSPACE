@@ -101,7 +101,7 @@ router.get(
       res.json({
         category: null,
         startTime: null,
-        remainedTime: null,
+        remainingTime: null,
         table: null,
         position: null,
         duration: null,
@@ -115,7 +115,7 @@ router.get(
       res.json({
         category,
         duration,
-        remainedTime: calcTime(remainingTime),
+        remainingTime: calcTime(remainingTime),
         startTime: null,
         position: null,
         table: null,
