@@ -1,6 +1,6 @@
 import toast from "../js/common/toast.js";
 import AbstractView from "./AbstractView.js";
-
+import { baseURL } from "../js/common/baseURL.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
@@ -8,7 +8,7 @@ export default class extends AbstractView {
   }
   async getHtml() {
     let content;
-    await fetch("http://localhost:8000/template/find")
+    await fetch(baseURL + "/template/find")
       .then((res) => res.json())
       .then((res) => {
         content = "" + res.data.trim();
