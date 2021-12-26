@@ -72,14 +72,6 @@ router.get(
                         remainingTime: -tempSecTime,
                     },
                 });
-
-                // if (user.remainingTime > -5000 || user.remainingTime < 5000) {
-                //     await User.updateOne({ _id: id }, {
-                //         $inc: {
-                //             remainingTime: -user.remainingTime,
-                //         },
-                //     });
-                // }
                 console.log("else 찍히나");
             }
             console.log("이건 찍히겠지 왜죠");
@@ -106,10 +98,7 @@ router.get(
         //회원가입하고 이용권만 사고 한번도 좌석이용을 안 해본 경우
         if (!checkoutUser.userSeat) {
             const { category, duration } = checkoutUser.userTicket;
-            let { remainingTime } = checkoutUser;
-            // if (remainingTime > -5000 || remainingTime < 5000) {
-            //     remainingTime = 0;
-            // }
+            const { remainingTime } = checkoutUser;
             res.json({
                 category,
                 duration,
@@ -121,13 +110,9 @@ router.get(
             return;
         }
 
-        // let { remainingTime } = checkoutUser;
-        // if (remainingTime > -5000 || remainingTime < 5000) {
-        //     remainingTime = 0;
-        // }
         const { category, duration } = checkoutUser.userTicket;
         const { table, position, startTime } = checkoutUser.userSeat;
-        // const { remainingTime } = checkoutUser;
+        const { remainingTime } = checkoutUser;
 
         console.log("출력하기 전 ", checkoutUser.usedTime);
         // const remainingTimeMilSec =
@@ -147,7 +132,6 @@ router.get(
     })
 );
 
-//티켓 추가정보
 router.get(
     "/addInfo",
     asyncHandler(async(req, res, next) => {
