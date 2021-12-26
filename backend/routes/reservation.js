@@ -9,6 +9,10 @@ router.get(
   "/table",
   asyncHandler(async (req, res, next) => {
     //이용중인 좌석을 일단 찾습니다.
+    if (!jwtAuth(req)) {
+      res.redirect("/");
+      return;
+    }
     const renewedSeat = await Position.find({
       isempty: false,
     }).populate("user");
