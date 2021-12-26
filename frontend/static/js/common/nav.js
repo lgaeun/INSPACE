@@ -204,8 +204,8 @@ export default class {
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <table class="table table-hover">
-                <thead class="history-thread">
+            <table class="table table-hover table-bordered history-table">
+                <thead class="history-table-thead">
                   <tr>
                     <th scope="col">구매시각</th>
                     <th scope="col">이용권</th>
@@ -222,6 +222,8 @@ export default class {
           </div>
         </div>
       </div>
+
+      <a href="/" data-link style="display:none;"><input type="button" id="home-Btn"/></a>
       `;
   }
   defaultFunc() {
@@ -245,8 +247,10 @@ export default class {
     const $infoBtn = document.getElementById("userInfo-modify-btn");
     const $pwdBtn = document.getElementById("pwd-change-btn");
     const $logoutBtn = document.getElementById("logout-btn");
+    const $homeBtn = document.getElementById("home-Btn");
     const $historyBtn = document.getElementById("historyBtn");
     const $historyContent = document.getElementById("historyContent");
+    const $thead = document.querySelector(".history-table-thead");
 
     const token = localStorage.getItem("token");
 
@@ -306,6 +310,9 @@ export default class {
             alert("정상적으로 변경되었습니다.");
           } else {
             alert("변경이 안됐습니다.");
+            $password.value = "";
+            $newpassword.value = "";
+            $confirmpassword.value = "";
             throw new Error("변경이 안됐습니다.");
           }
         })
@@ -338,7 +345,7 @@ export default class {
           if (res[0].ok && res[1].ok) {
             localStorage.clear();
             sessionStorage.clear();
-            location.href = "/";
+            $homeBtn.click();
           }
         })
         .catch((err) => console.log(err));
@@ -383,15 +390,21 @@ export default class {
         .then((data) => {
           let trList = "";
 
-          data.map((row) => {
-            trList += `<tr>
+          if (data.length > 0) {
+            $thead.style.display = "table-header-group";
+            data.map((row) => {
+              trList += `<tr>
             <td scope="row">${formatDate(new Date(row.startTime))}</td>
             <td>${row.duration}시간 ${
-              row.category == "charge" ? "충전권" : "당일권"
-            }</td>
+                row.category == "charge" ? "충전권" : "당일권"
+              }</td>
             <td>${Intl.NumberFormat("ko-KR").format(row.price)}원</td>
           </tr>`;
-          });
+            });
+          } else {
+            $thead.style.display = "none";
+            trList = "<tr><td colspan='3'>구매 이력 없음</td></tr>";
+          }
           $historyContent.innerHTML = trList;
         })
         .catch((err) => {
