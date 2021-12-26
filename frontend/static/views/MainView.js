@@ -217,8 +217,6 @@ export default class extends AbstractView {
 
             const endTime = new Date(data.finishTime);
 
-            //console.log(endTime);
-
             let setTimer = setInterval(function () {
               elapsed = endTime.getTime() - new Date().getTime();
 

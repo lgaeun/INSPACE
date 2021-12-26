@@ -148,7 +148,7 @@
   justify-content: center;
 }
 
-.table {
+#section-container .table {
   display: flex;
   background-color: #444451;
   border-radius: 1rem;

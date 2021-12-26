@@ -26,6 +26,10 @@ export default class {
               </svg>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
+              <li data-bs-toggle="modal" data-bs-target="#historyModal" id="historyBtn">
+                <a class="dropdown-item" href="javascript:void(0);">이용권 구매 이력</a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
               <li data-bs-toggle="modal" data-bs-target="#userInfoModal">
                 <a class="dropdown-item" href="javascript:void(0);">개인 정보 수정</a>
               </li>
@@ -48,7 +52,7 @@ export default class {
       >
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
-            <div class="modal-header bg-yellow">
+            <div class="modal-header">
               <h5 class="modal-title" id="userInfoModalLabel">
                 계정 정보 수정
               </h5>
@@ -167,7 +171,7 @@ export default class {
               >
                 뒤로 가기
               </button>
-              <button type="button" class="btn btn-primary" id="pwd-change-btn">
+              <button type="button" class="btn btn-primary" id="pwd-change-btn" data-bs-dismiss="modal">
                 비밀번호 변경
               </button>
             </div>
@@ -186,6 +190,33 @@ export default class {
             
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-primary" id="logout-btn" data-bs-dismiss="modal">확인</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="historyModalLabel">구매 이력</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <table class="table table-hover">
+                <thead class="history-thread">
+                  <tr>
+                    <th scope="col">구매시각</th>
+                    <th scope="col">이용권</th>
+                    <th scope="col">가격</th>
+                  </tr>
+                </thead>
+                <tbody id="historyContent">
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
               <button type="button" class="btn btn-primary" id="logout-btn" data-bs-dismiss="modal">확인</button>
             </div>
           </div>
@@ -214,29 +245,28 @@ export default class {
     const $infoBtn = document.getElementById("userInfo-modify-btn");
     const $pwdBtn = document.getElementById("pwd-change-btn");
     const $logoutBtn = document.getElementById("logout-btn");
-    const $modifyPwdModal = document.getElementById("modifyPwdModal");
+    const $historyBtn = document.getElementById("historyBtn");
+    const $historyContent = document.getElementById("historyContent");
 
-    let flag = true;
-
-    const id = localStorage.getItem("id");
+    const token = localStorage.getItem("token");
 
     $infoBtn.addEventListener("click", () => {
       const userInfo = {
         name: $name.value,
       };
-
-      const loginURL =
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-name";
       //서버 fetch
-      fetch(loginURL, {
-        method: "POST",
-        body: JSON.stringify(userInfo),
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      })
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-name",
+        {
+          method: "POST",
+          body: JSON.stringify(userInfo),
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      )
         .then((res) => {
           if (res.ok) {
             localStorage.setItem("name", $name.value);
@@ -259,20 +289,18 @@ export default class {
         confirmpassword: $confirmpassword.value,
       };
 
-      console.log(pwdInfo);
-
-      const loginURL =
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-password";
-      //서버 fetch
-      fetch(loginURL, {
-        method: "POST",
-        body: JSON.stringify(pwdInfo),
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      })
+      fetch(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-password",
+        {
+          method: "POST",
+          body: JSON.stringify(pwdInfo),
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      )
         .then((res) => {
           if (res.ok) {
             alert("정상적으로 변경되었습니다.");
@@ -291,7 +319,7 @@ export default class {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkOut`,
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
       );
@@ -300,7 +328,7 @@ export default class {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout`,
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
       );
@@ -316,11 +344,59 @@ export default class {
         .catch((err) => console.log(err));
     });
 
-    // $modifyPwdModal.addEventListener("show.bs.modal", function (event) {
-    //   console.log(event);
-    //   if (!flag) {
-    //     return event.preventDefault(); // stops modal from being shown
-    //   }
-    // });
+    const formatDate = (current_datetime) => {
+      let formatted_date =
+        current_datetime.getFullYear() +
+        "-" +
+        (current_datetime.getMonth() + 1 >= 10
+          ? current_datetime.getMonth() + 1
+          : `0${current_datetime.getMonth() + 1}`) +
+        "-" +
+        (current_datetime.getDate() >= 10
+          ? current_datetime.getDate()
+          : `0${current_datetime.getDate()}`) +
+        " " +
+        (current_datetime.getHours() >= 10
+          ? current_datetime.getHours()
+          : `0${current_datetime.getHours()}`) +
+        ":" +
+        (current_datetime.getMinutes() >= 10
+          ? current_datetime.getMinutes()
+          : `0${current_datetime.getMinutes()}`) +
+        ":" +
+        (current_datetime.getSeconds() >= 10
+          ? current_datetime.getSeconds()
+          : `0${current_datetime.getSeconds()}`);
+      return formatted_date;
+    };
+
+    $historyBtn.addEventListener("click", () => {
+      fetch(
+        `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/addInfo`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          let trList = "";
+
+          data.map((row) => {
+            trList += `<tr>
+            <td scope="row">${formatDate(new Date(row.startTime))}</td>
+            <td>${row.duration}시간 ${
+              row.category == "charge" ? "충전권" : "당일권"
+            }</td>
+            <td>${Intl.NumberFormat("ko-KR").format(row.price)}원</td>
+          </tr>`;
+          });
+          $historyContent.innerHTML = trList;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   }
 }
