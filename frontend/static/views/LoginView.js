@@ -68,8 +68,8 @@ export default class extends AbstractView {
               <a
                 ><input type="button" id="login-Btn" value="로그인"
               /></a>
-              <button id="google-login">
-                Google 계정으로 로그인
+              <button id="google-login"><a id="google-btn" href="">
+                Google 계정으로 로그인</a>
               </button>
             </form>
             <div id="form-box">
@@ -112,7 +112,7 @@ export default class extends AbstractView {
 
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
-    const $googleBtn = document.getElementById("google-login");
+    const $google = document.getElementById("google-login");
 
     $loginBtn.addEventListener("click", (e) => {
       const target = $loginBtn.parentElement;
@@ -180,6 +180,19 @@ export default class extends AbstractView {
       }
     });
 
-    $googleBtn.addEventListener("click", googleLogin);
+    $google.addEventListener("click", async () => {
+      const $googleBtn = document.getElementById("google-btn");
+
+      $googleBtn.href =
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/auth/google";
+
+      const token = document.cookie.split("=")[1];
+
+      localStorage.setItem("token", JSON.stringify(parseJwt(token)));
+
+      location.replace(
+        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/main"
+      );
+    });
   }
 }
