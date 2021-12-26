@@ -88,12 +88,12 @@ export default class extends AbstractView {
     // 사용중 Main
     if (prevPath === "using") {
       if (path === "move") chooseSeat();
-      else if (path == "extend") extendTime();
+      else if (path == "extend") extendTime(ticketInfoArr, totalPrice, payBtn);
     }
     //퇴실메인
     else if (prevPath === "before") {
       if (path === "select") chooseSeat();
-      else if (path === "extend") extendTime();
+      else if (path === "extend") extendTime(ticketInfoArr, totalPrice, payBtn);
       // 선택+연장
       else {
         setButtonConnection(prevBtn, "ticket");

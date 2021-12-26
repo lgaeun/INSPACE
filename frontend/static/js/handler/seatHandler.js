@@ -66,7 +66,7 @@ export function checkSeat(selectedSeat, payBtn) {
   }
 }
 
-export function extendTime(ticketInfoArr, totalPrice) {
+export function extendTime(ticketInfoArr, totalPrice, payBtn) {
   const ticket = JSON.parse(localStorage.getItem("ticket"));
   const { time, auth } = ticket;
   const formattedPrice = composePaymentsInfo(
