@@ -85,6 +85,17 @@ router.get(
             },
           }
         );
+
+        if (user.remainingTime > -5000 || user.remainingTime < 5000) {
+          await User.updateOne(
+            { _id: id },
+            {
+              $inc: {
+                remainingTime: -user.remainingTime,
+              },
+            }
+          );
+        }
         console.log("else 찍히나");
       }
       console.log("이건 찍히겠지 왜죠");
@@ -101,7 +112,7 @@ router.get(
       res.json({
         category: null,
         startTime: null,
-        remainedTime: null,
+        remainingTime: null,
         table: null,
         position: null,
         duration: null,
@@ -111,11 +122,14 @@ router.get(
     //회원가입하고 이용권만 사고 한번도 좌석이용을 안 해본 경우
     if (!checkoutUser.userSeat) {
       const { category, duration } = checkoutUser.userTicket;
-      const { remainingTime } = checkoutUser;
+      let { remainingTime } = checkoutUser;
+      if (remainingTime > -5000 || remainingTime < 5000) {
+        remainingTime = 0;
+      }
       res.json({
         category,
         duration,
-        remainedTime: calcTime(remainingTime),
+        remainingTime: calcTime(remainingTime),
         startTime: null,
         position: null,
         table: null,
@@ -123,6 +137,10 @@ router.get(
       return;
     }
 
+    let { remainingTime } = checkoutUser;
+    if (remainingTime > -5000 || remainingTime < 5000) {
+      remainingTime = 0;
+    }
     const { category, duration } = checkoutUser.userTicket;
     const { table, position, startTime } = checkoutUser.userSeat;
     const { remainingTime } = checkoutUser;
@@ -145,4 +163,25 @@ router.get(
   })
 );
 
+//티켓 추가정보
+router.get(
+  "/addInfo",
+  asyncHandler(async (req, res, next) => {
+    const id = jwtAuth(req).id;
+    const user = await User.findOne({
+      _id: id,
+    }).populate(
+      { path: "userTicketHistory" } // populate blogs
+    );
+    const editedHistory = user.userTicketHistory;
+    const editedData = editedHistory.reduce((acc, history) => {
+      const { category, duration, price } = history;
+      acc.push({ category, duration, price, startTime: history.createdAt });
+      return acc;
+    }, []);
+    console.log(editedData);
+
+    res.json(editedData);
+  })
+);
 module.exports = router;
