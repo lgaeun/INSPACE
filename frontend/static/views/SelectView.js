@@ -3,9 +3,9 @@ import NavComponent from "../js/common/nav.js";
 import { initSeats } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
-// const baseURL =
-//   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
-const baseURL = "http://localhost:5000";
+const baseURL =
+  "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
+// const baseURL = "http://localhost:5000";
 const Price = {
   oneday: {
     1: 2000,
@@ -86,7 +86,7 @@ export default class extends AbstractView {
   checkSeat(selectedSeat, payBtn) {
     if (!selectedSeat) {
       this.setButtonConnection(payBtn, "select");
-      sessionStorage.setItem(
+      localStorage.setItem(
         "denied",
         JSON.stringify({ ok: true, msg: "좌석을 선택해주세요!" })
       );
@@ -123,8 +123,9 @@ export default class extends AbstractView {
           Authorization: localStorage.getItem("token"),
         },
       };
-      fetch(baseURL + `/reservation/payments/${userId}`, priceData)
+      fetch(baseURL + `/reservation/payments`, priceData)
         .then((res) => {
+          console.log(res);
           if (res.ok) {
             localStorage.setItem("ticket", {
               ...ticket,
@@ -141,6 +142,7 @@ export default class extends AbstractView {
     this.disablePaymentInfo(payBtn, totalPrice);
 
     payBtn.addEventListener("click", (e) => {
+      this.setButtonConnection(payBtn, "select");
       const selectedSeat = sessionStorage.getItem("lastSelected");
       let isSelected = this.checkSeat(selectedSeat, payBtn);
 
@@ -160,26 +162,28 @@ export default class extends AbstractView {
 
         fetch(baseURL + `/reservation/position/`, seatData)
           .then((res) => {
+            console.log(res);
             if (res.ok) {
               localStorage.setItem("checkIn", true);
+              document.querySelector("#moveon").click();
               return;
             }
             return res.json();
           })
           .then((res) => {
-            const status = {
-              ok: true,
-              msg: `${res.message}`,
-            };
-            status.msg +=
+            console.log(res);
+            let status = res.message;
+            status +=
               res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
-            sessionStorage.setItem("denied", JSON.stringify(status));
-            window.history.back();
+            toast(status);
           })
           .catch((err) => {
             console.log(err);
           });
       }
+    });
+    prevBtn.addEventListener("click", () => {
+      if (localStorage.getItem("denied")) localStorage.removeItem("denied");
     });
   }
 
@@ -188,10 +192,10 @@ export default class extends AbstractView {
 
     initSeats();
 
-    const denied = JSON.parse(sessionStorage.getItem("denied"));
+    const denied = JSON.parse(localStorage.getItem("denied"));
     if (denied) {
       toast(denied.msg);
-      sessionStorage.removeItem("denied");
+      localStorage.removeItem("denied");
     }
 
     path = sessionStorage.getItem("path");
@@ -227,7 +231,12 @@ export default class extends AbstractView {
           auth
         );
 
+        prevBtn.addEventListener("click", () => {
+          if (localStorage.getItem("denied")) localStorage.removeItem("denied");
+        });
+
         payBtn.addEventListener("click", (e) => {
+          this.setButtonConnection(payBtn, "select");
           const selectedSeat = sessionStorage.getItem("lastSelected");
           let isSelected = this.checkSeat(selectedSeat, payBtn);
           const seatTicketObj = {
@@ -251,14 +260,17 @@ export default class extends AbstractView {
               seatData
             ).then((res) => {
               if (res.ok) {
-                localStorage.setItem("ticket", {
-                  ...ticket,
-                  price: formattedPrice,
-                });
+                localStorage.setItem(
+                  "ticket",
+                  JSON.stringify({
+                    ...ticket,
+                    price: formattedPrice,
+                  })
+                );
+                document.querySelector("#moveon").click();
                 localStorage.setItem("checkIn", true);
               } else {
-                sessionStorage.setItem("denied", "true");
-                window.history.back();
+                toast("이미 이용중인 좌석입니다");
               }
             });
           }

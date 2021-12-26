@@ -7,7 +7,7 @@ const baseURL =
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle = "Paycheck Page";
+    this.setTitle = "InSpace";
     this.nav = new NavComponent();
   }
 
@@ -42,6 +42,8 @@ export default class extends AbstractView {
 
     userName.innerText = localStorage.getItem("name");
     payTime.innerText = `${now.getFullYear()}.${now.getMonth()}.${now.getDate()} ${hour}:${min}`;
+
+    console.log("im in paycheck view");
 
     const path = sessionStorage.getItem("path");
 

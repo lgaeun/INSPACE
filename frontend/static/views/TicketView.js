@@ -5,7 +5,7 @@ import ticketHandler from "../js/handler/ticketHandler.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("INSPACE");
+    this.setTitle("InSpace");
     this.obj = {};
     this.nav = new NavComponent();
   }
@@ -44,7 +44,8 @@ export default class extends AbstractView {
       .then((res) => res.json())
       .then((data) => {
         // 유저의 현재 사용하는 이용권이 충전권(charge)인 경우 충전권 버튼만 클릭 이벤트 활성화
-        //console.log(data);
+        console.log(data);
+
         if (data.category === "charge") {
           ticketHandler($chargeTickets);
 

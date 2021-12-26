@@ -1,5 +1,5 @@
 import AbstractView from "./AbstractView.js";
-import loginHandler from "../js/handler/loginHandler.js";
+//import loginHandler from "../js/handler/loginHandler.js";
 // import jwt from "../../../backend/passport/strategies/jwt.js";
 import parseJwt from "../js/handler/tokenHandler.js";
 // import jwt_decode from "jwt-decode";
@@ -8,7 +8,7 @@ import toast from "../js/common/toast.js";
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("INSPACE");
+    this.setTitle("InSpace");
   }
   async getHtml() {
     let content;
@@ -21,7 +21,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    // if (localStorage.getItem("id")) {
+    // if (localStorage.getItem("token")) {
     //   document.getElementById("login-Btn").parentElement.href = "/main";
     //   document.getElementById("login-Btn").click();
     // } else {
@@ -88,7 +88,7 @@ export default class extends AbstractView {
               const tokenKey = "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";
               const decoded = parseJwt(token);
               // const decoded = jwt_decode(token);
-              console.log(decoded);
+              //console.log(decoded);
               localStorage.setItem("token", data.token);
               localStorage.setItem("checkIn", decoded.checkIn);
               localStorage.setItem("id", decoded.id);
@@ -110,5 +110,4 @@ export default class extends AbstractView {
       }
     });
   }
-  //}
 }
