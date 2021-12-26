@@ -107,9 +107,9 @@ router.get(
         if (!checkoutUser.userSeat) {
             const { category, duration } = checkoutUser.userTicket;
             let { remainingTime } = checkoutUser;
-            if (remainingTime > -5000 || remainingTime < 5000) {
-                remainingTime = 0;
-            }
+            // if (remainingTime > -5000 || remainingTime < 5000) {
+            //     remainingTime = 0;
+            // }
             res.json({
                 category,
                 duration,
@@ -121,10 +121,10 @@ router.get(
             return;
         }
 
-        let { remainingTime } = checkoutUser;
-        if (remainingTime > -5000 || remainingTime < 5000) {
-            remainingTime = 0;
-        }
+        // let { remainingTime } = checkoutUser;
+        // if (remainingTime > -5000 || remainingTime < 5000) {
+        //     remainingTime = 0;
+        // }
         const { category, duration } = checkoutUser.userTicket;
         const { table, position, startTime } = checkoutUser.userSeat;
         // const { remainingTime } = checkoutUser;
