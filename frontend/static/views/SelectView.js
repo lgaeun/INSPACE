@@ -3,9 +3,9 @@ import NavComponent from "../js/common/nav.js";
 import { initSeats } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
-// const baseURL =
-//   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
-const baseURL = "http://localhost:5000";
+const baseURL =
+  "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
+// const baseURL = "http://localhost:5000";
 const Price = {
   oneday: {
     1: 2000,
@@ -165,10 +165,12 @@ export default class extends AbstractView {
         body: JSON.stringify(priceObj),
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
         },
       };
-      fetch(baseURL + `/reservation/payments/${userId}`, priceData)
+      fetch(baseURL + `/reservation/payments`, priceData)
         .then((res) => {
+          console.log(res);
           if (res.ok) {
             localStorage.setItem("ticket", {
               ...ticket,
@@ -183,6 +185,7 @@ export default class extends AbstractView {
   chooseSeat() {
     this.setButtonConnection(prevBtn, "main");
     this.disablePaymentInfo(payBtn, totalPrice);
+    this.setButtonConnection(payBtn, "select");
 
     payBtn.addEventListener("click", (e) => {
       const selectedSeat = sessionStorage.getItem("lastSelected");
@@ -204,26 +207,32 @@ export default class extends AbstractView {
 
         fetch(baseURL + `/reservation/position/`, seatData)
           .then((res) => {
+            console.log(res);
             if (res.ok) {
               localStorage.setItem("checkIn", true);
+              this.setButtonConnection(payBtn, "paycheck");
+              payBtn.click();
               return;
             }
             return res.json();
           })
           .then((res) => {
+            console.log(res);
             const status = {
               ok: true,
               msg: `${res.message}`,
             };
             status.msg +=
               res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
-            sessionStorage.setItem("denied", JSON.stringify(status));
-            window.history.back();
+            localStorage.setItem("denied", JSON.stringify(status));
           })
           .catch((err) => {
             console.log(err);
           });
       }
+    });
+    prevBtn.addEventListener("click", () => {
+      if (localStorage.getItem("denied")) localStorage.removeItem("denied");
     });
   }
 
@@ -231,11 +240,12 @@ export default class extends AbstractView {
     this.nav.defaultFunc();
 
     initSeats();
+    console.log("Im in select view");
 
-    const denied = JSON.parse(sessionStorage.getItem("denied"));
+    const denied = JSON.parse(localStorage.getItem("denied"));
     if (denied) {
       toast(denied.msg);
-      sessionStorage.removeItem("denied");
+      localStorage.removeItem("denied");
     }
 
     path = sessionStorage.getItem("path");
@@ -271,6 +281,10 @@ export default class extends AbstractView {
           auth
         );
 
+        prevBtn.addEventListener("click", () => {
+          if (localStorage.getItem("denied")) localStorage.removeItem("denied");
+        });
+
         payBtn.addEventListener("click", (e) => {
           const selectedSeat = sessionStorage.getItem("lastSelected");
           let isSelected = this.checkSeat(selectedSeat, payBtn);
@@ -286,6 +300,7 @@ export default class extends AbstractView {
             body: JSON.stringify(seatTicketObj),
             headers: {
               "Content-Type": "application/json",
+              Authorization: localStorage.getItem("token"),
             },
           };
           if (isSelected) {
@@ -300,7 +315,7 @@ export default class extends AbstractView {
                 });
                 localStorage.setItem("checkIn", true);
               } else {
-                sessionStorage.setItem("denied", "true");
+                localStorage.setItem("denied", "true");
                 window.history.back();
               }
             });

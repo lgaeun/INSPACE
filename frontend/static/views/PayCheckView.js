@@ -40,6 +40,8 @@ export default class extends AbstractView {
   defaultFunc() {
     this.nav.defaultFunc();
 
+    console.log("im in paycheck view");
+
     const paycheckTitle = document.querySelector(".pay-chekc-title");
     const totalPrice = document.querySelector(".total-price-box__price");
     const totalPriceTitle = document.querySelector(".total-price-box__title");
