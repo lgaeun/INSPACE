@@ -3,7 +3,7 @@ const router = express.Router();
 const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Position } = require("../models/index");
 const calcTime = require("../utils/calc-time");
-
+const jwtAuth = require("../utils/jwt-auth");
 //
 router.get(
   "/table",
@@ -101,9 +101,9 @@ router.get(
 //티켓정보 확인하는 페이지
 //티켓을 선택하고 다음버튼 눌렀을 때 유저가 어떤 티켓을 가지고 있었는지 보내줍니다.
 router.get(
-  "/:id/ticket",
+  "/ticket",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({
       _id: id,
     }).populate("userTicket");
@@ -142,9 +142,9 @@ router.get(
 //case 7 => 좌석이 이미 있는 사람이 이용권을 결제하고 좌석이동을 하는 경우
 //결제하기 화면에서 결제하기 버튼을 누를 경우 데이터를 DB에 넣습니다.
 router.post(
-  "/table/position/payments/:id",
+  "/table/position/payments/",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userSeat")
       .populate("userTicket");
@@ -245,10 +245,9 @@ router.post(
 // case2: 퇴실한 사람 → 시간연장만
 // case5 : 이용중인 사람 -> 시간연장만
 router.post(
-  "/payments/:id",
+  "/payments/",
   asyncHandler(async (req, res, next) => {
-    console.log("티켓구매", req.user);
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userSeat")
       .populate("userTicket");
@@ -285,9 +284,9 @@ router.post(
 //case3: 퇴실한 사람 → 좌석선택
 //case6: 이용중인 사람 → 좌석이동 , 이 경우 기존 좌석 데이터도 수정해야함
 router.post(
-  "/position/:id",
+  "/position/",
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
+    const id = jwtAuth(req).id;
     const { position, table } = req.body;
     const user = await User.findOne({ _id: id })
       .populate("userSeat")
