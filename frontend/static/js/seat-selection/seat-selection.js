@@ -1,59 +1,108 @@
 import { createTable, createSmallTable } from "./Table.js";
-import selectSeat from "./selectSeat.js";
+import { selectSeat, releaseSeat } from "./selectSeat.js";
+import toast from "../common/toast.js";
 
-export default function initSeats() {
-  const section = document.getElementById("section-container");
+let countSelected = 0;
+
+export function bringSeatInfo() {
+  let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
+
+  fetch(
+    "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/table",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        const { position, remainingTime, table } = data[i];
+
+        const min = remainingTime.min === 0 ? "00" : remainingTime.min;
+        const hour = remainingTime.hour === 0 ? "00" : remainingTime.hour;
+        const hourText = hour + ":" + min;
+
+        const occupiedSeat = document.querySelector(`li[idx='${position}']`);
+
+        occupiedSeat.innerHTML = hourText;
+        occupiedSeat.style.color = "white";
+        occupiedSeat.classList.remove("available");
+
+        countSeatsLeft[table] = countSeatsLeft[table] - 1;
+      }
+
+      const tableTexts = document.getElementsByClassName(
+        "table__contents__seats-left"
+      );
+      for (let i = 0; i < countSeatsLeft.length; i++) {
+        tableTexts[i].innerText = `(${countSeatsLeft[i]}자리 남음)`;
+        if (countSeatsLeft[i] === 0) {
+          const table = document.getElementById(`table${i}`);
+          let selector = `#table${i} .table__color-bar`;
+          if (table.classList.contains("small")) {
+            selector += ".small";
+          }
+          document.querySelector(selector).style.backgroundColor = "#c28ed1";
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function createSeats() {
   const row1 = document.getElementById("table-row1");
   const row2 = document.getElementById("table-row2");
   const row3 = document.getElementById("table-row3");
   const row4 = document.getElementById("table-row4");
 
-  function bringSeatInfo() {
-    fetch("http://localhost:3000/times")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        data.forEach((obj) => {
-          const row = Object.entries(obj)[0][0];
-          const hours = Object.entries(obj)[0][1];
-          const occupied = document.querySelectorAll(`#${row} li`);
+  let numChairs = 0;
+  let tableNumber = 0;
 
-          hours.forEach((hour, idx) => {
-            if (hour !== null) {
-              occupied[idx].innerText = hour;
-              occupied[idx].style.color = "white";
-            } else {
-              occupied[idx].classList.add("available");
-              occupied[idx].innerText = `${occupied[idx].getAttribute(
-                "idx"
-              )}번`;
-            }
-            occupied[idx].style.fontSize = "0.7rem";
-          });
-        });
-      })
-      .catch((err) => console.log(err));
+  for (let i = 0; i < 3; i++) {
+    numChairs = createTable(tableNumber, numChairs, row1.id);
+    tableNumber++;
   }
-
-  function createSeats() {
-    let numChairs = 0;
-
-    for (let i = 0; i < 3; i++) {
-      numChairs = createTable(numChairs, row1.id);
-    }
-    for (let i = 0; i < 3; i++) {
-      numChairs = createSmallTable(numChairs, row2.id);
-    }
-    for (let i = 0; i < 3; i++) {
-      numChairs = createSmallTable(numChairs, row3.id);
-    }
-    for (let i = 0; i < 3; i++) {
-      numChairs = createTable(numChairs, row4.id);
-    }
+  for (let i = 0; i < 3; i++) {
+    numChairs = createSmallTable(tableNumber, numChairs, row2.id);
+    tableNumber++;
   }
+  for (let i = 0; i < 3; i++) {
+    numChairs = createSmallTable(tableNumber, numChairs, row3.id);
+    tableNumber++;
+  }
+  for (let i = 0; i < 3; i++) {
+    numChairs = createTable(tableNumber, numChairs, row4.id);
+    tableNumber++;
+  }
+}
 
-  bringSeatInfo();
+export function clearCountSelected() {
+  countSelected = 0;
+}
+
+export function initSeats() {
+  const section = document.getElementById("section-container");
+
+  clearCountSelected();
   createSeats();
+  bringSeatInfo();
 
-  section.addEventListener("click", selectSeat);
+  section.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("seat")) return;
+    if (countSelected === 0) {
+      selectSeat(e);
+      countSelected++;
+    } else {
+      if (e.target.classList.contains("selected")) {
+        releaseSeat(e);
+        countSelected--;
+      } else {
+        toast("자리를 이미 선택하셨습니다!");
+      }
+    }
+  });
 }

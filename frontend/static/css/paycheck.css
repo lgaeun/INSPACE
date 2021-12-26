@@ -1,65 +1,34 @@
-.payment-box {
-  width: 75%;
+.pay-check-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 92vh;
+  background-color: #edf0eb;
 }
 
-.payment-box h2 {
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 3rem;
+#select-res {
+  background: none;
+  width: 50px;
+  border: none;
+}
+
+.pay-check-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 28vw;
+  height: 62vh;
+  background-color: white;
+  border-radius: 12px;
 }
 
-.payment-box .total-price-box {
-  background-color: rgba(128, 128, 128, 0.173);
-  padding: 3rem;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  font-size: 0.9rem;
-}
-
-.payment-box .total-price-box a {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-left: 2rem;
-}
-
-.payment-box .info-payments {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 50% 50%;
-  list-style-type: none;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.payment-box .info-payment {
+.pay-check-container .pay-chekc-title {
+  font-family: "Chonburi", cursive;
+  font-size: 2.3rem;
+  text-decoration: #c28ed1 wavy underline;
+  text-underline-position: under;
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  color: rgba(128, 128, 128, 0.582);
-  font-size: 0.9rem;
-}
-
-.payment-box .info-payment a {
-  font-weight: bold;
-  font-size: 1rem;
-  color: black;
-  margin-top: 0.4rem;
-}
-
-.payment-box #payment-Btn {
-  width: 100%;
-  padding: 1rem;
-  border-radius: 5px;
-  border: 0;
-  background-color: rgba(121, 167, 135, 0.411);
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
-
-.payment-box #payment-Btn:active {
-  transform: scale(0.98);
+  justify-content: center;
 }

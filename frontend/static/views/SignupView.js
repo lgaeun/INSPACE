@@ -1,43 +1,88 @@
 import AbstractView from "./AbstractView.js";
 import userData from "../js/data.js";
+import toast from "../js/common/toast.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("Dashboard");
+    this.setTitle("InSpace");
   }
   getHtml() {
     return `
+    <style>
+      @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+    </style>
     <div class="bg">
       <main class="sign-in">
         <aside class="left">
           <div class="logo_container">
-            <img class="logo" src="/static//assets/images/logo.png" />
+            <!-- <img class="logo" src="../../assets/images/logo.png" /> -->
+            <h1>inspace</h1>
           </div>
         </aside>
         <article class="right">
           <div class="sign-in_container">
-            <span class="sign-in_title">Sign up</span>
+          <div id="toast"></div>
+            <h1 class="sign-in_title">Sign up</h1>
             <form class="sign-in_form">
-              <label for="name">Name</label>
-              <input type="text" id="name" placeholder="이름을 입력하세요." />
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  placeholder="Name"
+                />
+                <label for="name">Name</label>
+              </div>
 
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="example@xx.com" />
+              <!-- <label for="name">Name</label>
+              <input type="text" id="name" placeholder="이름을 입력하세요." /> -->
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  placeholder="name@example.com"
+                />
+                <label for="email">Email</label>
+              </div>
 
-              <label for="password">Password</label>
+              <!-- <label for="email">Email</label>
+              <input type="email" id="email" placeholder="example@xx.com" /> -->
+
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="알바펫,숫자 포함 8자리 이상"
+                />
+                <label for="password">Password(알파벳, 숫자 포함 8자리 이상)</label>
+              </div>
+
+              <!-- <label for="password">Password</label>
               <input
                 type="password"
                 id="password"
                 placeholder="알바펫,숫자 포함 8자리 이상"
-              />
+              /> -->
 
-              <label for="confirm">Password Confirm</label>
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  id="passwordconfirm"
+                  class="form-control"
+                  placeholder="비밀번호를 한 번 더 입력하세요"
+                />
+                <label for="password">Password Confirm</label>
+              </div>
+
+              <!-- <label for="confirm">Password Confirm</label>
               <input
                 type="password"
                 id="passwordconfirm"
                 placeholder="비밀번호를 한 번 더 입력하세요"
-              />
+              /> -->
             </form>
             <div class="btn_container">
             <a href='/' data-link><button class="btn btn-cancel">Cancel</button></a>
@@ -51,7 +96,24 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
+    // const script = document.createElement("script");
+    // script.src =
+    //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+    // document.getElementById("root").appendChild(script);
+
     const $signUp = document.getElementById("signUp");
+    const error = sessionStorage.getItem("error");
+    const errorMessage = [
+      "이름을 입력해주세요.",
+      "이메일을 입력해주세요.",
+      "비밀번호를 정확히 입력해주세요.",
+      "비밀번호가 맞지 않습니다.",
+    ];
+
+    if (error) {
+      toast(errorMessage[error]);
+      sessionStorage.clear();
+    }
 
     $signUp.addEventListener("click", () => {
       const name = document.getElementById("name").value;
@@ -66,46 +128,49 @@ export default class extends AbstractView {
       // 이름, 이메일 , 비밀번호 검증
       if (name === "") {
         $signUp.parentElement.href = "";
-        alert("이름을 입력해주세요.");
+        sessionStorage.setItem("error", 0);
       } else if (regEmail.test(email) !== true) {
         $signUp.parentElement.href = "";
-        alert("이메일을 입력해주세요.");
+        sessionStorage.setItem("error", 1);
       } else if (regPassword.test(password) !== true) {
         $signUp.parentElement.href = "";
-        alert("비밀번호를 정확히 입력해주세요.");
+        sessionStorage.setItem("error", 2);
       } else if (password !== passwordconfirm) {
         $signUp.parentElement.href = "";
-        alert("비밀번호가 맞지 않습니다.");
+        sessionStorage.setItem("error", 3);
+      } else {
+        // 회원가입 유저 요청 데이터
+        const createdUser = {
+          name: name,
+          userId: email,
+          password: password,
+          checkPassword: passwordconfirm,
+        };
+        // const dd = JSON.stringify(createdUser);
+        // console.log(dd);
+        const signupURL =
+          "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/signup";
+        // `http://localhost:8080/signup;`;
+        // 서버 전달
+        fetch(signupURL, {
+          method: "POST",
+          body: JSON.stringify(createdUser),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              alert("에러");
+              console.log(response);
+            } else {
+              localStorage.setItem("signup", true);
+              response.json();
+            }
+          })
+          .then((res) => console.log(res))
+          .catch((e) => console.log(e));
       }
-      // 회원가입 유저 요청 데이터
-
-      const createdUser = {
-        name: name,
-        email: email,
-        password: password,
-      };
-      // 예비) userData에 회원정보 push
-      userData.push(createdUser);
-
-      // 서버 전달
-      //     fetch("url", {
-      //       method: "POST",
-      //       cache: "no-cache",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify(createdUser),
-      //     })
-      //       .then((response) => {
-      //         if (!response.ok) {
-      //           alert("이미 존재하는 회원입니다.");
-      //         } else {
-      //           response.json();
-      //         }
-      //       })
-      //       .then(console.log);
-      //   }
-      // });
     });
   }
 }

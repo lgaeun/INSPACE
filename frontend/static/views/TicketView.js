@@ -1,81 +1,103 @@
 import AbstractView from "./AbstractView.js";
-import userData from "../js/data.js";
-// import e from "express";
+import NavComponent from "../js/common/nav.js";
+import ticketHandler from "../js/handler/ticketHandler.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("INSPACE");
+    this.setTitle("InSpace");
     this.obj = {};
+    this.nav = new NavComponent();
   }
 
   getHtml() {
-    return `<body>
-    <div class="bg">
+    return (
+      this.nav.getHtml() +
+      `<div class="ticket-bg">
       <main class="ticket-select">
-        <h2>이용권 선택</h2>
+        <h2>Ticket</h2>
         <section class="ticket-box">
           <article class="oneday-box">
             <h3>당일권</h3>
             <p>당일 내에 사용 가능하며 퇴실시 소멸됩니다.</p>
             <ul>
-              <li class="oneday ticket" data-name="1">1시간권 : 2,000원</li>
-              <li class="oneday ticket" data-name="4">4시간권 : 6,000원</li>
-              <li class="oneday ticket" data-name="12">12시간권 : 15,000원</li>
-              <li class="oneday ticket" data-name="24">24시간권 : 25,000원</li>
+              <li class="oneday ticket" data-name="1" data-price="2,000">1시간권 : 2,000원</li>
+              <li class="oneday ticket" data-name="4" data-price="6,000">4시간권 : 6,000원</li>
+              <li class="oneday ticket" data-name="12" data-price="15,000">12시간권 : 15,000원</li>
+              <li class="oneday ticket" data-name="24" data-price="25,000">24시간권 : 25,000원</li>
             </ul>
           </article>
+          <div class="divider"></div>
           <article class="charge-box">
             <h3>충전권</h3>
             <p>시간 내에 사용 가능하며 퇴실시 유지됩니다.</p>
             <ul>
               <li>
-                <li class="charge ticket" data-name="50">50시간권 : 50,000원</li>
-                <li class="charge ticket" data-name="100">100시간권 : 100,000원</li>
+                <li class="charge ticket" data-name="50" data-price="50,000">50시간권 : 50,000원</li>
+                <li class="charge ticket" data-name="100" data-price="100,000">100시간권 : 100,000원</li>
               </li>
             </ul>
           </article>
         </section>
-        <div>
-          <a href="/select" id="next-Btn"><button>NEXT</button></a>
-        </div>
       </main>
-    </div>`;
+      <div class="prev-btn-wrapper seat-view__nav">
+          <a href="/main" data-link><button id="prev-btn">Prev</button></a>
+        </div>
+      <div class="next-btn-wrapper">
+          <a href="/select" data-link><button id="next-btn" class="next-btn__disabled">Next</button></a>
+        </div>
+    </div>`
+    );
   }
 
   defaultFunc() {
+    this.nav.defaultFunc();
+
     const $tickets = document.querySelectorAll(".ticket");
+    const $nextBtn = document.getElementById("next-btn");
+    $nextBtn.disabled = true;
 
-    $tickets.forEach((ticket) => {
-      // ticket 클릭이벤트
-      ticket.onclick = (e) => {
-        const selectedTime = Number(ticket.dataset.name);
+    const ID = localStorage.getItem("id");
 
-        const userAuth =
-          e.target.className === "charge ticket" ? "charge" : "oneday";
-        // 클릭시 버튼 눌림 효과 CSS적용
-        e.target.style =
-          "box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;";
+    const $onedayTickets = document.querySelectorAll(".oneday");
+    const $chargeTickets = document.querySelectorAll(".charge");
 
-        // 이벤트 타깃이 아닌 버튼 이벤트 초기화
-        $tickets.forEach((ticket) => {
-          if (ticket !== e.target) {
-            ticket.style = "box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;";
-          }
-        });
-        // 티켓데이터
-        const ticketData = objectFunc();
-        // localStorage에 추가
-        sessionStorage.setItem("ticket", JSON.stringify(ticketData));
+    fetch(
+      // `http://localhost:5000/reservation/${ID}/ticket`
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/ticket`,
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        // 유저의 현재 사용하는 이용권이 충전권(charge)인 경우 충전권 버튼만 클릭 이벤트 활성화
+        console.log(data);
 
-        //티켓데이터 obj생성함수
-        function objectFunc() {
-          return {
-            time: selectedTime,
-            auth: userAuth,
-          };
+        if (data.category === "charge") {
+          ticketHandler($chargeTickets);
+
+          $onedayTickets.forEach((ticket) => {
+            ticket.style.pointerEvents = "none";
+            ticket.style.backgroundColor = "#b0b0b0a3";
+          });
+          // 유저의 현재 사용하는 이용권이 시간권(oneday)인 경우 시간권 버튼만 클릭 이벤트 활성화
+        } else if (data.category === "oneday") {
+          ticketHandler($onedayTickets);
+
+          $chargeTickets.forEach((ticket) => {
+            ticket.style.pointerEvents = "none";
+            ticket.style.backgroundColor = "#b0b0b0a3";
+          });
+          // 처음 이용하는 유저인 경우 모든 버튼 활성화
+        } else {
+          ticketHandler($tickets);
         }
-      };
-    });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 }

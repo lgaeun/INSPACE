@@ -1,0 +1,27 @@
+.find_container {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.find_container .find_form {
+  width: 60%;
+}
+
+.find_container .btn_container {
+  margin-top: 3vmin;
+  display: flex;
+  width: 70%;
+}
+
+/* #find-password-alert {
+  display: none;
+  position: absolute;
+  color: white;
+  background-color: #8a8a8abb;
+  padding: 4rem;
+  border-radius: 7px;
+} */

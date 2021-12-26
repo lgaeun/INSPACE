@@ -1,7 +1,7 @@
-@font-face {
+/* @font-face {
   font-family: customFont;
   src: url(./TTRamillas-Regular.otf);
-}
+} */
 
 .bg {
   display: flex;
@@ -9,10 +9,10 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1);
+  /* background: linear-gradient(to right top, #c28ed1, #becfbb, #bccbea, #c28ed1); */
   /* background: url(bg.jpg); */
 }
-main {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,20 +20,57 @@ main {
   height: 75vh;
   background-color: white;
   border-radius: 12px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
 }
 
 .payment-box {
   width: 45%;
 }
 
-.payment-box h2 {
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 3rem;
+.payment-box .total-price-box {
+  height: 160px;
+  background-color: #edf0eb;
+  border-radius: 22px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
 }
 
-.payment-box .total-price-box {
+.payment-box .total-price-box .total-price-box__title {
+  margin-bottom: 0;
+  font-size: 20px;
+}
+
+.payment-box .total-price-box .total-price-box__price {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.payment-box h1 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.payment-box .seat-title {
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  font-family: "Chonburi", cursive;
+  text-decoration: #e9967a wavy underline;
+  text-underline-position: under;
+}
+
+.payment-box .seat__selected {
+  height: 20px;
+  margin-bottom: 3rem;
+  font-size: 27px;
+  font-weight: 600;
+}
+
+/* .payment-box .total-price-box {
   background-color: rgba(128, 128, 128, 0.173);
   padding: 3rem;
   border-radius: 10px;
@@ -45,6 +82,54 @@ main {
   font-size: 1.3rem;
   font-weight: bold;
   margin-left: 2rem;
+} */
+
+.payment-box .info-payments {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  list-style-type: none;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.payment-box .info-payment {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  color: rgba(128, 128, 128, 0.582);
+  font-size: 0.9rem;
+}
+
+.payment-box .info-payment a {
+  font-weight: bold;
+  font-size: 1rem;
+  color: black;
+  margin-top: 0.4rem;
+}
+
+/* .payment-box #payment-Btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 5px;
+  border: 0;
+  background-color: rgba(121, 167, 135, 0.411);
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+} */
+
+.payment-box {
+  width: 75%;
+}
+
+.payment-box h2 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
 }
 
 .payment-box .info-payments {
@@ -75,10 +160,17 @@ main {
 .payment-box #payment-Btn {
   width: 100%;
   padding: 1rem;
-  border-radius: 5px;
+  color: #ffff;
+  border-radius: 40px;
   border: 0;
-  background-color: rgba(121, 167, 135, 0.411);
-  font-weight: bold;
+  background-color: black;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.payment-box #payment-Btn:hover,
+.payment-box #payment-Btn:active {
+  color: black;
+  box-shadow: 0 0 0 2px #000 inset;
+  background-color: white;
+  transition: 0.5s;
 }

@@ -1,0 +1,15 @@
+.history-table {
+  text-align: center;
+}
+
+.history-table-thead {
+  font-weight: 900;
+}
+
+.history-table-thead th {
+  padding: 1rem;
+}
+
+.history-table tr td {
+  padding: 1rem 1rem;
+}
