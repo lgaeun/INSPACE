@@ -285,18 +285,27 @@ export default class {
     });
 
     const checkOut = fetch(
-      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/${id}/checkOut`
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkOut`,
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
     );
 
     const logOut = fetch(
-      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout`
+      `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/logout`,
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
     );
 
     $logoutBtn.addEventListener("click", () => {
       Promise.all([checkOut, logOut])
         .then((res) => {
           if (res[0].ok && res[1].ok) {
-            console.log("in");
             localStorage.clear();
             sessionStorage.clear();
             location.href = "/";

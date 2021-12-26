@@ -11,6 +11,10 @@ export function bringSeatInfo() {
     "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/table",
     {
       headers: {
+<<<<<<< HEAD
+=======
+        "Content-Type": "application/json",
+>>>>>>> 18709f80acbbcc739a9b4579b2c9cc530ee70766
         Authorization: localStorage.getItem("token"),
       },
     }
