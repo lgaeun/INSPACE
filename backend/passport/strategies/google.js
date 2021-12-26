@@ -9,21 +9,13 @@ const config = {
   clientSecret: "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",
   callbackURL: "/auth/google/callback",
 };
-// if (!user) {
-//   await User.create({
-//     googleId: profile.id,
-//     name: profile.displayName,
-//     userId: profile.emails[0].value,
-//     password: hashPassword(profile.id),
-//   });
 
+//구글로그인시 기존 유저라면 구글아이디와 연결,
+//구글로그인시 신규 유저라면 회원가입처리
 module.exports = new GoogleStrategy(
   config,
   async (accessToken, refreshToken, profile, done) => {
-    const { email, name } = profile._json;
-    // console.log('profile 값 : ', profile)
     try {
-      // const user = await findOrCreateUser({ googleId: profile.id });
       const user = await User.findOne({ googleId: profile.id });
       if (user) {
         done(null, user);
