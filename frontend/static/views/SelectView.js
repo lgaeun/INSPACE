@@ -218,7 +218,7 @@ export default class extends AbstractView {
           })
           .then((res) => {
             console.log(res);
-            const status = res.message;
+            let status = res.message;
             status +=
               res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
             toast(status);
@@ -313,12 +313,6 @@ export default class extends AbstractView {
                 localStorage.setItem("checkIn", true);
               } else {
                 toast("이미 이용중인 좌석입니다");
-                //   const status = {
-                //     ok: true,
-                //     msg: `${res.message}`,
-                //   };
-                //   localStorage.setItem("denied", JSON.stringify(status));
-                //   window.history.back();
               }
             });
           }
