@@ -28,12 +28,24 @@ router.get(
   async (req, res, next) => {
     // userToken 설정하기
     // setUserToken(res, req.user)
-    const user = await User.findOne({ googleId: req.user.googleId });
+    const user = await User.findOne({ googleId: req.user.googleId }).populate(
+      "userSeat"
+    );
+    var checkIn = null;
+    const { userId, name } = user;
+    if (!user.userSeat) {
+      checkIn = false;
+    } else {
+      checkIn = !user.userSeat.isempty;
+    }
+
     const token = jwt.sign(
       {
         googleId: req.user.googleId,
-        name: req.user.name,
-        userId: req.user.userId,
+        name: name,
+        userId: userId,
+        checkIn,
+        id: user._id,
       },
       secret
     );

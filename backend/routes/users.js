@@ -23,9 +23,15 @@ router.get(
     const finishTime = new Date(finishTimeMilSec);
 
     // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
-    res
-      .status(200)
-      .json({ category, duration, table, position, startTime, finishTime });
+    res.status(200).json({
+      category,
+      duration,
+      table,
+      position,
+      startTime,
+      finishTime,
+      // remainingtime: calcTime(finishTime - new Date()),
+    });
   })
 );
 

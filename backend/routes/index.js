@@ -125,6 +125,7 @@ router.post(
   asyncHandler(async (req, res, next) => {
     const id = jwtAuth(req).id;
     console.log("id", id);
+    console.log("jwtAuth", jwtAuth(req));
     const { name } = req.body;
     const user = await User.findOne({ _id: id });
     if (user.name == name) {
