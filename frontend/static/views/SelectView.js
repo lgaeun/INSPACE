@@ -57,6 +57,7 @@ export default class extends AbstractView {
                 <li class="info-payment" >결제수단<a id="pay-method">카드결제</a></li>
               </div>
               <a href='/paycheck' data-link><input type="button" value="결제하기" id="payment-Btn" /></a>
+              <a href='/paycheck' data-link ><input type="button" id="moveon" /></a>
             </div>
           </section>
 
@@ -131,7 +132,7 @@ export default class extends AbstractView {
   checkSeat(selectedSeat, payBtn) {
     if (!selectedSeat) {
       this.setButtonConnection(payBtn, "select");
-      sessionStorage.setItem(
+      localStorage.setItem(
         "denied",
         JSON.stringify({ ok: true, msg: "좌석을 선택해주세요!" })
       );
@@ -185,9 +186,9 @@ export default class extends AbstractView {
   chooseSeat() {
     this.setButtonConnection(prevBtn, "main");
     this.disablePaymentInfo(payBtn, totalPrice);
-    this.setButtonConnection(payBtn, "select");
 
     payBtn.addEventListener("click", (e) => {
+      this.setButtonConnection(payBtn, "select");
       const selectedSeat = sessionStorage.getItem("lastSelected");
       let isSelected = this.checkSeat(selectedSeat, payBtn);
 
@@ -210,21 +211,17 @@ export default class extends AbstractView {
             console.log(res);
             if (res.ok) {
               localStorage.setItem("checkIn", true);
-              this.setButtonConnection(payBtn, "paycheck");
-              payBtn.click();
+              document.querySelector("#moveon").click();
               return;
             }
             return res.json();
           })
           .then((res) => {
             console.log(res);
-            const status = {
-              ok: true,
-              msg: `${res.message}`,
-            };
-            status.msg +=
+            const status = res.message;
+            status +=
               res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
-            localStorage.setItem("denied", JSON.stringify(status));
+            toast(status);
           })
           .catch((err) => {
             console.log(err);
@@ -240,7 +237,6 @@ export default class extends AbstractView {
     this.nav.defaultFunc();
 
     initSeats();
-    console.log("Im in select view");
 
     const denied = JSON.parse(localStorage.getItem("denied"));
     if (denied) {
@@ -286,6 +282,7 @@ export default class extends AbstractView {
         });
 
         payBtn.addEventListener("click", (e) => {
+          this.setButtonConnection(payBtn, "select");
           const selectedSeat = sessionStorage.getItem("lastSelected");
           let isSelected = this.checkSeat(selectedSeat, payBtn);
           const seatTicketObj = {
@@ -315,8 +312,13 @@ export default class extends AbstractView {
                 });
                 localStorage.setItem("checkIn", true);
               } else {
-                localStorage.setItem("denied", "true");
-                window.history.back();
+                toast("이미 이용중인 좌석입니다");
+                //   const status = {
+                //     ok: true,
+                //     msg: `${res.message}`,
+                //   };
+                //   localStorage.setItem("denied", JSON.stringify(status));
+                //   window.history.back();
               }
             });
           }

@@ -342,6 +342,9 @@
   background-color: white;
   transition: 0.5s;
 }
+#moveon {
+  visibility: hidden;
+}
 
 #toast {
   position: fixed;
