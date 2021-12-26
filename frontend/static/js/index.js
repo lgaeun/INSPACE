@@ -48,9 +48,9 @@ const router = async () => {
     (potentialMatch) => potentialMatch.result !== null
   );
 
-  if (!match) {
+  if (!match || localStorage.getItem("token") === null) {
     match = {
-      route: localStorage.getItem("token") ? routes[4] : routes[0],
+      route: routes[0],
       result: [location.pathname],
     };
   }
