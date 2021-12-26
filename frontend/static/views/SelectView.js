@@ -3,9 +3,9 @@ import NavComponent from "../js/common/nav.js";
 import { initSeats } from "../js/seat-selection/seat-selection.js";
 import toast from "../js/common/toast.js";
 
-// const baseURL =
-//   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
-const baseURL = "http://localhost:5000";
+const baseURL =
+  "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
+//const baseURL = "http://localhost:5000";
 const Price = {
   oneday: {
     1: 2000,

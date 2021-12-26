@@ -177,20 +177,10 @@ export default class extends AbstractView {
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
-    const checkIn = localStorage.getItem("checkIn"); //fetch
-    const id = localStorage.getItem("id");
-
-    let clearTimer = false;
-    let elapsed = 0;
-
-    // fetch(
-    //   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login"
-    // )
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //   });
+    const checkIn = localStorage.getItem("checkIn");
     const token = localStorage.getItem("token");
+
+    let elapsed = 0;
 
     if (checkIn == "true") {
       checkInDisplay(true);
@@ -199,7 +189,7 @@ export default class extends AbstractView {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkIn`,
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
       )
@@ -227,16 +217,14 @@ export default class extends AbstractView {
 
             const endTime = new Date(data.finishTime);
 
+            //console.log(endTime);
+
             let setTimer = setInterval(function () {
               elapsed = endTime.getTime() - new Date().getTime();
 
               if (elapsed <= 0) {
                 $btnCheckOut.click();
               }
-
-              // if (clearTimer) {
-              //   clearInterval(setTimer);
-              // }
 
               drawTimer();
             }, 1000);
@@ -250,7 +238,7 @@ export default class extends AbstractView {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkOut`,
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
       )
@@ -272,11 +260,11 @@ export default class extends AbstractView {
 
           setInfo(info);
 
-          if (data.remainedTime) {
+          if (data.remainingTime) {
             elapsed =
-              Math.abs(data.remainedTime.hour) * (1000 * 60 * 60) +
-              data.remainedTime.min * (1000 * 60) +
-              data.remainedTime.sec * 1000;
+              Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
+              data.remainingTime.min * (1000 * 60) +
+              data.remainingTime.sec * 1000;
           } else {
             elapsed = 0;
           }
@@ -369,7 +357,7 @@ export default class extends AbstractView {
         `http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/users/checkOut`,
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
         // `http://localhost:5000/users/${id}/checkOut`

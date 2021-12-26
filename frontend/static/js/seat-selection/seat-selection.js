@@ -8,7 +8,12 @@ export function bringSeatInfo() {
   let countSeatsLeft = [4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4];
 
   fetch(
-    "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/table"
+    "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/reservation/table",
+    {
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      },
+    }
   )
     .then((res) => res.json())
     .then((data) => {
