@@ -85,6 +85,17 @@ router.get(
             },
           }
         );
+
+        if (user.remainingTime > -5000 || user.remainingTime < 5000) {
+          await User.updateOne(
+            { _id: id },
+            {
+              $inc: {
+                remainingTime: -user.remainingTime,
+              },
+            }
+          );
+        }
         console.log("else 찍히나");
       }
       console.log("이건 찍히겠지 왜죠");
