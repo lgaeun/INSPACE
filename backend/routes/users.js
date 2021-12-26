@@ -123,7 +123,6 @@ router.get(
     if (!checkoutUser.userSeat) {
       const { category, duration } = checkoutUser.userTicket;
       const { remainingTime } = checkoutUser;
-
       res.json({
         category,
         duration,
@@ -135,9 +134,9 @@ router.get(
       return;
     }
 
+    const { remainingTime } = checkoutUser;
     const { category, duration } = checkoutUser.userTicket;
     const { table, position, startTime } = checkoutUser.userSeat;
-    const { remainingTime } = checkoutUser;
 
     console.log("출력하기 전 ", checkoutUser.usedTime);
     // const remainingTimeMilSec =
