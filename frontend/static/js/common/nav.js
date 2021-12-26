@@ -225,8 +225,7 @@ export default class {
         name: $name.value,
       };
 
-      const loginURL =
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-name";
+      const loginURL = "http://localhost:8080/info-change-name";
       //서버 fetch
       fetch(loginURL, {
         method: "POST",
@@ -234,6 +233,7 @@ export default class {
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
         },
       })
         .then((res) => {
@@ -260,8 +260,7 @@ export default class {
 
       console.log(pwdInfo);
 
-      const loginURL =
-        "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/info-change-password";
+      const loginURL = "http://localhost:8080/info-change-password";
       //서버 fetch
       fetch(loginURL, {
         method: "POST",
@@ -269,6 +268,7 @@ export default class {
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
         },
       })
         .then((res) => {

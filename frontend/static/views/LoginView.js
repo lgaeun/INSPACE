@@ -2,6 +2,7 @@ import AbstractView from "./AbstractView.js";
 import loginHandler from "../js/handler/loginHandler.js";
 // import jwt from "../../../backend/passport/strategies/jwt.js";
 import parseJwt from "../js/handler/tokenHandler.js";
+import googleLogin from "../js/handler/oauthHandler.js";
 // import jwt_decode from "jwt-decode";
 
 export default class extends AbstractView {
@@ -66,11 +67,6 @@ export default class extends AbstractView {
                 ><input type="button" id="login-Btn" value="로그인"
               /></a>
               <button id="google-login">
-                <!-- <img
-                  src="/static/assets/images/Google_2015_logo.svg.png"
-                  width="40"
-                /> -->
-                <!-- <img src="../../assets/images/google-logo.png" width="40" /> -->
                 Google 계정으로 로그인
               </button>
             </form>
@@ -106,14 +102,14 @@ export default class extends AbstractView {
 
     // @@@@@ 로그인 기능 @@@@@@
     const $loginBtn = document.getElementById("login-Btn");
+    const $googleBtn = document.getElementById("google-login");
+
     $loginBtn.addEventListener("click", (e) => {
       const target = $loginBtn.parentElement;
       const href = target.getAttribute("href");
+
       if (href === null) {
         // id, password 입력값 받기
-
-        // let loginSuccess = false;
-
         let ID = document.getElementById("ID").value;
         let PASSWORD = document.getElementById("password").value;
 
@@ -173,6 +169,8 @@ export default class extends AbstractView {
         }
       }
     });
+
+    $googleBtn.addEventListener("click", googleLogin);
   }
   //}
 }
