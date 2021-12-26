@@ -6,7 +6,7 @@ export default class extends AbstractView {
   constructor(params) {
     super(params);
     //this.postId = params.id;
-    this.setTitle("Main Page");
+    this.setTitle("InSpace");
     this.nav = new NavComponent();
   }
 

@@ -351,7 +351,7 @@
   transform: translate(-60%, 10px);
   border-radius: 30px;
   overflow: hidden;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   opacity: 0;
   visibility: hidden;
   background: rgba(0, 0, 0, 0.35);

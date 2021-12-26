@@ -1,9 +1,10 @@
+import toast from "../js/common/toast.js";
 import AbstractView from "./AbstractView.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("INSPACE");
+    this.setTitle("InSpace");
   }
   getHtml() {
     return `
@@ -19,6 +20,7 @@ export default class extends AbstractView {
         </aside>
         <article class="right">
           <div class="find_container">
+            <div id="toast"></div>
             <div class="sign-in_title">Find <br> Password</div>
             <form class="find_form">
               <div class="form-floating mb-3">
@@ -81,9 +83,9 @@ export default class extends AbstractView {
       }).then((res) => {
         console.log(res);
         if (res.ok) {
-          alert("임시 비밀번호가 발급되었습니다.");
+          toast("임시 비밀번호가 발급되었습니다.");
         } else {
-          alert("정보를 입력해주세요.");
+          toast("정보를 입력해주세요.");
         }
       });
     });
