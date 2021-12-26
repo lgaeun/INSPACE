@@ -6,23 +6,23 @@ const PositionSchema = new Schema(
     position: {
       type: Number,
       required: true,
-    }, //속한 섹션
+    }, //속한 테이블
     table: {
       type: Number,
       required: true,
-    }, //좌석이용여부
+    }, //좌석이 사옹되고 있는지 여부
     isempty: {
       type: Boolean,
       default: false,
       required: true,
-    }, //좌석을 반납하거나 이동한시간
+    }, //좌석을 반납하거나 이동한시간.
     deletedAt: {
       type: Date,
       default: null,
     }, //좌석 사용 시작 시간
     startTime: {
       type: Date,
-      default: null, //timestamps 이용???
+      default: null,
     }, //마지막으로 좌석 이용시간 정보 업데이트한 시간
     checkTime: {
       type: Date,

@@ -2,7 +2,7 @@ const passport = require("passport");
 
 module.exports = (req, res, next) => {
   if (!req.headers.authorization) {
-    next();
+    // next();
     return;
   }
 

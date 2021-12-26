@@ -2,14 +2,11 @@ var express = require("express");
 var router = express.Router({});
 const hashPassword = require("../utils/hash-password");
 const asyncHandler = require("../utils/async-handler");
-// const { User } = require('../models');
-const { redirect } = require("../passport/strategies/jwt");
 const generateRandomPassword = require("../utils/generate-random-password");
 const SendmailTransport = require("nodemailer/lib/sendmail-transport");
 const { User, Ticket, Seat } = require("../models/index");
 const sendMail = require("../utils/send-mail");
 const passport = require("passport");
-// const { setUserToken, secret } = require("../utils/jwt");
 const local = require("../passport/strategies/local");
 const jwt = require("jsonwebtoken");
 const jwtAuth = require("../utils/jwt-auth");
@@ -19,7 +16,8 @@ const secret = process.env.SECRET_KEY;
 
 router.post(
   "/signup",
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
+    console.log("회원가입시작");
     const { name, userId, password, checkPassword } = req.body;
     const hashedPassword = hashPassword(password);
     const existId = await User.findOne({ userId });
@@ -27,7 +25,6 @@ router.post(
       throw new Error("사용중인 아이디입니다.");
       return;
     }
-    console.log("비교 :", password != checkPassword);
     if (password != checkPassword) {
       throw new Error("비밀번호가 일치하지 않습니다.");
       return;
@@ -37,7 +34,8 @@ router.post(
       userId,
       password: hashedPassword,
     });
-    res.status(201).json({ message: "success" });
+    console.log("회원가입후");
+    res.status(200).json({ message: "success" });
   })
 );
 
@@ -46,7 +44,7 @@ router.post(
   passport.authenticate("local", { session: false }),
   async (req, res, next) => {
     // setUserToken(res, req.user)
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
     var checkIn = null;
     const { userId, name } = user;
     if (!user.userSeat) {
@@ -63,9 +61,9 @@ router.post(
     console.log("req.cookies값좀 보자777", req.cookies);
     // user = await User.findOne({ _id: req.user.id }).populate("userSeat");
 
-    // res.json({
-    //   token,
-    // });
+    res.json({
+      token,
+    });
   }
 );
 
@@ -125,6 +123,7 @@ router.post(
   asyncHandler(async (req, res, next) => {
     const id = jwtAuth(req).id;
     console.log("id", id);
+    console.log("jwtAuth", jwtAuth(req));
     const { name } = req.body;
     const user = await User.findOne({ _id: id });
     if (user.name == name) {

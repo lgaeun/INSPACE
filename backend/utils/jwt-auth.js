@@ -6,7 +6,5 @@ module.exports = (req) => {
   // access token 검증
   const token = req.headers.authorization;
   const decoded = jwt.verify(token, secret);
-  return {
-    id: decoded.id,
-  };
+  return decoded;
 };

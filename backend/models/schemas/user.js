@@ -3,32 +3,40 @@ const findOrCreate = require("mongoose-findorcreate");
 
 const UserSchema = new Schema(
   {
+    //구글아이디로 로그인할 경우 구글 아이디를 따로 받아줌
     googleId: {
       type: String,
       default: null,
     },
+    //이름
     name: {
       type: String,
       required: true,
     },
+    //유저아이디 (이메일형식)
     userId: {
       type: String,
       required: true,
     },
+
+    //비밀번호
     password: {
       type: String,
       required: true,
-    }, //이제껏 결제한 총 시간
+    },
+    //이제껏 결제한 총 시간
     totalTime: {
       type: Number, //밀리초
       required: true,
       default: 0,
-    }, //사용한 총 시간
+    },
+    //사용한 총 시간
     usedTime: {
       type: Number, // 밀리초
       required: true,
       default: 0,
     },
+    //이용가능한 남은 시간
     remainingTime: {
       type: Number, //밀리초
       required: true,
