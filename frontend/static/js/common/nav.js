@@ -381,8 +381,10 @@ export default class {
       )
         .then((res) => res.json())
         .then((data) => {
+          let trList = "";
+
           data.map((row) => {
-            $historyContent.innerHTML += `<tr>
+            trList += `<tr>
             <td scope="row">${formatDate(new Date(row.startTime))}</td>
             <td>${row.duration}시간 ${
               row.category == "charge" ? "충전권" : "당일권"
@@ -390,6 +392,7 @@ export default class {
             <td>${Intl.NumberFormat("ko-KR").format(row.price)}원</td>
           </tr>`;
           });
+          $historyContent.innerHTML = trList;
         })
         .catch((err) => {
           console.log(err);
