@@ -163,7 +163,7 @@ export default class extends AbstractView {
               const tokenKey = "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";
               const decoded = parseJwt(token);
               // const decoded = jwt_decode(token);
-              console.log(decoded);
+              //console.log(decoded);
               localStorage.setItem("token", data.token);
               localStorage.setItem("checkIn", decoded.checkIn);
               localStorage.setItem("id", decoded.id);

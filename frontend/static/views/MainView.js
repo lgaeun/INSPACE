@@ -260,7 +260,7 @@ export default class extends AbstractView {
 
           setInfo(info);
 
-          if (data.remainingTime) {
+          if (data.remainingTime && data.remainingTime.hour >= 0) {
             elapsed =
               Math.abs(data.remainingTime.hour) * (1000 * 60 * 60) +
               data.remainingTime.min * (1000 * 60) +
