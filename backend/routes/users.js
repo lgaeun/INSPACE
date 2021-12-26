@@ -145,4 +145,24 @@ router.get(
   })
 );
 
+router.get(
+  "/addInfo",
+  asyncHandler(async (req, res, next) => {
+    const id = jwtAuth(req).id;
+    const user = await User.findOne({
+      _id: id,
+    }).populate(
+      { path: "userTicketHistory" } // populate blogs
+    );
+    const editedHistory = user.userTicketHistory;
+    const editedData = editedHistory.reduce((acc, history) => {
+      const { category, duration, price } = history;
+      acc.push({ category, duration, price, startTime: history.createdAt });
+      return acc;
+    }, []);
+    console.log(editedData);
+
+    res.json(editedData);
+  })
+);
 module.exports = router;
