@@ -1,5 +1,5 @@
 import AbstractView from "./AbstractView.js";
-import loginHandler from "../js/handler/loginHandler.js";
+//import loginHandler from "../js/handler/loginHandler.js";
 // import jwt from "../../../backend/passport/strategies/jwt.js";
 import parseJwt from "../js/handler/tokenHandler.js";
 // import jwt_decode from "jwt-decode";
@@ -96,7 +96,7 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    // if (localStorage.getItem("id")) {
+    // if (localStorage.getItem("token")) {
     //   document.getElementById("login-Btn").parentElement.href = "/main";
     //   document.getElementById("login-Btn").click();
     // } else {
@@ -185,5 +185,4 @@ export default class extends AbstractView {
       }
     });
   }
-  //}
 }
