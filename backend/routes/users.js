@@ -11,7 +11,7 @@ const jwtAuth = require("../utils/jwt-auth");
 router.get(
   "/checkIn",
   asyncHandler(async (req, res, next) => {
-    if (!jwtAuth(req)) {
+    if (!res.headers.authorization) {
       res.redirect("/");
       return;
     }
@@ -26,7 +26,6 @@ router.get(
       checkTime.getTime() + new Date(remainingTime).getTime();
     const finishTime = new Date(finishTimeMilSec);
 
-    // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
     res.status(200).json({
       category,
       duration,
@@ -34,7 +33,6 @@ router.get(
       position,
       startTime,
       finishTime,
-      // remainingtime: calcTime(finishTime - new Date()),
     });
   })
 );
@@ -71,7 +69,6 @@ router.get(
       );
       //oneday 유저의 경우 남은 시간 0으로 초기화됩니다.
 
-      console.log("이프문 시작전");
       if (user.userTicket && user.userTicket.category == "oneday") {
         await User.updateOne(
           { _id: id },
@@ -82,7 +79,6 @@ router.get(
             },
           }
         );
-        console.log("이건 안찍혀야하고");
       } else {
         await User.updateOne(
           { _id: id },
@@ -104,9 +100,7 @@ router.get(
         //     }
         //   );
         // }
-        console.log("else 찍히나");
       }
-      console.log("이건 찍히겠지 왜죠");
     }
 
     const checkoutUser = await User.findOne({ _id: id })
@@ -147,11 +141,7 @@ router.get(
     const { table, position, startTime } = checkoutUser.userSeat;
 
     console.log("출력하기 전 ", checkoutUser.usedTime);
-    // const remainingTimeMilSec =
-    //   new Date().getTime() + new Date(remainingTime * 1000).getTime();
-    // const remainedTime = new Date(remainingTimeMilSec);
 
-    // res.json({ category, table, position, startTime, totalTime, usedTime, finishTime });
     res.json({
       category,
       startTime,
@@ -160,7 +150,6 @@ router.get(
       position,
       duration,
     });
-    // res.status(200).json({ message: "success" });
   })
 );
 
@@ -171,9 +160,7 @@ router.get(
     const id = jwtAuth(req).id;
     const user = await User.findOne({
       _id: id,
-    }).populate(
-      { path: "userTicketHistory" } // populate blogs
-    );
+    }).populate({ path: "userTicketHistory" });
     const editedHistory = user.userTicketHistory;
     const editedData = editedHistory.reduce((acc, history) => {
       const { category, duration, price } = history;

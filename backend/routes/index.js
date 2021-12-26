@@ -14,10 +14,10 @@ const jwtAuth = require("../utils/jwt-auth");
 require("dotenv").config();
 const secret = process.env.SECRET_KEY;
 
+//회원가입
 router.post(
   "/signup",
   asyncHandler(async (req, res, next) => {
-    console.log("회원가입시작");
     const { name, userId, password, checkPassword } = req.body;
     const hashedPassword = hashPassword(password);
     const existId = await User.findOne({ userId });
@@ -39,6 +39,8 @@ router.post(
   })
 );
 
+//로그인
+//로그인시 토큰을 보내줌
 router.post(
   "/login",
   passport.authenticate("local", { session: false }),
@@ -59,32 +61,12 @@ router.post(
     console.log("req.user 안의 값12345:", req.user);
     console.log("token555:", token);
     console.log("req.cookies값좀 보자777", req.cookies);
-    // user = await User.findOne({ _id: req.user.id }).populate("userSeat");
 
     res.json({
       token,
     });
   }
 );
-
-// router.post('/login', passport.authenticate('local', { session: false }),
-//     async(req, res, next) => {
-//         const token = setUserToken(res, req.user);
-//         const token0 = req.cookies.token
-//         const id = req.user.id
-//         const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
-
-//         if (!user.userSeat) {
-//             res.json({ checkIn: false, id: id, name: user.name, userId: user.userId, token0 });
-//             return;
-//         }
-//         const checkIn = !user.userSeat.isempty;
-//         res.json({ token0, checkIn: false, id: id, name: user.name, userId: user.userId })
-//             // next()
-//         console.log('req.user7777', req.user)
-
-//     }
-// )
 
 router.get("/logout", (req, res, next) => {
   res.cookie("token", null, { maxAge: 0 });
@@ -94,8 +76,6 @@ router.get("/logout", (req, res, next) => {
 router.post(
   "/reset-password",
   asyncHandler(async (req, res, next) => {
-    // const id = jwtAuth(req).id;
-
     const { userId } = req.body;
     const user = await User.findOne({ userId });
     if (!user) {
@@ -122,8 +102,6 @@ router.post(
   "/info-change-name",
   asyncHandler(async (req, res, next) => {
     const id = jwtAuth(req).id;
-    console.log("id", id);
-    console.log("jwtAuth", jwtAuth(req));
     const { name } = req.body;
     const user = await User.findOne({ _id: id });
     if (user.name == name) {

@@ -4,7 +4,8 @@ const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Position } = require("../models/index");
 const calcTime = require("../utils/calc-time");
 const jwtAuth = require("../utils/jwt-auth");
-//
+
+//좌석이 이용중인지. 이용중이라면 몇 시간이 남았는지를 보여줍니다.
 router.get(
   "/table",
   asyncHandler(async (req, res, next) => {
@@ -20,14 +21,14 @@ router.get(
     //이용중인 좌석들을 사용한 시간을 업데이트합니다.
     //남은시간 < 사용한 시간이면 유저의 누적 사용시간을 남아있던 시간만큼 더하고 남은 시간을 0으로
     //남은시간 > 사용한 시간이면 유저의 누적 사용시간에서 사용한 시간을 더하고 남은 시간에서 사용한 시간을 빼는 로직입니다.
+    //첫번쨰 라우터에서 유저와 좌석이용 데이터를 업데이트 합니다.
     for (const position of renewedSeat) {
+      //지난 시간 계산
       const passedTime = Math.floor(new Date() - position.checkTime);
       console.log(passedTime);
       const user = await User.findOne({ _id: position.user });
-      console.log("좌석선택에서 업데이트 전");
-      console.log("user 남은시간", user.remainingTime);
-      console.log("user 사용시간", user.usedTime);
 
+      //남은 시간보다 사용한 시간이 많은 경우
       if (user.remainingTime <= passedTime) {
         await User.updateOne(
           { _id: position.user },
@@ -53,6 +54,7 @@ router.get(
           }
         );
       } else {
+        //남은 시간이 사용한 시간보다 많은 경우
         const user = await User.findOneAndUpdate(
           { _id: position.user },
           {
@@ -69,22 +71,19 @@ router.get(
             checkTime: new Date(),
           }
         );
-        console.log("좌석선택창");
-        console.log("user 남은시간", user.remainingTime);
-        console.log("user 사용시간", user.usedTime);
       }
     }
     next();
   })
 );
-//
+
+// 두번째 라우터에서 업데이트된 유저정보가 반영된 좌석이용현황을 응답해줍니다.
 router.get(
   "/table",
   asyncHandler(async (req, res, next) => {
     const reservedSeat = await Position.find({
       isempty: false,
     }).populate("user");
-    //여기에 시간 다 쓴 유저 캐치하는 코드 넣자
     const editedReservedSeat = reservedSeat.reduce((acc, pos) => {
       const remainingTimeMilSec = Math.floor(
         pos.checkTime.getTime() +
@@ -111,7 +110,7 @@ router.get(
     const user = await User.findOne({
       _id: id,
     }).populate("userTicket");
-    //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
+    //유저가 이용중인 이용권이 있으면 해당이용권의 종류를 보내주고 이용중인 이용권이 없으면 null을 보내줍니다.
     if (user.userTicket && user.remainingTime >= 2) {
       res.json({ message: "success", category: user.userTicket.category });
     } else {
@@ -119,26 +118,6 @@ router.get(
     }
   })
 );
-// router.get(
-//   "/:id/ticket",
-//   asyncHandler(async (req, res, next) => {
-//     const { category } = req.query;
-//     const { id } = req.params;
-//     const user = await User.findOne({
-//       _id: id,
-//     }).populate("userTicket");
-//     //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
-//     if (user.userTicket && user.remainingTime >= 2) {
-//       if (category != user.userTicket.category) {
-//         throw new Error("이용중인 이용권과 같은 이용권이 아닙니다.");
-//       } else {
-//         res.json({ message: "success", category: user.Ticket.category });
-//       }
-//     } else {
-//       res.json({ message: "success", category: user.Ticket.category });
-//     }
-//   })
-// );
 
 //이용권과 좌석을 둘 다 구매하는 경우
 //case 1 , 4, 7
@@ -153,7 +132,6 @@ router.post(
       .populate("userSeat")
       .populate("userTicket");
     //req.body 로 받는 duration은 hour
-    // console.log("uesr", user);
     const { category, duration, price, table, position } = req.body;
 
     //겹치는 좌석이 있는지 확인하고 겹치는 좌석이 있으면 에러를 던집니다.
@@ -366,9 +344,5 @@ router.post(
     res.status(200).json({ message: "success" });
   })
 );
-
-//duration : Number hour
-//좌석 시간은 시 분
-//메인페이지 시간카운트는 종료시간을 보내주면 Date객체로
 
 module.exports = router;

@@ -18,7 +18,6 @@ router.get(
     const { position, table } = user.userSeat;
     const startTime = user.userTicket.createdAt;
     res.json({ category, price, duration, startTime, position, table });
-    // res.status(200).json({ message: "success" });
   })
 );
 
@@ -36,7 +35,6 @@ router.get(
     const { category, price, duration } = user.userTicket;
     const { position, table } = user.userSeat;
     res.json({ category, price, duration, position, table });
-    // res.status(200).json({ message: "success" });
   })
 );
 

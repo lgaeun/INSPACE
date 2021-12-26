@@ -5,5 +5,3 @@ module.exports = (req, res, next) => {
   }
   next();
 };
-
-// 사용안하는데 지워도되나
