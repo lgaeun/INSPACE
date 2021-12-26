@@ -310,6 +310,7 @@ export default class extends AbstractView {
                   ...ticket,
                   price: formattedPrice,
                 });
+                document.querySelector("#moveon").click();
                 localStorage.setItem("checkIn", true);
               } else {
                 toast("이미 이용중인 좌석입니다");
