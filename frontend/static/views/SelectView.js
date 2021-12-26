@@ -1,59 +1,55 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
-import initSeats from "../js/seat-selection/seat-selection.js";
+import { initSeats } from "../js/seat-selection/seat-selection.js";
+import toast from "../js/common/toast.js";
+import {
+  Price,
+  baseURL,
+  setButtonConnection,
+  composePaymentsInfo,
+  checkSeat,
+  extendTime,
+  chooseSeat,
+} from "../js/handler/seatHandler.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
     this.setTitle("좌석 선택");
+    this.nav = new NavComponent();
   }
   getHtml() {
     return (
-      NavComponent() +
+      this.nav.getHtml() +
       `<div class="seat-bg" id="bg">
       <div class="seat-container-border">
         <div class="seat-container" id="seat-container">
           <section class="seat-detail">
-            <!-- 결제정보, 좌석 정보 -->
             <div class="payment-box">
               <h1 class="seat-title">selected <br> Seat</h1>
               <h1 class="seat__selected"></h1>
               <div class="total-price-box">
                 <h1 class="total-price-box__title">총 결제금액:</h1>
-                <h1 class="total-price-box__price">12,000원</h1>
+                <h1 class="total-price-box__price">0원</h1>
               </div>
               <div class="info-payments">
                 <li class="info-payment">이용권정보<a>시간권</a></li>
-                <li class="info-payment">이용시간<a>4시간</a></li>
-                <li class="info-payment">결제수단<a>카드결제</a></li>
+                <li class="info-payment" id="charged-time">이용시간<a></a></li>
+                <li class="info-payment" >결제수단<a id="pay-method">카드결제</a></li>
               </div>
               <a href='/paycheck' data-link><input type="button" value="결제하기" id="payment-Btn" /></a>
+              <a href='/paycheck' data-link ><input type="button" id="moveon" /></a>
             </div>
           </section>
-          <div class="divider"></div>
           <main class="seat-view">
-            <!-- <nav class="seat-view__nav">
-              <a href="/main" data-link>
-              <button type="button" class="btn btn-primary">
-                <div class="plus-icon">
-                  <img src="/static/assets/svg/arrow-left.svg" />
-                </div>
-                <div class="select-label">이전페이지로</div>
-              </button>
-              </a>
-            </nav> -->
-
+            <div id="disable--seat-view"></div>
             <div class="information">
-              <!-- <img src="/static/assets/images/table-ok.png" /> -->
               <div class="color-box__empty"></div>
               <p class="table-status">Empty</p>
-              <!-- <img src="/static/assets/images/table-full.png" /> -->
               <div class="color-box__full"></div>
               <p class="table-status full">Full</p>
             </div>
-
             <div id="toast"></div>
-
             <div id="section-container">
               <div id="table-row1"></div>
               <div id="table-row2"></div>
@@ -72,11 +68,89 @@ export default class extends AbstractView {
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    this.nav.defaultFunc();
 
     initSeats();
+
+    const denied = JSON.parse(localStorage.getItem("denied"));
+    if (denied) {
+      toast(denied.msg);
+      localStorage.removeItem("denied");
+    }
+
+    const path = sessionStorage.getItem("path");
+    const prevPath = sessionStorage.getItem("history");
+    const prevBtn = document.querySelector("#prev-btn");
+    const payBtn = document.getElementById("payment-Btn");
+    const totalPrice = document.querySelector(".total-price-box__price");
+    const ticketInfoArr = document.querySelectorAll(".info-payment a");
+
+    // 사용중 Main
+    if (prevPath === "using") {
+      if (path === "move") chooseSeat();
+      else if (path == "extend") extendTime(ticketInfoArr, totalPrice, payBtn);
+    }
+    //퇴실메인
+    else if (prevPath === "before") {
+      if (path === "select") chooseSeat();
+      else if (path === "extend") extendTime(ticketInfoArr, totalPrice, payBtn);
+      // 선택+연장
+      else {
+        setButtonConnection(prevBtn, "ticket");
+        const ticket = JSON.parse(localStorage.getItem("ticket"));
+        const { time, auth } = JSON.parse(localStorage.getItem("ticket"));
+        const formattedPrice = composePaymentsInfo(
+          ticketInfoArr,
+          totalPrice,
+          time,
+          auth
+        );
+
+        prevBtn.addEventListener("click", () => {
+          if (localStorage.getItem("denied")) localStorage.removeItem("denied");
+        });
+
+        payBtn.addEventListener("click", (e) => {
+          setButtonConnection(payBtn, "select");
+          const selectedSeat = sessionStorage.getItem("lastSelected");
+          let isSelected = checkSeat(selectedSeat, payBtn);
+          const seatTicketObj = {
+            category: auth,
+            duration: time,
+            price: Price[auth][time],
+            table: sessionStorage.getItem("table"),
+            position: Number(selectedSeat.replace(/[^0-9]/g, "")),
+          };
+          let seatData = {
+            method: "POST",
+            body: JSON.stringify(seatTicketObj),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("token"),
+            },
+          };
+          if (isSelected) {
+            fetch(
+              baseURL + `/reservation/table/position/payments/`,
+              seatData
+            ).then((res) => {
+              if (res.ok) {
+                localStorage.setItem(
+                  "ticket",
+                  JSON.stringify({
+                    ...ticket,
+                    price: formattedPrice,
+                  })
+                );
+                document.querySelector("#moveon").click();
+                localStorage.setItem("checkIn", true);
+              } else {
+                toast("이미 이용중인 좌석입니다");
+              }
+            });
+          }
+        });
+      }
+    }
   }
 }

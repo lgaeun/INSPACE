@@ -50,7 +50,7 @@ const router = async () => {
 
   if (!match) {
     match = {
-      route: routes[0],
+      route: localStorage.getItem("token") ? routes[4] : routes[0],
       result: [location.pathname],
     };
   }

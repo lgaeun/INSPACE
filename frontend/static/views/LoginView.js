@@ -1,14 +1,14 @@
-// import { doc } from "prettier";
-// import { response } from "express";
-//import e from "express";
-// import e from "express";
 import AbstractView from "./AbstractView.js";
-import userData from "../js/data.js";
+//import loginHandler from "../js/handler/loginHandler.js";
+// import jwt from "../../../backend/passport/strategies/jwt.js";
+import parseJwt from "../js/handler/tokenHandler.js";
+// import jwt_decode from "jwt-decode";
+import toast from "../js/common/toast.js";
 
 export default class extends AbstractView {
   constructor(params) {
     super(params);
-    this.setTitle("Dashboard");
+    this.setTitle("InSpace");
   }
   getHtml() {
     return `
@@ -25,6 +25,7 @@ export default class extends AbstractView {
         </aside>
         <article class="right">
           <div id="login-box">
+            <div id="toast"></div>
             <h3>Log in</h3>
             <form action="post" id="login-form">
               <div class="form-floating mb-3">
@@ -63,7 +64,7 @@ export default class extends AbstractView {
                 placeholder="PASSWORD"
                 class="login-input"
               /> -->
-              <a href="/" data-link
+              <a
                 ><input type="button" id="login-Btn" value="로그인"
               /></a>
               <button id="google-login">
@@ -88,85 +89,101 @@ export default class extends AbstractView {
             </div>
           </div>
         </article>
+        
       </main>
     </div>
   `;
   }
 
   defaultFunc() {
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    document.getElementById("root").appendChild(script);
+    if (localStorage.getItem("token")) {
+      document.getElementById("login-Btn").parentElement.href = "/main";
+      document.getElementById("login-Btn").click();
+    } else {
+      sessionStorage.clear();
+      // const script = document.createElement("script");
+      // script.src =
+      //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
+      // document.getElementById("root").appendChild(script);
 
-    // @@@@@ 로그인 기능 @@@@@@
-    const $loginBtn = document.getElementById("login-Btn");
+      setTimeout(() => {
+        const signup = localStorage.getItem("signup");
+        if (signup) {
+          toast("회원가입이 완료되었습니다! 로그인 해주세요.");
+          localStorage.removeItem("signup");
+        }
+      }, 500);
 
-    $loginBtn.addEventListener("click", () => {
-      // id, password 입력값 받기
-      let ID = document.getElementById("ID").value;
-      let PASSWORD = document.getElementById("password").value;
+      // @@@@@ 로그인 기능 @@@@@@
+      const $loginBtn = document.getElementById("login-Btn");
+      $loginBtn.addEventListener("click", (e) => {
+        const target = $loginBtn.parentElement;
+        const href = target.getAttribute("href");
+        if (href === null) {
+          // id, password 입력값 받기
 
-      // 예외처리
-      if (ID.length < 6) {
-        alert("6자 이상 아이디를 입력해주세요.");
-      } else if (PASSWORD.length < 8) {
-        alert("8자 이상 비밀번호를 입력해주세요.");
-      }
+          // let loginSuccess = false;
 
-      // 전달할 유저 데이터
-      const loginUser = {
-        id: ID,
-        password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
-      };
+          let ID = document.getElementById("ID").value;
+          let PASSWORD = document.getElementById("password").value;
 
-      // 예비) 서버에서 유효성 체크
-      const idCheck = userData.some((user) => {
-        return user.id === loginUser.id;
+          // 예외처리
+          if (ID.length < 6) {
+            toast("6자 이상 아이디를 입력해주세요.");
+          } else if (PASSWORD.length < 8) {
+            toast("8자 이상 비밀번호를 입력해주세요.");
+          } else {
+            // 전달할 유저 데이터
+            const loginUser = {
+              userId: ID,
+              password: PASSWORD, // 유저스키마에 패스워드 저장할 때 해시값 사용하면 해시값으로 변경후 password 전송
+            };
+
+            const loginURL =
+              "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000/login";
+            //서버 fetch
+            fetch(loginURL, {
+              method: "POST",
+              body: JSON.stringify(loginUser),
+              cache: "no-cache",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((res) => {
+                if (res.ok) {
+                  return res.json();
+                } else {
+                  toast("존재하지 않는 회원이거나 아이디 비밀번호가 틀립니다.");
+                  throw new Error("아이디가 틀립니다.");
+                }
+              })
+              .then((data) => {
+                const token = data.token;
+                const tokenKey = "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";
+                const decoded = parseJwt(token);
+                // const decoded = jwt_decode(token);
+                //console.log(decoded);
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("checkIn", decoded.checkIn);
+                localStorage.setItem("id", decoded.id);
+                localStorage.setItem("userId", decoded.userId);
+                localStorage.setItem("name", decoded.name);
+
+                target.setAttribute("href", "/main");
+                target.setAttribute("data-link", "true");
+                $loginBtn.click();
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            // sessionStorage.setItem("history", "login");
+            // function movePage() {
+            //   $loginBtn.parentElement.href = "/main"
+            //}
+          }
+        }
       });
-
-      const passwordCheck = userData.some((user) => {
-        return user.password === loginUser.password;
-      });
-
-      if (!idCheck || !passwordCheck) {
-        alert(
-          "존재하지 않는 계정이거나 아이디와 비밀번호가 일치하지 않습니다."
-        );
-      }
-
-      const loginSuccessedUser = userData.find(
-        (user) => loginUser.id === user.id
-      );
-
-      //서버 fetch
-      fetch("http://localhost:3000/users", {
-        method: "POST",
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginUser),
-      })
-        .then((res) => res.json())
-        .then(console.log);
-      // fetch("http://localhost:3000/users")
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     console.log(data);
-      //   });
-      // .then((data) => console.log(data));
-
-      //만약 충전권 회원이라면 바로 메인페이지로 이동하고
-      // 당일권 회원이라면 이용권 구매 UI로 이동한다.
-
-      if (loginSuccessedUser.leftTime) {
-        sessionStorage.setItem("history", "main");
-        $loginBtn.parentElement.href = "/main";
-      } else {
-        sessionStorage.setItem("history", "login");
-        $loginBtn.parentElement.href = "/ticket";
-      }
-    });
+    }
   }
 }

@@ -4,24 +4,136 @@ const asyncHandler = require("../utils/async-handler");
 const { User, Ticket, Position } = require("../models/index");
 const calcTime = require("../utils/calc-time");
 
-// 테이블 전체가 보일때 사용하고 있는 좌석의 위치와 남은시간을 보내줍니다.
+//
 router.get(
   "/table",
   asyncHandler(async (req, res, next) => {
+    //이용중인 좌석을 일단 찾습니다.
+    const renewedSeat = await Position.find({
+      isempty: false,
+    }).populate("user");
+    console.log(renewedSeat);
+
+    //이용중인 좌석들을 사용한 시간을 업데이트합니다.
+    //남은시간 < 사용한 시간이면 유저의 누적 사용시간을 남아있던 시간만큼 더하고 남은 시간을 0으로
+    //남은시간 > 사용한 시간이면 유저의 누적 사용시간에서 사용한 시간을 더하고 남은 시간에서 사용한 시간을 빼는 로직입니다.
+    for (const position of renewedSeat) {
+      const passedTime = Math.floor((new Date() - position.checkTime) / 1000);
+      console.log(passedTime);
+      const user = await User.findOne({ _id: position.user });
+
+      if (user.remainingTime <= passedTime) {
+        console.log(3);
+        await User.updateOne(
+          { _id: position.user },
+          {
+            $inc: {
+              usedTime: user.remainingTime,
+              remainingTime: -user.remainingTime,
+            },
+          }
+        );
+        await Position.updateOne(
+          {
+            _id: position._id,
+          },
+          {
+            isempty: true,
+            checkTime: new Date(
+              position.checkTime.getTime() + user.remainingTime * 1000
+            ),
+            deletedAt: new Date(
+              position.checkTime.getTime() + user.remainingTime * 1000
+            ),
+          }
+        );
+      } else {
+        await User.updateOne(
+          { _id: position.user },
+          {
+            $inc: {
+              usedTime: passedTime,
+              remainingTime: -passedTime,
+            },
+          }
+        );
+        await Position.updateOne(
+          { _id: position.id },
+          {
+            checkTime: new Date(),
+          }
+        );
+      }
+    }
+    console.log("next전");
+    next();
+  })
+);
+//
+router.get(
+  "/table",
+  asyncHandler(async (req, res, next) => {
+    console.log("두번째 라우터 들어와서");
     const reservedSeat = await Position.find({
       isempty: false,
     }).populate("user");
+    //여기에 시간 다 쓴 유저 캐치하는 코드 넣자
     const editedReservedSeat = reservedSeat.reduce((acc, pos) => {
+      const remainingTimeSec = Math.floor(
+        (pos.checkTime.getTime() +
+          new Date(pos.user.remainingTime * 1000).getTime() -
+          new Date().getTime()) /
+          1000
+      );
       acc.push({
-        postion: pos.position,
+        position: pos.position,
         table: pos.table,
-        remainingTime: calcTime(pos.user.remainingTime),
+        remainingTime: calcTime(remainingTimeSec),
       });
       return acc;
     }, []);
+    console.log("두번쨰 데이터 보내기 전");
     res.json(editedReservedSeat);
   })
 );
+
+//티켓정보 확인하는 페이지
+//티켓을 선택하고 다음버튼 눌렀을 때 유저가 어떤 티켓을 가지고 있었는지 보내줍니다.
+router.get(
+  "/:id/ticket",
+  asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const user = await User.findOne({
+      _id: id,
+    }).populate("userTicket");
+    //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
+    if (user.userTicket && user.remainingTime >= 2) {
+      res.json({ message: "success", category: user.userTicket.category });
+    } else {
+      res.json({ message: "success", category: null });
+    }
+  })
+);
+// router.get(
+//   "/:id/ticket",
+//   asyncHandler(async (req, res, next) => {
+//     const { category } = req.query;
+//     const { id } = req.params;
+//     const user = await User.findOne({
+//       _id: id,
+//     }).populate("userTicket");
+//     //보유하고 있는, 사용가능한 티켓이 있다면 티켓 종류가 다른 티켓 구매시 에러 던짐
+//     if (user.userTicket && user.remainingTime >= 2) {
+//       if (category != user.userTicket.category) {
+//         throw new Error("이용중인 이용권과 같은 이용권이 아닙니다.");
+//       } else {
+//         res.json({ message: "success", category: user.Ticket.category });
+//       }
+//     } else {
+//       res.json({ message: "success", category: user.Ticket.category });
+//     }
+//   })
+// );
 
 //이용권과 좌석을 둘 다 구매하는 경우
 //case 1 , 4, 7
@@ -32,7 +144,9 @@ router.post(
   "/table/position/payments/:id",
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     //req.body 로 받는 duration은 hour
     // console.log("uesr", user);
     const { category, duration, price, table, position } = req.body;
@@ -40,7 +154,8 @@ router.post(
     //겹치는 좌석이 있는지 확인하고 겹치는 좌석이 있으면 에러를 던집니다.
     const checkPosition = await Position.findOne({
       table: table,
-      name: position,
+      position: position,
+      isempty: false,
     });
     if (checkPosition) {
       throw new Error("이미 사용중인 좌석입니다.");
@@ -63,13 +178,16 @@ router.post(
       isempty: false,
       startTime: new Date(),
       deletedAt: null,
+      checkTime: new Date(),
       user: user._id,
       ticket: newTicket._id,
     });
     //try catch 로 오류를 잡을 때(롤백) 이런 방식으로 하면 되는지 궁금합니다.
     try {
       //기존에 이용중인 좌석이 있던 경우 기존 좌석 정보도 같이 수정해야 합니다.
-      if (!user.userSeat.isempty) {
+      // if (user.userSeat && !user.userSeat.isempty) {
+
+      if (user.userSeat && !user.userSeat.isempty) {
         const prevPosition = await Position.findOneAndUpdate(
           { _id: user.userSeat },
           { isempty: true, deletedAt: new Date() },
@@ -77,7 +195,13 @@ router.post(
         );
         //기존에 사용하던 좌석을 이용한 시간을 계산해서 유저데이터를 업데이트합니다.
         const tempSecTime = Math.floor(
-          (prevPosition.deletedAt - prevPosition.startTime) / 1000
+          (prevPosition.deletedAt - prevPosition.checkTime) / 1000
+        );
+        await Position.updateOne(
+          { _id: user.userSeat },
+          {
+            checkTime: new Date(),
+          }
         );
         await User.updateOne(
           { _id: id },
@@ -122,8 +246,11 @@ router.post(
 router.post(
   "/payments/:id",
   asyncHandler(async (req, res, next) => {
+    console.log("티켓구매", req.user);
     const { id } = req.params;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
     const { category, duration, price } = req.body; //시간연장에 필요한 데이터만 저장
     const newTicket = await Ticket.create({
       category,
@@ -132,7 +259,7 @@ router.post(
       user: user._id,
     });
 
-    if (!user.userSeat.isempty) {
+    if (user.userSeat && !user.userSeat.isempty) {
       await Position.updateOne(
         { _id: user.userSeat },
         { ticket: newTicket._id }
@@ -161,17 +288,25 @@ router.post(
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const { position, table } = req.body;
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: id })
+      .populate("userSeat")
+      .populate("userTicket");
 
     //겹치는 좌석이 있는지 확인 후 에러처리
     const checkPosition = await Position.findOne({
       table: table,
-      name: position,
+      position: position,
+      isempty: false,
     });
 
     if (checkPosition) {
       throw new Error("이미 사용중인 좌석입니다.");
       return;
+    }
+
+    //남은 시간이 있는지 확인 후 에러처리
+    if (user.remainingTime <= 1) {
+      throw new Error("남은 시간이 없습니다.");
     }
 
     //새로운 좌석에 대한 데이터를 만듭니다.
@@ -181,18 +316,25 @@ router.post(
       isempty: false,
       startTime: new Date(),
       deletedAt: null,
+      checkTime: new Date(),
       user: user._id,
       ticket: user.userTicket,
     });
     //기존에 이용하던 좌석이 있는 경우
-    if (!user.userSeat.isempty) {
+    if (user.userSeat && !user.userSeat.isempty) {
+      console.log("1", user.userSeat);
+      console.log("2", user.userSeat.isempty);
       const prevPosition = await Position.findOneAndUpdate(
         { _id: user.userSeat },
         { isempty: true, deletedAt: new Date() },
         { new: true }
       );
       const tempSecTime = Math.floor(
-        (prevPosition.deletedAt - prevPosition.startTime) / 1000
+        (prevPosition.deletedAt - prevPosition.checkTime) / 1000
+      );
+      await Position.updateOne(
+        { _id: user.userSeat },
+        { checkTime: new Date() }
       );
       await User.updateOne(
         { _id: id },

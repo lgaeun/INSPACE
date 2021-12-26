@@ -3,8 +3,14 @@
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 91vh;
+  height: 92vh;
   background-color: #edf0eb;
+}
+
+#select-res {
+  background: none;
+  width: 50px;
+  border: none;
 }
 
 .pay-check-container {

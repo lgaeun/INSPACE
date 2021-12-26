@@ -42,7 +42,7 @@ function bringTable(tableNumber, type) {
   pSeatsLeft.classList.add("table__contents__seats-left");
 
   pTitle.innerText = `T${tableNumber}`;
-  pSeatsLeft.innerText = `(${defaultChairs[type]} left)`;
+  pSeatsLeft.innerText = `(${defaultChairs[type]}자리 남음)`;
 
   table.append(pTitle, pSeatsLeft);
   tableDiv.append(table, tableBar);
