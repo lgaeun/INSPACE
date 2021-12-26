@@ -76,7 +76,7 @@ export default class extends AbstractView {
         // 유저의 현재 사용하는 이용권이 충전권(charge)인 경우 충전권 버튼만 클릭 이벤트 활성화
         console.log(data);
 
-        if (data.category === "savingupTime") {
+        if (data.category === "charge") {
           ticketHandler($chargeTickets);
 
           $onedayTickets.forEach((ticket) => {

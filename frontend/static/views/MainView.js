@@ -210,7 +210,7 @@ export default class extends AbstractView {
               ticket:
                 data.duration +
                 "시간 " +
-                (data.category == "savingupTime" ? "충전권" : "당일권"),
+                (data.category == "charge" ? "충전권" : "당일권"),
             };
 
             setInfo(info);
