@@ -12,6 +12,7 @@ const usersRouter = require("./routes/users");
 const paymentsRouter = require("./routes/payments");
 const reservationRouter = require("./routes/reservation");
 const authRouter = require("./routes/auth");
+const templateRouter = require("./routes/template");
 // const loginRouter = require('./routes/login');
 const loginRequired = require("./middlewares/login-required");
 // const session = require("express-session");
@@ -57,8 +58,8 @@ app.use(express.static(path.join(__dirname, "public")));
 //     })
 // );
 
-app.use(passport.initialize());
-app.use(getUserFromJWT);
+// app.use(passport.initialize());
+// app.use(getUserFromJWT);
 // app.use(passport.session());
 
 app.use("/", indexRouter);
@@ -69,6 +70,7 @@ app.use("/auth", authRouter);
 app.use("/payments", paymentsRouter);
 app.use("/users", usersRouter);
 app.use("/reservation", reservationRouter);
+app.use("/template", templateRouter);
 
 // app.use("/payments", loginRequired, paymentsRouter);
 // app.use("/users", loginRequired, usersRouter);
