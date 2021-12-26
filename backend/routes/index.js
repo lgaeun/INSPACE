@@ -46,7 +46,7 @@ router.post(
   passport.authenticate("local", { session: false }),
   async (req, res, next) => {
     // setUserToken(res, req.user)
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
     var checkIn = null;
     const { userId, name } = user;
     if (!user.userSeat) {
