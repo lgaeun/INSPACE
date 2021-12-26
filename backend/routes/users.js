@@ -11,6 +11,10 @@ const jwtAuth = require("../utils/jwt-auth");
 router.get(
   "/checkIn",
   asyncHandler(async (req, res, next) => {
+    if (!jwtAuth(req)) {
+      res.redirect("/");
+      return;
+    }
     const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userTicket")
@@ -38,6 +42,10 @@ router.get(
 router.get(
   "/checkOut",
   asyncHandler(async (req, res, next) => {
+    if (!jwtAuth(req)) {
+      res.redirect("/");
+      return;
+    }
     const id = jwtAuth(req).id;
     const user = await User.findOne({ _id: id })
       .populate("userSeat")
