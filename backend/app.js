@@ -54,7 +54,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(passport.initialize());
 
-app.use(getUserFromJWT);
+// app.use(getUserFromJWT);
 
 // app.use(passport.session());
 
