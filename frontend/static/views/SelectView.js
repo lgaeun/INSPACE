@@ -306,10 +306,13 @@ export default class extends AbstractView {
               seatData
             ).then((res) => {
               if (res.ok) {
-                localStorage.setItem("ticket", {
-                  ...ticket,
-                  price: formattedPrice,
-                });
+                localStorage.setItem(
+                  "ticket",
+                  JSON.stringify({
+                    ...ticket,
+                    price: formattedPrice,
+                  })
+                );
                 document.querySelector("#moveon").click();
                 localStorage.setItem("checkIn", true);
               } else {

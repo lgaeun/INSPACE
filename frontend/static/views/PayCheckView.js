@@ -82,7 +82,7 @@ export default class extends AbstractView {
     }
 
     localStorage.removeItem("ticket");
-    // sessionStorage.clear();
+    sessionStorage.clear();
 
     history.pushState(null, null, location.href);
     window.onpopstate = function () {
