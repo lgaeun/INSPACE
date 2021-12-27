@@ -11,7 +11,7 @@ const jwtAuth = require("../utils/jwt-auth");
 router.get(
   "/checkIn",
   asyncHandler(async (req, res, next) => {
-    if (!res.headers.authorization) {
+    if (!jwtAuth(req)) {
       res.redirect("/");
       return;
     }
