@@ -11,7 +11,7 @@ export default class {
 
   async getHtml(path) {
     if (!this.content) {
-      await fetch(`http://localhost:8000/template/${path}`)
+      await fetch(`http://localhost:5000/template/${path}`)
         .then((res) => res.json())
         .then((res) => {
           this.content = "" + res.data.trim();

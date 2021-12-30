@@ -142,7 +142,7 @@ export function chooseSeat(payBtn, prevBtn, totalPrice) {
           return res.json();
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           let status = res.message;
           status += res.type === "noTime" ? "이용권을 먼저 구매해주세요." : "";
           toast(status);
