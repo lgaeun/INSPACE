@@ -31,6 +31,7 @@ export function bringSeatInfo() {
         occupiedSeat.innerHTML = hourText;
         occupiedSeat.style.color = "white";
         occupiedSeat.classList.remove("available");
+        occupiedSeat.classList.add("occupied");
 
         countSeatsLeft[table] = countSeatsLeft[table] - 1;
       }
@@ -92,7 +93,11 @@ export function initSeats() {
   bringSeatInfo();
 
   section.addEventListener("click", (e) => {
-    if (!e.target.classList.contains("seat")) return;
+    if (
+      !e.target.classList.contains("seat") ||
+      e.target.classList.contains("occupied")
+    )
+      return;
     if (countSelected === 0) {
       selectSeat(e);
       countSelected++;
