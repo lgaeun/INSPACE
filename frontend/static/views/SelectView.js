@@ -1,6 +1,6 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
-import { initSeats } from "../js/seat-selection/Seat.js";
+import { initSeats } from "../js/Seat/Seat.js";
 import toast from "../js/common/toast.js";
 import {
   Price,
