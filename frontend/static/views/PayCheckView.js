@@ -11,30 +11,14 @@ export default class extends AbstractView {
     this.nav = new NavComponent();
   }
 
-  getHtml() {
-    return (
-      this.nav.getHtml() +
-      `<div class="pay-check-bg">
-      <main class="pay-check-container">
-        <div class="payment-box">
-          <h2 class="pay-chekc-title">Check <br> the payment!</h2>
-          <div class="total-price-box">
-                <h1 class="total-price-box__title">총 결제금액:</h1>
-                <h1 class="total-price-box__price">12,000원</h1>
-              </div>
-          <div id="toast"></div>
-          <div class="info-payments">
-            <li class="info-payment">성함<a>-</a></li>
-            <li class="info-payment">이용권 정보<a>-</a></li>
-            <li class="info-payment">결제수단<a>카드결제</a></li>
-            <li class="info-payment"><p>결제일시</p><a>2021.12.14 15:45</a></li>
-          </div>
-          <a href='/main' data-link><input type="button" value="확인" id="payment-Btn" /></a>
-        </div>
-      </main>
-    </div>
-    `
-    );
+  async getHtml() {
+    let content;
+    await fetch("http://localhost:8000/template/paycheck")
+      .then((res) => res.json())
+      .then((res) => {
+        content = "" + res.data.trim();
+      });
+    return this.nav.getHtml() + content;
   }
 
   defaultFunc() {

@@ -6,6 +6,16 @@ import FindView from "../views/FindView.js";
 import SelectView from "../views/SelectView.js";
 import PayCheckView from "../views/PayCheckView.js";
 
+const routes = [
+  { path: "/", view: LoginView },
+  { path: "/signup", view: SignupView },
+  { path: "/find", view: FindView },
+  { path: "/select", view: SelectView },
+  { path: "/main", view: MainView },
+  { path: "/ticket", view: TicketView },
+  { path: "/paycheck", view: PayCheckView },
+];
+
 const pathToRegex = (path) =>
   new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
@@ -27,16 +37,6 @@ const navigateTo = (url) => {
 };
 
 const router = async () => {
-  const routes = [
-    { path: "/", view: LoginView },
-    { path: "/signup", view: SignupView },
-    { path: "/find", view: FindView },
-    { path: "/select", view: SelectView },
-    { path: "/main", view: MainView },
-    { path: "/ticket", view: TicketView },
-    { path: "/paycheck", view: PayCheckView },
-  ];
-
   const potentialMatches = routes.map((route) => {
     return {
       route: route,
@@ -62,8 +62,10 @@ const router = async () => {
 
   const view = new match.route.view(getParams(match));
 
-  document.querySelector("#root").innerHTML = view.getHtml();
-  view.defaultFunc();
+  await view.getHtml().then((content) => {
+    document.querySelector("#root").innerHTML = content;
+    view.defaultFunc();
+  });
 };
 
 window.addEventListener("popstate", router);
