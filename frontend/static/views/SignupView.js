@@ -8,13 +8,7 @@ export default class extends AbstractView {
     this.setTitle("InSpace");
   }
   async getHtml() {
-    let content;
-    await fetch("http://localhost:8000/template/select")
-      .then((res) => res.json())
-      .then((res) => {
-        content = "" + res.data.trim();
-      });
-    return content;
+    return await super.getHtml("signup");
   }
 
   defaultFunc() {

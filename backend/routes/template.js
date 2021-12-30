@@ -7,7 +7,6 @@ router.get("/:view", (req, res) => {
   const { view } = req.params;
   const filepath = path.join(__dirname, "..", "/static", `/${view}.html`);
   fs.readFile(filepath, "utf-8", (err, data) => {
-    console.log(data);
     res.status(200).json({ data: data });
   });
 });

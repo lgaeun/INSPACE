@@ -2,26 +2,18 @@ import toast from "../js/common/toast.js";
 import AbstractView from "./AbstractView.js";
 import { baseURL } from "../js/common/baseURL.js";
 export default class extends AbstractView {
+  content;
+
   constructor(params) {
     super(params);
     this.setTitle("InSpace");
   }
+
   async getHtml() {
-    let content;
-    await fetch(baseURL + "/template/find")
-      .then((res) => res.json())
-      .then((res) => {
-        content = "" + res.data.trim();
-      });
-    return content;
+    return await super.getHtml("find");
   }
 
   defaultFunc() {
-    // const script = document.createElement("script");
-    // script.src =
-    //   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js";
-    // document.getElementById("root").appendChild(script);
-
     const $passwordReqBtn = document.querySelector(".btn-signup");
 
     $passwordReqBtn.addEventListener("click", () => {

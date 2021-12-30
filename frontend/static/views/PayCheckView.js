@@ -5,6 +5,8 @@ const baseURL =
   "http://elice-kdt-sw-1st-vm08.koreacentral.cloudapp.azure.com:5000";
 
 export default class extends AbstractView {
+  content;
+
   constructor(params) {
     super(params);
     this.setTitle = "InSpace";
@@ -12,13 +14,7 @@ export default class extends AbstractView {
   }
 
   async getHtml() {
-    let content;
-    await fetch("http://localhost:8000/template/paycheck")
-      .then((res) => res.json())
-      .then((res) => {
-        content = "" + res.data.trim();
-      });
-    return this.nav.getHtml() + content;
+    return this.nav.getHtml() + (await super.getHtml("paycheck"));
   }
 
   defaultFunc() {
@@ -28,7 +24,6 @@ export default class extends AbstractView {
     const totalPrice = document.querySelector(".total-price-box__price");
     const totalPriceTitle = document.querySelector(".total-price-box__title");
     const infoPayment = document.getElementsByClassName("info-payment");
-    const okBtn = document.querySelector("#payment-Btn");
 
     let userName = infoPayment[0].querySelector("a");
     let ticketInfo = infoPayment[1].querySelector("a");
@@ -43,8 +38,6 @@ export default class extends AbstractView {
     userName.innerText = localStorage.getItem("name");
     payTime.innerText = `${now.getFullYear()}.${now.getMonth()}.${now.getDate()} ${hour}:${min}`;
 
-    console.log("im in paycheck view");
-
     const path = sessionStorage.getItem("path");
 
     if (path === "move" || path === "select") {
@@ -52,7 +45,6 @@ export default class extends AbstractView {
         path === "move"
           ? "Successfully<br> Moved!"
           : "Successfully<br> Selected!";
-      // paycheckTitle.style.fontSize = "1.5rem";
       totalPriceTitle.innerText = "현재 좌석:";
       totalPrice.innerText = sessionStorage.getItem("lastSelected");
       ticketInfo.innerText = "-";
@@ -72,13 +64,5 @@ export default class extends AbstractView {
     window.onpopstate = function () {
       history.go(1);
     };
-
-    // okBtn.addEventListener("click", () => {
-    //   localStorage.removeItem("ticket");
-    //   sessionStorage.clear();
-    // });
-
-    // userName.innerText = userData.user
-    // payTime.innerText = userData.time
   }
 }

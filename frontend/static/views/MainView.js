@@ -1,8 +1,11 @@
 import AbstractView from "./AbstractView.js";
 import NavComponent from "../js/common/nav.js";
+import { baseURL } from "../js/handler/seatHandler.js";
 // import { copy } from "../../../backend/app.js";
 
 export default class extends AbstractView {
+  content;
+
   constructor(params) {
     super(params);
     //this.postId = params.id;
@@ -11,13 +14,7 @@ export default class extends AbstractView {
   }
 
   async getHtml() {
-    let content;
-    await fetch("http://localhost:8000/template/main")
-      .then((res) => res.json())
-      .then((res) => {
-        content = "" + res.data.trim();
-      });
-    return this.nav.getHtml() + content;
+    return this.nav.getHtml() + (await super.getHtml("main"));
   }
 
   defaultFunc() {

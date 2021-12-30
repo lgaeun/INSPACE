@@ -11,13 +11,7 @@ export default class extends AbstractView {
   }
 
   async getHtml() {
-    let content;
-    await fetch("http://localhost:8000/template/select")
-      .then((res) => res.json())
-      .then((res) => {
-        content = "" + res.data.trim();
-      });
-    return this.nav.getHtml() + content;
+    return this.nav.getHtml() + (await super.getHtml("ticket"));
   }
 
   defaultFunc() {
