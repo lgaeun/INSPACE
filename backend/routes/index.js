@@ -37,23 +37,24 @@ router.post(
     console.log("회원가입후");
     res.status(200).json({ message: "success" });
   })
+
 );
 
 //로그인
 //로그인시 토큰을 보내줌
 router.post(
-  "/login",
-  passport.authenticate("local", { session: false }),
-  async (req, res, next) => {
-    // setUserToken(res, req.user)
-    const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
-    var checkIn = null;
-    const { userId, name } = user;
-    if (!user.userSeat) {
-      checkIn = false;
-    } else {
-      checkIn = !user.userSeat.isempty;
-    }
+    "/login",
+    passport.authenticate("local", { session: false }),
+    async(req, res, next) => {
+        // setUserToken(res, req.user)
+        const user = await User.findOne({ _id: req.user.id }).populate("userSeat");
+        var checkIn = null;
+        const { userId, name } = user;
+        if (!user.userSeat) {
+            checkIn = false;
+        } else {
+            checkIn = !user.userSeat.isempty;
+        }
 
     const token = jwt.sign({ userId, name, id: req.user.id, checkIn }, secret); //payload
     res.cookie("token", token);
@@ -61,41 +62,39 @@ router.post(
     console.log("req.user 안의 값12345:", req.user);
     console.log("token555:", token);
     console.log("req.cookies값좀 보자777", req.cookies);
-
-    res.json({
-      token,
-    });
-  }
+        res.json({
+            token,
+        });
+    }
 );
 
 router.get("/logout", (req, res, next) => {
-  res.cookie("token", null, { maxAge: 0 });
-  res.json({ message: "logout" });
+    res.cookie("token", null, { maxAge: 0 });
+    res.json({ message: "logout" });
 });
 
 router.post(
-  "/reset-password",
-  asyncHandler(async (req, res, next) => {
-    const { userId } = req.body;
-    const user = await User.findOne({ userId });
-    if (!user) {
-      throw new Error("해당 메일로 가입된 아이디가 없습니다.");
-    }
-    const password = generateRandomPassword();
-    await User.updateOne(
-      { userId },
-      {
-        password: hashPassword(password),
-      }
-    );
+    "/reset-password",
+    asyncHandler(async(req, res, next) => {
+        // const id = jwtAuth(req).id;
 
-    await sendMail(
-      userId,
-      "비밀번호가 변경되었습니다.",
-      `변경된 비밀번호는 : ${password} 입니다.`
-    );
-    res.status(200).json({ message: "success" });
-  })
+        const { userId } = req.body;
+        const user = await User.findOne({ userId });
+        if (!user) {
+            throw new Error("해당 메일로 가입된 아이디가 없습니다.");
+        }
+        const password = generateRandomPassword();
+        await User.updateOne({ userId }, {
+            password: hashPassword(password),
+        });
+
+        await sendMail(
+            userId,
+            "비밀번호가 변경되었습니다.",
+            `변경된 비밀번호는 : ${password} 입니다.`
+        );
+        res.status(200).json({ message: "success" });
+    })
 );
 
 router.post(
@@ -110,29 +109,27 @@ router.post(
     await User.updateOne({ _id: id }, { name });
     res.status(200).json({ message: "success" });
   })
+
 );
 router.post(
-  "/info-change-password",
-  asyncHandler(async (req, res, next) => {
-    const id = jwtAuth(req).id;
-    const { password, newpassword, confirmpassword } = req.body;
-    const user = await User.findOne({ _id: id });
+    "/info-change-password",
+    asyncHandler(async(req, res, next) => {
+        const id = jwtAuth(req).id;
+        const { password, newpassword, confirmpassword } = req.body;
+        const user = await User.findOne({ _id: id });
 
-    if (user.password != hashPassword(password)) {
-      throw new Error("기존 비밀번호를 다시 입력해주세요");
-    } else if (hashPassword(password) == hashPassword(newpassword)) {
-      throw new Error("기존비밀번호와 새 비밀번호를 다르게 입력해주세요");
-    }
-    if (newpassword != confirmpassword) {
-      throw new Error("새비밀번호를 다시 확인해주세요.");
-    }
-    await User.updateOne(
-      { _id: id },
-      {
-        password: hashPassword(newpassword),
-      }
-    );
-    res.status(200).json({ message: "success" });
-  })
+        if (user.password != hashPassword(password)) {
+            throw new Error("기존 비밀번호를 다시 입력해주세요");
+        } else if (hashPassword(password) == hashPassword(newpassword)) {
+            throw new Error("기존비밀번호와 새 비밀번호를 다르게 입력해주세요");
+        }
+        if (newpassword != confirmpassword) {
+            throw new Error("새비밀번호를 다시 확인해주세요.");
+        }
+        await User.updateOne({ _id: id }, {
+            password: hashPassword(newpassword),
+        });
+        res.status(200).json({ message: "success" });
+    })
 );
 module.exports = router;

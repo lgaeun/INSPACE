@@ -6,27 +6,28 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secret = process.env.SECRET_KEY;
 
+
 const router = Router();
 
 router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+    "/google",
+    passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 router.get(
-  "/google/callback",
-  passport.authenticate("google", { session: false }),
-  async (req, res, next) => {
-    const user = await User.findOne({ googleId: req.user.googleId }).populate(
-      "userSeat"
-    );
-    var checkIn = null;
-    const { userId, name } = user;
-    if (!user.userSeat) {
-      checkIn = false;
-    } else {
-      checkIn = !user.userSeat.isempty;
-    }
+    "/google/callback",
+    passport.authenticate("google", { session: false }),
+    async(req, res, next) => {
+        const user = await User.findOne({ googleId: req.user.googleId }).populate(
+            "userSeat"
+        );
+        var checkIn = null;
+        const { userId, name } = user;
+        if (!user.userSeat) {
+            checkIn = false;
+        } else {
+            checkIn = !user.userSeat.isempty;
+        }
 
     const token = jwt.sign(
       {
@@ -44,6 +45,7 @@ router.get(
     });
     res.redirect("/");
   }
+
 );
 
 module.exports = router;
